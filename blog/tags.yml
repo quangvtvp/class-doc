@@ -1,0 +1,44 @@
+facebook:
+  label: Facebook
+  permalink: /facebook
+  description: Facebook tag description
+
+hello:
+  label: Hello
+  permalink: /hello
+  description: Hello tag description
+
+docusaurus:
+  label: Docusaurus
+  permalink: /docusaurus
+  description: Docusaurus tag description
+
+hola:
+  label: Hola
+  permalink: /hola
+  description: Hola tag description
+
+flutter:
+  label: Flutter
+  permalink: /flutter
+  description: Posts related to the Flutter framework.
+
+tutorial:
+  label: Tutorial
+  permalink: /tutorial
+  description: Step-by-step guides and tutorials.
+
+layout:
+  label: Layout
+  permalink: /layout
+  description: Posts focusing on UI layout techniques.
+
+ui:
+  label: UI
+  permalink: /ui
+  description: Posts about User Interface design and implementation.
+
+beginner:
+  label: Beginner
+  permalink: /beginner
+  description: Content suitable for beginners.
