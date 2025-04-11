@@ -30,6 +30,9 @@ const config: Config = {
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/class-doc/',
 
+  // Add explicit trailingSlash configuration
+  trailingSlash: true,
+
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'quangvtvp', // Usually your GitHub org/user name.
