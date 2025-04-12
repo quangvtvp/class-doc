@@ -29,6 +29,11 @@ const sidebars: SidebarsConfig = {
       id: 'flutter-calculator-tutorial',
       label: 'Calculator Tutorial',
     },
+    {
+      type: 'doc',
+      id: 'networking-part1',
+      label: 'Networking Tutorial',
+    },
   ],
 
 };

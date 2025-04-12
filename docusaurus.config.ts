@@ -64,7 +64,7 @@ const config: Config = {
           docId: 'flutter-calculator-tutorial',
           position: 'left',
           label: 'Tutorial',
-        },
+        }
       ],
     },
     prism: {
