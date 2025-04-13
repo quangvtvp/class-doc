@@ -1,17 +1,17 @@
 ---
-slug: flutter-calculator-tutorial
+slug: simple-calculator
 title: Hướng dẫn xây dựng UI Calculator đơn giản
 authors: [quanglm]
 tags: [flutter, tutorial, layout, ui, beginner]
 ---
 
-Chào mừng các bạn đến với bài hướng dẫn xây dựng một ứng dụng máy tính bỏ túi (Calculator) đơn giản bằng Flutter. Mục tiêu chính của bài này không phải là tạo ra một chiếc máy tính đầy đủ chức năng, mà là giúp các bạn làm quen với cách Flutter xây dựng giao diện người dùng (UI) thông qua các Widget layout cơ bản như `Column`, `Row`, và `Expanded`.
+Chào mừng các bạn đến với bài hướng dẫn xây dựng một ứng dụng máy tính (Calculator) đơn giản bằng Flutter. Mục tiêu chính của bài này không phải là tạo ra một chiếc máy tính đầy đủ chức năng, mà là giúp các bạn làm quen với cách Flutter xây dựng UI thông qua các Widget layout cơ bản như `Column`, `Row`, và `Expanded`.
 
 Chúng ta sẽ chỉ thực hiện hai phép tính cơ bản là cộng (+) và trừ (-).
 
 **Kết quả cuối cùng trông sẽ như thế này:**
 
-*(Ảnh chụp màn hình ứng dụng hoàn thiện sẽ được thêm vào đây sau)*
+<img src="https://external-preview.redd.it/ios-18-pb5-calculator-app-is-retaining-the-previous-result-v0-Nm1leHZleXBhd2pkMTNIPyaMkjFcS3mNlAlxRFe6Kq3iTxqbm8bNNpfv74QF.png?format=pjpg&auto=webp&s=d82691da1c89be610d3ee496a7bf3a44d66c878b" alt="Calculator Preview" width="300"/>
 
 Chúng ta sẽ chia bài học thành nhiều nhiệm vụ nhỏ, mỗi nhiệm vụ sẽ xây dựng thêm một phần cho ứng dụng và bạn có thể chạy thử code sau mỗi nhiệm vụ.
 

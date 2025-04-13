@@ -61,7 +61,7 @@ const config: Config = {
         },
         {
           type: 'doc',
-          docId: 'flutter-calculator-tutorial',
+          docId: 'calculator-tutorial',
           position: 'left',
           label: 'Tutorial',
         }

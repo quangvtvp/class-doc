@@ -26,13 +26,13 @@ const sidebars: SidebarsConfig = {
     // },
     {
       type: 'doc',
-      id: 'flutter-calculator-tutorial',
-      label: 'Calculator Tutorial',
+      id: 'calculator-tutorial',
+      label: 'Simple Calculator',
     },
     {
       type: 'doc',
       id: 'networking-part1',
-      label: 'Networking Tutorial',
+      label: 'Networking phần 1',
     },
   ],
 
