@@ -1,5 +1,4 @@
 ---
-slug: simple-calculator
 title: Hướng dẫn xây dựng UI Calculator đơn giản
 authors: [quanglm]
 tags: [flutter, tutorial, layout, ui, beginner]
