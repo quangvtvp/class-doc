@@ -34,6 +34,11 @@ const sidebars: SidebarsConfig = {
       id: 'networking-part1',
       label: 'Networking phần 1',
     },
+    {
+      type: 'doc',
+      id: 'networking-part2',
+      label: 'Networking phần 2',
+    },
   ],
 
 };
