@@ -4,14 +4,14 @@
 _Ảnh minh hoạ giao diện ứng dụng thởi tiết Flutter_
 
 :::tip
-Trong bài này, các em sẽ được thực hành từ cơ bản đến nâng cao, giúp hiểu rõ hoạt động của HTTP và JSON.
+Trong bài này, các em sẽ được thực hành từ cơ bản giúp hiểu rõ hoạt động của HTTP và JSON.
 :::
 
 ---
 
 ## 1. Giới thiệu
 
-Trong phần này, các em sẽ học cách sử dụng HTTP để lấy dữ liệu từ một API thởi tiết miễn phí và hiển thị kết quả lên ứng dụng Flutter. Chúng ta sẽ sử dụng API wttr.in vì không cần đăng ký hay lấy API key, giúp các em tập trung vào kiến thức lập trình.
+Trong phần này, các em sẽ học cách sử dụng HTTP để lấy dữ liệu từ một API thởi tiết miễn phí và hiển thị kết quả lên ứng dụng Flutter. Chúng ta sẽ sử dụng API wttr.in (https://wttr.in).
 
 ---
 
