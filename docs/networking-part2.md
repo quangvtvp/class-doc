@@ -77,6 +77,19 @@ class LoginScreen extends StatelessWidget {
 - Password không được để trống, phải dài hơn 5 ký tự.
 - Sử dụng `Form`, `TextFormField` với `validator`.
 
+### Giải thích về Form và validation trong Flutter
+
+Trong Flutter, widget `Form` giúp bạn quản lý và xác thực (validate) nhiều trường nhập liệu cùng lúc một cách dễ dàng. Khi bạn đặt các trường `TextFormField` bên trong một `Form`, bạn có thể gán mỗi trường một hàm `validator`. Khi gọi `formKey.currentState!.validate()`, Flutter sẽ tự động chạy tất cả các hàm `validator` của các trường con:
+
+- Nếu tất cả các hàm trả về `null`, dữ liệu hợp lệ.
+- Nếu có ít nhất một hàm trả về chuỗi lỗi, Form sẽ hiển thị lỗi đó ngay dưới trường nhập tương ứng.
+
+Điều này giúp kiểm tra nhanh, hiển thị lỗi rõ ràng, không cần tự viết nhiều logic kiểm tra thủ công.
+
+Ví dụ:
+- `validator: (value) { if (value == null || value.isEmpty) return 'Vui lòng nhập username'; return null; }`
+- Khi nhấn nút đăng nhập, chỉ cần gọi: `if (_formKey.currentState!.validate()) { ... }`
+
 ### Code demo:
 ```dart
 import 'package:flutter/material.dart';
@@ -109,6 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
               TextFormField(
                 controller: _usernameController,
                 decoration: InputDecoration(labelText: 'Username', border: OutlineInputBorder()),
+                // Validator kiểm tra username không rỗng và không chứa dấu cách
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Vui lòng nhập username';
@@ -124,6 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 controller: _passwordController,
                 decoration: InputDecoration(labelText: 'Password', border: OutlineInputBorder()),
                 obscureText: true,
+                // Validator kiểm tra password không rỗng và dài hơn 5 ký tự
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Vui lòng nhập password';
@@ -137,6 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
               SizedBox(height: 24),
               ElevatedButton(
                 onPressed: () {
+                  // Khi nhấn nút, gọi validate để kiểm tra tất cả các trường
                   if (_formKey.currentState!.validate()) {
                     // Xử lý đăng nhập ở bước tiếp theo
                   }
@@ -179,6 +195,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
+  // Hàm gửi HTTP POST request để đăng nhập
   Future<Map<String, dynamic>> login(String username, String password) async {
     try {
       final response = await http.post(
@@ -190,11 +207,14 @@ class _LoginScreenState extends State<LoginScreen> {
         }),
       );
       if (response.statusCode == 200) {
+        // Đăng nhập thành công, trả về dữ liệu từ server
         return jsonDecode(response.body);
       } else {
+        // Đăng nhập thất bại, trả về thông báo lỗi từ server
         return jsonDecode(response.body);
       }
     } catch (e) {
+      // Lỗi kết nối hoặc lỗi khác
       return {'success': false, 'message': 'Lỗi kết nối hoặc máy chủ: ${e.toString()}'};
     }
   }
@@ -242,13 +262,14 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               SizedBox(height: 24),
               ElevatedButton(
+                // Khi nhấn nút, gọi validate và gửi request đăng nhập
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     final result = await login(
                       _usernameController.text,
                       _passwordController.text,
                     );
-                    print(result);
+                    print(result); // In ra kết quả để kiểm tra
                   }
                 },
                 child: Text('Login'),
@@ -282,6 +303,7 @@ ElevatedButton(
       );
       final bool success = result['success'] == true;
       final String message = result['message'] ?? '';
+      // Hiển thị SnackBar với màu sắc khác nhau tuỳ theo kết quả
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(message, style: TextStyle(color: Colors.white)),
@@ -321,6 +343,7 @@ ElevatedButton(
         ),
       );
       if (success) {
+        // Chờ SnackBar hiển thị xong rồi chuyển màn hình
         Future.delayed(Duration(milliseconds: 600), () {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
@@ -342,6 +365,7 @@ class WelcomeScreen extends StatelessWidget {
       body: Center(
         child: ElevatedButton(
           onPressed: () {
+            // Khi logout, quay lại màn hình Login
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => LoginScreen()),
             );
