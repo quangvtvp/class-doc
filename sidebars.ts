@@ -39,6 +39,11 @@ const sidebars: SidebarsConfig = {
       id: 'networking-part2',
       label: 'Networking phần 2',
     },
+    {
+      type: 'doc',
+      id: 'supabase',
+      label: 'Connecting to Supabase',
+    },
   ],
 
 };
