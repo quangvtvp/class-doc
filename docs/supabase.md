@@ -128,8 +128,7 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
     final response = await Supabase.instance.client
         .from('leaderboard')
         .select('name, score')
-        .order('score', ascending: false) // Sắp xếp theo điểm giảm dần
-        .execute();
+        .order('score', ascending: false); // Sắp xếp theo điểm giảm dần
 
     if (response.error != null) {
       throw response.error!;
