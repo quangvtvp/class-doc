@@ -47,7 +47,7 @@ const sidebars: SidebarsConfig = {
     {
       type: 'doc',
       id: 'navigation-pattern',
-      label: 'Connecting to Supabase',
+      label: 'Flutter Navigation Pattern',
     },
   ],
 
