@@ -44,6 +44,11 @@ const sidebars: SidebarsConfig = {
       id: 'supabase',
       label: 'Connecting to Supabase',
     },
+    {
+      type: 'doc',
+      id: 'navigation-pattern',
+      label: 'Connecting to Supabase',
+    },
   ],
 
 };
