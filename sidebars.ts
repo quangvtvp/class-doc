@@ -49,6 +49,11 @@ const sidebars: SidebarsConfig = {
       id: 'navigation-pattern',
       label: 'Flutter Navigation Pattern',
     },
+    {
+      type: 'doc',
+      id: 'git-flow-team-beginner',
+      label: 'Hướng dẫn Git Flow cho làm việc nhóm',
+    },
   ],
 
 };
