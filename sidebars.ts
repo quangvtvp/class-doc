@@ -23,7 +23,22 @@ const sidebars: SidebarsConfig = {
     //   type: 'doc',
     //   id: 'index',
     //   label: 'Trang Chủ',
-    // },
+    // }, Bai-01-Gioi-Thieu-Lap-Trinh-Dart
+    {
+      type: 'doc',
+      id: 'Bai-01-Gioi-Thieu-Lap-Trinh-Dart',
+      label: '1. Giới thiệu lập trình Dart',
+    },
+    {
+      type: 'doc',
+      id: 'Bai-02-Bien-Kieu-Du-Lieu-Dart',
+      label: '2. Biến và kiểu dữ liệu Dart',
+    },
+    {
+      type: 'doc',
+      id: 'Bai-03-Dieu-kien-if-else',
+      label: '3. Điều kiện if-else',
+    },
     {
       type: 'doc',
       id: 'calculator-tutorial',
