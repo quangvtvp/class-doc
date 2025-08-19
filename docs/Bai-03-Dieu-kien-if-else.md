@@ -476,10 +476,10 @@ void main() {
 ## 7) Bài tập tự luyện (có nhập từ bàn phím)
 1) **Điểm rèn luyện**: Nhập RL (0–100). In: `Xuất sắc (≥90) / Tốt (80–89) / Khá (65–79) / TB (50–64) / Yếu (<50)`.  
 2) **Cước data**: Gói cơ bản 3GB/tháng; vượt ngưỡng tính 20.000đ/GB (làm tròn lên theo 0.1GB). In tổng tiền.  
-3) **Thuế TNCN (đơn giản)**: Thu nhập <11tr: 0%; 11–20: 5%; 20–32: 10%; >32: 20%. In số thuế.  
+3) **Thuế TNCN (đơn giản)**: Thu nhập `<11tr`: 0%; 11–20: 5%; 20–32: 10%; >32: 20%. In số thuế.  
 4) **Hạnh kiểm (switch)**: Nhập `A/B/C/D` → In “Tốt/Khá/TB/Yếu”.  
 5) **Strong password**: ≥10 ký tự, có số, chữ hoa, ký tự đặc biệt. In “Mạnh/Chưa đạt”.  
-6) **Cảnh báo tồn kho**: Nhập số lượng; 0 → “Hết hàng”; <5 → “Sắp hết”; ≥5 → “Đủ hàng”.  
+6) **Cảnh báo tồn kho**: `Nhập số lượng; 0 → “Hết hàng”; <5 → “Sắp hết”; ≥5 → “Đủ hàng”`.  
 7) **Ưu tiên hỗ trợ (switch)**: Nhập `Free/Pro/Business/Enterprise` → In thời gian phản hồi cam kết: 72h/24h/8h/2h.
 
 ---
