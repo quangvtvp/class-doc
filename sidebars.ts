@@ -39,36 +39,6 @@ const sidebars: SidebarsConfig = {
       id: 'Bai-03-Dieu-kien-if-else',
       label: '3. Điều kiện if-else',
     },
-    {
-      type: 'doc',
-      id: 'calculator-tutorial',
-      label: 'Simple Calculator',
-    },
-    {
-      type: 'doc',
-      id: 'networking-part1',
-      label: 'Networking phần 1',
-    },
-    {
-      type: 'doc',
-      id: 'networking-part2',
-      label: 'Networking phần 2',
-    },
-    {
-      type: 'doc',
-      id: 'supabase',
-      label: 'Connecting to Supabase',
-    },
-    {
-      type: 'doc',
-      id: 'navigation-pattern',
-      label: 'Flutter Navigation Pattern',
-    },
-    {
-      type: 'doc',
-      id: 'git-flow-team-beginner',
-      label: 'Hướng dẫn Git Flow cho làm việc nhóm',
-    },
   ],
 
 };
