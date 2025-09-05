@@ -39,6 +39,11 @@ const sidebars: SidebarsConfig = {
       id: 'Bai-03-Dieu-kien-if-else',
       label: '3. Điều kiện if-else',
     },
+    {
+      type: 'doc',
+      id: 'Bai-04-Vong-lap-co-ban',
+      label: '4. Vòng lặp',
+    },
   ],
 
 };
