@@ -490,7 +490,7 @@ void main() {
 > **Quy tắc gợi ý:**  
 > - Xếp loại theo GPA: `≥9.0 XS`, `≥8.0 Giỏi`, `≥6.5 Khá`, `≥5.0 TB`, `<5.0 Yếu`.  
 > - **Lên lớp** nếu: `GPA ≥ 5.0` **và** không môn nào `< 3.5` **và** chuyên cần `≥ 80%`.
-
+<!--
 ### 8.1 Lời giải mẫu 
 ```dart
 import 'dart:io';
@@ -587,7 +587,7 @@ void main() {
   print('Lời khuyên: $advice');
 }
 ```
----
+-->
 
 ## 9) Tổng kết & Bài tập về nhà
 - Ôn lại: `if`, `if-else`, `else if`, **nested if**, `switch-case`; bảng chân trị; short-circuit.
