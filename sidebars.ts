@@ -44,6 +44,11 @@ const sidebars: SidebarsConfig = {
       id: 'Bai-04-Vong-lap-co-ban',
       label: '4. Vòng lặp',
     },
+    {
+      type: 'doc',
+      id: 'Bai-06-function',
+      label: '6. Hàm trong Dart',
+    },
   ],
 
 };
