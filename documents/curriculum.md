@@ -43,7 +43,7 @@ _Dành cho học sinh cấp 3 - Tổng cộng 50 buổi_
 - Buổi 2: Biến và kiểu dữ liệu
 - Buổi 3: Điều kiện if/else
 - Buổi 4: Vòng lặp cơ bản
-- Buổi 5: List (Danh sách)
+- Buổi 5: Collection trong Dart
 - Buổi 6: Functions (Hàm)
 
 **Phần 2: Lập trình hướng đối tượng & Async (6 buổi)**
