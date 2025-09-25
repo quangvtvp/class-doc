@@ -10,13 +10,44 @@ const config: Config = {
       '@docusaurus/preset-classic',
       {
         docs: {
+          id: 'default',
+          path: 'docs',
           routeBasePath: '/',
           sidebarPath: require.resolve('./sidebars.ts'),
         },
-        blog: false,
+        blog: {
+          showReadingTime: true,
+          feedOptions: {
+            type: ['rss', 'atom'],
+            xslt: true,
+          },
+          onInlineTags: 'warn',
+          onInlineAuthors: 'warn',
+          onUntruncatedBlogPosts: 'warn',
+        },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
         },
+      },
+    ],
+  ],
+  plugins: [
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'lessons',
+        path: 'lessons',
+        routeBasePath: '/lessons',
+        sidebarPath: require.resolve('./sidebars-lessons.ts'),
+      },
+    ],
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'tutorials',
+        path: 'tutorials',
+        routeBasePath: '/tutorials',
+        sidebarPath: require.resolve('./sidebars-tutorials.ts'),
       },
     ],
   ],
@@ -60,11 +91,19 @@ const config: Config = {
           label: 'Trang Chủ',
         },
         {
-          type: 'doc',
-          docId: 'calculator-tutorial',
+          type: 'docSidebar',
+          sidebarId: 'lessonsSidebar',
           position: 'left',
-          label: 'Tutorial',
-        }
+          label: 'Bài Giảng',
+          docsPluginId: 'lessons',
+        },
+        {
+          type: 'docSidebar',
+          sidebarId: 'tutorialsSidebar',
+          position: 'left',
+          label: 'Tutorials',
+          docsPluginId: 'tutorials',
+        },
       ],
     },
     prism: {

@@ -812,8 +812,8 @@ void timMonHocDiemCaoNhat(Map<String, double> bangDiem) {
 
 ### Các tính năng chính của chương trình:
 
-1. **Quản lý danh sách môn học** - Sử dụng Map<String, int>
-2. **Quản lý điểm số** - Sử dụng Map<String, double>
+1. **Quản lý danh sách môn học** - Sử dụng Map&lt;String, int&gt;
+2. **Quản lý điểm số** - Sử dụng Map&lt;String, double&gt;
 3. **Thêm/Xóa môn học** - Thao tác với Map
 4. **Sắp xếp** - Theo tên (alphabet) và theo số tín chỉ
 5. **Tìm kiếm** - Tìm môn học theo từ khóa
@@ -959,13 +959,13 @@ Map<String, Map<String, dynamic>> thuVien = {};
 
 3. **Chương trình quản lý lớp học:**
 
-   - Map lưu thông tin học sinh: tên -> {tuổi, lớp, điểm TB}
+   - Map lưu thông tin học sinh: tên ➜ thông tin cá nhân (tuổi, lớp, điểm TB)
    - List lưu danh sách môn học theo thứ tự
    - Set lưu danh sách học sinh giỏi (điểm TB >= 8.0)
    - Thống kê và báo cáo đa dạng
 
 4. **Ứng dụng từ điển đơn giản:**
-   - Map<String, String> để lưu từ vựng Anh-Việt
+   - Map&lt;String, String&gt; để lưu từ vựng Anh-Việt
    - Tìm kiếm từ (không phân biệt hoa thường)
    - Thêm từ mới vào từ điển
    - Thống kê số lượng từ theo từng chữ cái đầu

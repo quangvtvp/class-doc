@@ -24,7 +24,7 @@ Flutter là framework UI mã nguồn mở của Google giúp bạn xây dựng �
 
 ## Các bài hướng dẫn
 
-### Bài 1: [Xây dựng ứng dụng Calculator đơn giản](calculator-tutorial)
+### Bài 1: [Xây dựng ứng dụng Calculator đơn giản](/tutorials/calculator-tutorial)
 
 Trong bài hướng dẫn đầu tiên, bạn sẽ học cách xây dựng một ứng dụng máy tính bỏ túi đơn giản bằng Flutter. Bài học này tập trung vào:
 
