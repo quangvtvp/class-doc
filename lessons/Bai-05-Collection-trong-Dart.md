@@ -823,11 +823,11 @@ void main() {
 
 ### Các tính năng chính của chương trình:
 
-1. **Thêm/Xóa môn học** - Thao tác với Map
-2. **Sắp xếp** - Theo tên (alphabet) và theo số tín chỉ
-3. **Tìm kiếm** - Tìm môn học theo từ khóa
-4. **Thống kê** - Tính toán các chỉ số thống kê
-5. **Tìm môn có điểm giỏi** - Tìm các môn có điểm giỏi (>= 8.0)
+1. **Thêm môn học** - Thêm môn học, điểm cho từng môn
+2. **In bảng điểm** - In ra bảng điểm
+3. **Tính điểm trung bình** - Tính điểm trung bình
+4. **Tìm môn có điểm giỏi** - Tìm các môn có điểm giỏi (>= 8.0)
+5. **Tìm kiếm** - Tìm kiếm thông tin điểm của môn học theo tên
 
 ### Phân tích Mini Project:
 
