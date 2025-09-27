@@ -1,4 +1,4 @@
-# Bài 5: Collection trong Dart - Làm việc với tập hợp dữ liệu
+# Bài 5: Collection trong Dart
 
 ## Mục tiêu bài học
 
@@ -79,7 +79,34 @@ void main() {
 }
 ```
 
-**Bài tập 1:** Tạo một List chứa tên 5 bạn trong lớp và in ra tên bạn thứ 3.
+**Bài tập 1:** Tạo một `List` chứa tên 3 món ăn yêu thích. Sau đó:
+
+1.  In ra món ăn đầu tiên.
+2.  Thêm một món ăn nữa vào cuối danh sách.
+3.  In ra tổng số món ăn.
+
+<details>
+<summary>Nhấn vào đây để xem gợi ý</summary>
+
+```dart
+void main() {
+  // Tạo list với 3 món ăn
+  List<String> monAnYeuThich = ['Phở', 'Bún Chả', 'Nem Rán'];
+  print('Danh sách ban đầu: $monAnYeuThich');
+
+  // 1. In ra món ăn đầu tiên
+  print('Món ăn đầu tiên: ${monAnYeuThich[0]}');
+
+  // 2. Thêm một món ăn nữa
+  monAnYeuThich.add('Bánh Mì');
+  print('Danh sách sau khi thêm: $monAnYeuThich');
+
+  // 3. In ra tổng số món ăn
+  print('Tổng số món ăn yêu thích: ${monAnYeuThich.length}');
+}
+```
+
+</details>
 
 ### 2.4. Thao tác với List
 
@@ -139,7 +166,41 @@ void main() {
 }
 ```
 
-**Bài tập 2:** Tạo một List điểm số, thêm 3 điểm mới, xóa điểm thấp nhất và sửa điểm cao nhất thành 10.
+**Bài tập 2:** Tạo một `Map` để lưu thông tin của em, bao gồm: `ten`, `lop`, `truong`. Sau đó:
+
+1.  In ra tên lớp của em.
+2.  Thêm một thông tin mới: `soThich` với giá trị là sở thích của em.
+3.  In ra toàn bộ thông tin.
+
+<!-- <details>
+<summary>Nhấn vào đây để xem gợi ý</summary>
+
+```dart
+void main() {
+  // Tạo map chứa thông tin cá nhân
+  Map<String, String> thongTinCaNhan = {
+    'ten': 'Nguyễn Văn An',
+    'lop': '10A1',
+    'truong': 'THPT ABC',
+  };
+  print('Thông tin ban đầu: $thongTinCaNhan');
+
+  // 1. In ra tên lớp
+  print('Lớp: ${thongTinCaNhan['lop']}');
+
+  // 2. Thêm sở thích
+  thongTinCaNhan['soThich'] = 'Đá bóng';
+  print('Thông tin sau khi thêm sở thích: $thongTinCaNhan');
+
+  // 3. In ra toàn bộ thông tin
+  print('\n--- Thông tin chi tiết ---');
+  thongTinCaNhan.forEach((key, value) {
+    print('$key: $value');
+  });
+}
+```
+
+</details> -->
 
 ### 2.5. Duyệt List
 
@@ -180,6 +241,28 @@ void main() {
 }
 ```
 
+#### d) Lọc phần tử với `where` (quan trọng)
+
+`where` là một phương thức rất hữu ích để lọc ra các phần tử thỏa mãn điều kiện:
+
+```dart
+void main() {
+  List<int> diem = [8, 6, 9, 7, 10, 5];
+
+  // Lọc ra các điểm >= 8 (điểm giỏi)
+  List<int> diemGioi = diem.where((d) => d >= 8).toList();
+  print('Điểm giỏi (>= 8): $diemGioi');
+
+  // Lọc ra các điểm chẵn
+  List<int> diemChan = diem.where((d) => d % 2 == 0).toList();
+  print('Điểm chẵn: $diemChan');
+
+  // Đếm số điểm >= 8
+  int soDiemGioi = diem.where((d) => d >= 8).length;
+  print('Có $soDiemGioi điểm đạt loại giỏi');
+}
+```
+
 ### 2.6. Tìm kiếm trong List
 
 ```dart
@@ -217,7 +300,73 @@ void main() {
 }
 ```
 
-**Bài tập 3:** Viết chương trình tìm kiếm tên học sinh trong danh sách và hiển thị vị trí tìm thấy.
+**Bài tập 3:** Tạo danh sách tên học sinh trong lớp, sử dụng `where` để lọc ra những tên có độ dài >= 10 ký tự.
+
+<!-- <details>
+<summary>Nhấn vào đây để xem gợi ý</summary>
+
+```dart
+void main() {
+  List<String> danhSachLop = [
+    'An', 'Nguyễn Thị Bình', 'Trần Văn Cường', 'Lê Hoa',
+    'Phạm Thị Mai Linh', 'Vũ Đức Minh', 'Đỗ Thị Thanh Hương'
+  ];
+
+  print('Danh sách lớp: $danhSachLop');
+
+  // Lọc ra những tên có độ dài >= 10 ký tự
+  List<String> tenDai = danhSachLop.where((ten) => ten.length >= 10).toList();
+  print('Tên dài (>= 10 ký tự): $tenDai');
+
+  // Lọc ra những tên chứa từ "Thị"
+  List<String> tenCoThi = danhSachLop.where((ten) => ten.contains('Thị')).toList();
+  print('Tên có chứa "Thị": $tenCoThi');
+
+  print('Có ${tenDai.length} bạn có tên dài >= 10 ký tự');
+}
+```
+
+</details> -->
+
+### 2.7. Các phương thức hữu ích khác của List (tham khảo)
+
+```dart
+void main() {
+  List<int> diem = [8, 6, 9, 7, 10, 5];
+
+  // Độ dài
+  print('Số lượng điểm: ${diem.length}');
+
+  // Kiểm tra rỗng
+  print('Danh sách có rỗng không: ${diem.isEmpty}');
+  print('Danh sách có phần tử không: ${diem.isNotEmpty}');
+
+  // Chuyển thành chuỗi
+  print('Điểm dưới dạng chuỗi: ${diem.join(', ')}');
+
+  // Đảo ngược
+  List<int> diemDaoNguoc = diem.reversed.toList();
+  print('Điểm đảo ngược: $diemDaoNguoc');
+}
+```
+
+```dart
+void main() {
+  List<int> diem = [8, 6, 9, 7, 10, 5];
+
+  // Sắp xếp
+  diem.sort();
+  print('Điểm sau khi sắp xếp: $diem');
+
+  // Sắp xếp giảm dần
+  diem.sort((a, b) => b.compareTo(a));
+  print('Điểm sắp xếp giảm dần: $diem');
+
+  // Biến đổi phần tử với map
+  List<String> diemChuoi = diem.map((d) => 'Điểm: $d').toList();
+  print('Điểm dạng chuỗi: $diemChuoi');
+}
+```
 
 ---
 
@@ -307,7 +456,54 @@ void main() {
 }
 ```
 
-**Bài tập 4:** Tạo hai Set chứa sở thích của hai bạn, tìm sở thích chung và sở thích riêng của mỗi bạn.
+**Bài tập 4:** Tạo hai `Set` chứa sở thích của hai bạn, tìm sở thích chung.
+
+<!-- <details>
+<summary>Nhấn vào đây để xem gợi ý</summary>
+
+```dart
+void main() {
+  Set<String> soThichAn = {'đá bóng', 'đọc sách', 'nghe nhạc', 'du lịch'};
+  Set<String> soThichBinh = {'đá bóng', 'chơi game', 'nghe nhạc', 'xem phim'};
+
+  print('Sở thích An: $soThichAn');
+  print('Sở thích Bình: $soThichBinh');
+
+  // Tìm sở thích chung
+  Set<String> soThichChung = soThichAn.intersection(soThichBinh);
+  print('Sở thích chung: $soThichChung');
+
+  // Sở thích riêng của An
+  Set<String> soThichRiengAn = soThichAn.difference(soThichBinh);
+  print('Sở thích riêng của An: $soThichRiengAn');
+}
+```
+
+</details> -->
+
+### 3.6. Các phương thức hữu ích khác của Set (tham khảo)
+
+```dart
+void main() {
+  Set<String> monHoc = {'Toán', 'Lý', 'Hóa', 'Sinh'};
+
+  // Số lượng phần tử
+  print('Số môn học: ${monHoc.length}');
+
+  // Kiểm tra rỗng
+  print('Set có rỗng không: ${monHoc.isEmpty}');
+  print('Set có phần tử không: ${monHoc.isNotEmpty}');
+
+  // Chuyển thành List để sắp xếp
+  List<String> danhSachSapXep = monHoc.toList();
+  danhSachSapXep.sort();
+  print('Môn học theo alphabet: $danhSachSapXep');
+
+  // Tạo Set mới từ List đã sắp xếp
+  Set<String> monHocSapXep = danhSachSapXep.toSet();
+  print('Set đã sắp xếp: $monHocSapXep');
+}
+```
 
 ---
 
@@ -497,7 +693,10 @@ void main() {
 }
 ```
 
-### 4.6. Ví dụ thực tế: Đếm từ trong câu
+**Bài tập 5:** Bài tập đếm số lần xuất hiện của từng từ trong một câu.
+
+<!-- <details>
+<summary>Nhấn vào đây để xem gợi ý</summary>
 
 ```dart
 void main() {
@@ -526,289 +725,35 @@ void main() {
 }
 ```
 
-**Bài tập 5:** Tạo Map lưu thông tin cá nhân (tên, tuổi, lớp, sở thích) và viết chương trình hiển thị thông tin.
-
-**Bài tập 6:** Viết chương trình đếm số lần xuất hiện của mỗi ký tự trong một chuỗi.
+</details> -->
 
 ---
 
-## 5. Các phương thức hữu ích của List và Set
+## 4. So sánh List, Set và Map
 
-### 5.1. Phương thức chung
+<!-- ![So sánh List và Map](images/list-vs-map.png)
+*Hình 4: Bảng so sánh trực quan giữa List, Set và Map* -->
 
-```dart
-void main() {
-  List<int> diem = [8, 6, 9, 7, 10, 5];
-
-  // Độ dài
-  print('Số lượng điểm: ${diem.length}');
-
-  // Kiểm tra rỗng
-  print('Danh sách có rỗng không: ${diem.isEmpty}');
-  print('Danh sách có phần tử không: ${diem.isNotEmpty}');
-
-  // Chuyển thành chuỗi
-  print('Điểm dưới dạng chuỗi: ${diem.join(', ')}');
-
-  // Đảo ngược
-  List<int> diemDaoNguoc = diem.reversed.toList();
-  print('Điểm đảo ngược: $diemDaoNguoc');
-}
-```
-
-### 5.2. Phương thức đặc biệt của List
-
-```dart
-void main() {
-  List<int> diem = [8, 6, 9, 7, 10, 5];
-
-  // Sắp xếp
-  diem.sort();
-  print('Điểm sau khi sắp xếp: $diem');
-
-  // Sắp xếp giảm dần
-  diem.sort((a, b) => b.compareTo(a));
-  print('Điểm sắp xếp giảm dần: $diem');
-
-  // Lọc phần tử
-  List<int> diemCao = diem.where((d) => d >= 8).toList();
-  print('Điểm cao (>= 8): $diemCao');
-
-  // Biến đổi phần tử
-  List<String> diemChuoi = diem.map((d) => 'Điểm: $d').toList();
-  print('Điểm dạng chuỗi: $diemChuoi');
-}
-```
-
-**Bài tập 7:** Tạo danh sách điểm số, sắp xếp từ cao đến thấp và lọc ra những điểm >= 8.
+| Đặc điểm            | `List`                                      | `Set`                                   | `Map`                                              |
+| :------------------ | :------------------------------------------ | :-------------------------------------- | :------------------------------------------------- |
+| **Cấu trúc**        | Danh sách có thứ tự                         | Tập hợp không thứ tự                    | Cặp `key: value`                                   |
+| **Truy cập**        | Bằng số thứ tự (`index`)                    | Không có index                          | Bằng `key`                                         |
+| **Trùng lặp**       | Cho phép trùng lặp                          | Không cho phép trùng lặp                | Key không trùng, Value có thể trùng                |
+| **Khi nào dùng?**   | Khi cần danh sách có thứ tự, cho phép trùng | Khi cần đảm bảo phần tử duy nhất        | Khi cần tra cứu thông tin nhanh bằng một định danh |
+| **Ví dụ**           | Danh sách lớp, danh sách điểm kiểm tra      | Danh sách môn học duy nhất, từ khóa tag | Danh bạ điện thoại, bảng điểm, thông tin cá nhân   |
+| **Tốc độ tìm kiếm** | Chậm (O(n))                                 | Nhanh (O(1))                            | Nhanh (O(1))                                       |
 
 ---
 
-## 6. Mini Project: Chương trình Quản lý Môn học (Không dùng Class)
+## 5. Mini Project: Chương trình Quản lý Môn học
 
-Bây giờ chúng ta sẽ áp dụng kiến thức đã học để tạo một chương trình quản lý môn học đơn giản sử dụng các Collection.
+**Mô tả:** Chúng ta sẽ xây dựng một chương trình đơn giản để quản lý điểm các môn học. Chương trình sẽ nhập dữ liệu từ bàn phím và thực hiện các thao tác cơ bản.
 
-```dart
-void main() {
-  // Sử dụng Map để lưu thông tin môn học: tên môn -> số tín chỉ
-  Map<String, int> danhSachMonHoc = {};
+**Mục tiêu:**
 
-  // Sử dụng Map để lưu điểm số: tên môn -> điểm
-  Map<String, double> bangDiem = {};
-
-  print('=== CHƯƠNG TRÌNH QUẢN LÝ MÔN HỌC ===\n');
-
-  // Demo thêm môn học
-  themMonHoc(danhSachMonHoc, 'Lập trình cơ bản', 3);
-  themMonHoc(danhSachMonHoc, 'Toán cao cấp', 4);
-  themMonHoc(danhSachMonHoc, 'Tiếng Anh', 2);
-  themMonHoc(danhSachMonHoc, 'Vật lý đại cương', 3);
-
-  // Hiển thị danh sách môn học
-  hienThiDanhSachMonHoc(danhSachMonHoc);
-
-  // Thêm điểm cho các môn học
-  capNhatDiem(bangDiem, 'Lập trình cơ bản', 8.5);
-  capNhatDiem(bangDiem, 'Toán cao cấp', 7.5);
-  capNhatDiem(bangDiem, 'Tiếng Anh', 9.0);
-  capNhatDiem(bangDiem, 'Vật lý đại cương', 8.0);
-
-  // Hiển thị bảng điểm
-  hienThiBangDiem(bangDiem);
-
-  // Sắp xếp môn học theo tên
-  sapXepMonHocTheoTen(danhSachMonHoc);
-
-  // Sắp xếp môn học theo số tín chỉ
-  sapXepMonHocTheoTinChi(danhSachMonHoc);
-
-  // Tìm kiếm môn học
-  timKiemMonHoc(danhSachMonHoc, 'toán');
-
-  // Thống kê
-  thongKe(danhSachMonHoc, bangDiem);
-
-  // Xóa môn học
-  xoaMonHoc(danhSachMonHoc, bangDiem, 'Vật lý đại cương');
-
-  // Hiển thị kết quả cuối
-  hienThiDanhSachMonHoc(danhSachMonHoc);
-  thongKe(danhSachMonHoc, bangDiem);
-}
-
-// Hàm thêm môn học
-void themMonHoc(Map<String, int> danhSach, String tenMon, int soTinChi) {
-  danhSach[tenMon] = soTinChi;
-  print('✅ Đã thêm môn học: $tenMon ($soTinChi tín chỉ)');
-}
-
-// Hàm xóa môn học
-void xoaMonHoc(Map<String, int> danhSach, Map<String, double> bangDiem, String tenMon) {
-  if (danhSach.containsKey(tenMon)) {
-    danhSach.remove(tenMon);
-    bangDiem.remove(tenMon); // Xóa luôn điểm số
-    print('🗑️ Đã xóa môn học: $tenMon');
-  } else {
-    print('❌ Không tìm thấy môn học: $tenMon');
-  }
-}
-
-// Hàm cập nhật điểm
-void capNhatDiem(Map<String, double> bangDiem, String tenMon, double diem) {
-  bangDiem[tenMon] = diem;
-  print('📝 Đã cập nhật điểm $tenMon: $diem');
-}
-
-// Hàm hiển thị danh sách môn học
-void hienThiDanhSachMonHoc(Map<String, int> danhSach) {
-  if (danhSach.isEmpty) {
-    print('📋 Danh sách môn học trống!');
-    return;
-  }
-
-  print('\n📚 === DANH SÁCH MÔN HỌC ===');
-  int stt = 1;
-  danhSach.forEach((tenMon, soTinChi) {
-    print('$stt. $tenMon ($soTinChi tín chỉ)');
-    stt++;
-  });
-}
-
-// Hàm hiển thị bảng điểm
-void hienThiBangDiem(Map<String, double> bangDiem) {
-  if (bangDiem.isEmpty) {
-    print('📊 Bảng điểm trống!');
-    return;
-  }
-
-  print('\n🎯 === BẢNG ĐIỂM ===');
-  bangDiem.forEach((tenMon, diem) {
-    String xepLoai = layXepLoai(diem);
-    print('• $tenMon: $diem điểm ($xepLoai)');
-  });
-}
-
-// Hàm lấy xếp loại theo điểm
-String layXepLoai(double diem) {
-  if (diem >= 9.0) return 'Xuất sắc';
-  if (diem >= 8.0) return 'Giỏi';
-  if (diem >= 7.0) return 'Khá';
-  if (diem >= 5.0) return 'Trung bình';
-  return 'Yếu';
-}
-
-// Hàm sắp xếp môn học theo tên
-void sapXepMonHocTheoTen(Map<String, int> danhSach) {
-  // Chuyển thành List để sắp xếp
-  List<String> danhSachTen = danhSach.keys.toList();
-  danhSachTen.sort(); // Sắp xếp alphabet
-
-  print('\n🔤 === MÔN HỌC THEO THỨ TỰ ALPHABET ===');
-  for (String tenMon in danhSachTen) {
-    print('• $tenMon (${danhSach[tenMon]} tín chỉ)');
-  }
-}
-
-// Hàm sắp xếp môn học theo số tín chỉ
-void sapXepMonHocTheoTinChi(Map<String, int> danhSach) {
-  // Chuyển thành List các MapEntry để sắp xếp
-  List<MapEntry<String, int>> danhSachSapXep = danhSach.entries.toList();
-
-  // Sắp xếp theo số tín chỉ
-  danhSachSapXep.sort((a, b) => a.value.compareTo(b.value));
-
-  print('\n🔢 === MÔN HỌC THEO SỐ TÍN CHỈ (TĂNG DẦN) ===');
-  for (MapEntry<String, int> entry in danhSachSapXep) {
-    print('• ${entry.key} (${entry.value} tín chỉ)');
-  }
-}
-
-// Hàm tìm kiếm môn học
-void timKiemMonHoc(Map<String, int> danhSach, String tuKhoa) {
-  List<String> ketQua = [];
-
-  // Tìm kiếm không phân biệt hoa thường
-  danhSach.keys.forEach((tenMon) {
-    if (tenMon.toLowerCase().contains(tuKhoa.toLowerCase())) {
-      ketQua.add(tenMon);
-    }
-  });
-
-  print('\n🔍 === KẾT QUẢ TÌM KIẾM "$tuKhoa" ===');
-  if (ketQua.isEmpty) {
-    print('❌ Không tìm thấy môn học nào chứa từ khóa "$tuKhoa"');
-  } else {
-    for (String tenMon in ketQua) {
-      print('• $tenMon (${danhSach[tenMon]} tín chỉ)');
-    }
-  }
-}
-
-// Hàm thống kê
-void thongKe(Map<String, int> danhSach, Map<String, double> bangDiem) {
-  if (danhSach.isEmpty) {
-    print('📈 Chưa có dữ liệu để thống kê!');
-    return;
-  }
-
-  // Thống kê môn học
-  int tongSoMon = danhSach.length;
-  int tongTinChi = 0;
-  for (int tinChi in danhSach.values) {
-    tongTinChi += tinChi;
-  }
-  double trungBinhTinChi = tongTinChi / tongSoMon;
-
-  // Thống kê điểm số
-  double tongDiem = 0;
-  int soMonCoDiem = bangDiem.length;
-  double diemTrungBinh = 0;
-
-  if (soMonCoDiem > 0) {
-    for (double diem in bangDiem.values) {
-      tongDiem += diem;
-    }
-    diemTrungBinh = tongDiem / soMonCoDiem;
-  }
-
-  print('\n📈 === THỐNG KÊ ===');
-  print('📚 Tổng số môn học: $tongSoMon');
-  print('🎯 Tổng số tín chỉ: $tongTinChi');
-  print('📊 Trung bình tín chỉ/môn: ${trungBinhTinChi.toStringAsFixed(1)}');
-
-  if (soMonCoDiem > 0) {
-    print('📝 Số môn có điểm: $soMonCoDiem');
-    print('🏆 Điểm trung bình: ${diemTrungBinh.toStringAsFixed(2)}');
-
-    // Tìm điểm cao nhất và thấp nhất
-    double diemCaoNhat = bangDiem.values.reduce((a, b) => a > b ? a : b);
-    double diemThapNhat = bangDiem.values.reduce((a, b) => a < b ? a : b);
-
-    print('⭐ Điểm cao nhất: $diemCaoNhat');
-    print('📉 Điểm thấp nhất: $diemThapNhat');
-  }
-}
-
-// Hàm tìm môn học có điểm cao nhất
-void timMonHocDiemCaoNhat(Map<String, double> bangDiem) {
-  if (bangDiem.isEmpty) {
-    print('Chưa có điểm nào!');
-    return;
-  }
-
-  String monDiemCaoNhat = '';
-  double diemCaoNhat = 0;
-
-  bangDiem.forEach((tenMon, diem) {
-    if (diem > diemCaoNhat) {
-      diemCaoNhat = diem;
-      monDiemCaoNhat = tenMon;
-    }
-  });
-
-  print('🏆 Môn học có điểm cao nhất: $monDiemCaoNhat ($diemCaoNhat điểm)');
-}
-```
+- Áp dụng `Map` để lưu trữ điểm số theo môn học.
+- Áp dụng `List` để lưu trữ danh sách kết quả.
+- Thực hành nhập dữ liệu từ console.
 
 ### Các tính năng chính của chương trình:
 
@@ -820,156 +765,157 @@ void timMonHocDiemCaoNhat(Map<String, double> bangDiem) {
 6. **Thống kê** - Tính toán các chỉ số thống kê
 7. **Xếp loại điểm** - Phân loại theo thang điểm
 
+### Phân tích Mini Project:
+
+- Chúng ta dùng `Map<String, double>` để lưu điểm vì cần **tra cứu điểm theo tên môn**.
+- Chúng ta dùng `List<String>` để lưu danh sách các môn giỏi.
+- Sử dụng `stdin.readLineSync()` để nhập dữ liệu từ bàn phím.
+
+<!-- <details>
+<summary>Nhấn vào đây để xem gợi ý</summary>
+
+```dart
+import 'dart:io';
+
+void main() {
+  // Sử dụng Map để lưu điểm số
+  Map<String, double> bangDiem = {};
+
+  print('=== CHƯƠNG TRÌNH QUẢN LÝ ĐIỂM ===');
+
+  // Nhập số môn học
+  print('Nhập số môn học: ');
+  int soMon = int.parse(stdin.readLineSync()!);
+
+  // Nhập điểm cho từng môn
+  for (int i = 0; i < soMon; i++) {
+    print('Nhập tên môn học thứ ${i + 1}: ');
+    String tenMon = stdin.readLineSync()!;
+
+    print('Nhập điểm môn $tenMon: ');
+    double diem = double.parse(stdin.readLineSync()!);
+
+    // Lưu vào Map
+    bangDiem[tenMon] = diem;
+  }
+
+  // Hiển thị bảng điểm
+  print('\n=== BẢNG ĐIỂM ===');
+  bangDiem.forEach((mon, diem) {
+    print('$mon: $diem điểm');
+  });
+
+  // Tính điểm trung bình
+  double tongDiem = 0;
+  for (double diem in bangDiem.values) {
+    tongDiem += diem;
+  }
+  double diemTrungBinh = tongDiem / bangDiem.length;
+  print('\nĐiểm trung bình: ${diemTrungBinh.toStringAsFixed(2)}');
+
+  // Tìm các môn giỏi (>= 8.0)
+  List<String> monGioi = [];
+  bangDiem.forEach((mon, diem) {
+    if (diem >= 8.0) {
+      monGioi.add(mon);
+    }
+  });
+
+  if (monGioi.isNotEmpty) {
+    print('Các môn đạt điểm Giỏi: $monGioi');
+  } else {
+    print('Chưa có môn nào đạt điểm Giỏi (>= 8.0)');
+  }
+
+  // Tìm kiếm môn học
+  print('\nNhập tên môn muốn tìm: ');
+  String monCanTim = stdin.readLineSync()!;
+
+  if (bangDiem.containsKey(monCanTim)) {
+    print('Điểm môn $monCanTim: ${bangDiem[monCanTim]}');
+  } else {
+    print('Không tìm thấy môn $monCanTim');
+  }
+}
+```
+</details> -->
+
+---
+
+### 6. Bài tập về nhà
+
+**Bài tập 1: Quản lý chi tiêu**
+- Tạo một `Map<String, double>` để lưu các khoản chi tiêu trong ngày.
+- Tính tổng số tiền đã chi.
+- In ra khoản chi nhiều nhất.
+
+<!-- <details>
+<summary>Nhấn vào đây để xem gợi ý</summary>
+
+```dart
+void main() {
+  Map<String, double> chiTieu = {
+    'ăn sáng': 25000,
+    'gửi xe': 5000,
+    'mua sách': 150000,
+    'ăn trưa': 35000,
+  };
+
+  // Tính tổng chi tiêu
+  double tong = 0;
+  for (double tien in chiTieu.values) {
+    tong += tien;
+  }
+  print('Tổng chi tiêu: $tong');
+
+  // Tìm khoản chi nhiều nhất
+  String khoanLonNhat = '';
+  double tienLonNhat = 0;
+  chiTieu.forEach((khoan, tien) {
+    if (tien > tienLonNhat) {
+      tienLonNhat = tien;
+      khoanLonNhat = khoan;
+    }
+  });
+  print('Khoản chi nhiều nhất: $khoanLonNhat ($tienLonNhat)');
+}
+```
+
+</details> -->
+
+**Bài tập 2: Danh sách yêu thích**
+- Tạo một `List<String>` chứa 5 bài hát yêu thích.
+- Sắp xếp theo thứ tự alphabet.
+- Sử dụng `where` để lọc ra các bài hát có tên dài >= 10 ký tự.
+
+<!-- <details>
+<summary>Nhấn vào đây để xem gợi ý</summary>
+
+```dart
+void main() {
+  List<String> baiHatYeuThich = [
+    'Để Mị nói cho mà nghe',
+    'Anh trai say hi',
+    'Bước qua mùa cô đơn',
+    'Chúng ta của hiện tại',
+    'Em là của anh'
+  ];
+
+  print('Danh sách ban đầu: $baiHatYeuThich');
+
+  // Sắp xếp theo alphabet
+  baiHatYeuThich.sort();
+  print('Sau khi sắp xếp: $baiHatYeuThich');
+
+  // Lọc bài hát có tên dài >= 10 ký tự
+  List<String> baiHatDai = baiHatYeuThich.where((bai) => bai.length >= 10).toList();
+  print('Bài hát có tên dài: $baiHatDai');
+}
+```
+
+</details> -->
+
+---
+
+_Chúc các em học tốt! `List` và `Map` là hai công cụ quan trọng nhất trong lập trình. Hãy thực hành nhiều để nắm vững nhé! 💪_
 ````
-
----
-
-## 7. Bài tập thực hành
-
-### Bài tập 8: Quản lý điểm số
-Viết chương trình quản lý điểm số của một học sinh sử dụng Map:
-```dart
-Map<String, double> diemHocSinh = {};
-````
-
-- Thêm điểm các môn học
-- Tính điểm trung bình
-- Tìm môn có điểm cao nhất và thấp nhất
-- Hiển thị các môn có điểm >= 8.0
-
-### Bài tập 9: Danh sách bạn bè
-
-Tạo chương trình quản lý danh sách bạn bè:
-
-```dart
-Set<String> danhSachBanBe = {};
-Map<String, List<String>> soThichBanBe = {};
-```
-
-- Sử dụng Set để tránh trùng tên bạn bè
-- Sử dụng Map để lưu sở thích của mỗi bạn
-- Thêm/xóa bạn bè và sở thích
-- Tìm bạn bè có sở thích chung
-
-### Bài tập 10: Thống kê từ vựng
-
-Viết chương trình phân tích một đoạn văn:
-
-```dart
-String doanhVan = "dart là ngôn ngữ lập trình hiện đại...";
-```
-
-- Đếm số lần xuất hiện của mỗi từ
-- Tìm từ xuất hiện nhiều nhất
-- Hiển thị các từ có độ dài >= 5 ký tự
-- Sắp xếp từ theo thứ tự alphabet
-
-### Bài tập 11: Quản lý thư viện
-
-Tạo chương trình quản lý thư viện sách đơn giản:
-
-```dart
-Map<String, Map<String, dynamic>> thuVien = {};
-// Mỗi sách có: tên, tác giả, năm xuất bản, đã mượn chưa
-```
-
-- Thêm sách mới
-- Mượn/trả sách
-- Tìm sách theo tên hoặc tác giả
-- Thống kê số sách đã mượn và còn lại
-
----
-
-## 8. Tóm tắt kiến thức
-
-### So sánh List, Set và Map
-
-| Đặc điểm        | List                       | Set                        | Map                                 |
-| --------------- | -------------------------- | -------------------------- | ----------------------------------- |
-| **Cấu trúc**    | Danh sách có thứ tự        | Tập hợp không thứ tự       | Cặp key-value                       |
-| **Trùng lặp**   | Cho phép                   | Không cho phép             | Key không trùng, Value có thể trùng |
-| **Truy cập**    | Theo index [0,1,2...]      | Không có index             | Theo key                            |
-| **Sử dụng khi** | Cần thứ tự và trùng lặp    | Cần duy nhất, không thứ tự | Cần tra cứu theo key                |
-| **Ví dụ**       | Danh sách điểm theo thứ tự | Danh sách môn học duy nhất | Tra cứu điểm theo môn               |
-
-### Các phương thức quan trọng cần nhớ
-
-**List:**
-
-- `add()`, `addAll()`, `insert()` - Thêm phần tử
-- `remove()`, `removeAt()`, `removeLast()` - Xóa phần tử
-- `indexOf()`, `contains()` - Tìm kiếm
-- `sort()`, `reversed` - Sắp xếp
-- `where()`, `map()` - Lọc và biến đổi
-
-**Set:**
-
-- `add()`, `addAll()` - Thêm phần tử
-- `remove()`, `clear()` - Xóa phần tử
-- `contains()`, `containsAll()` - Kiểm tra tồn tại
-- `union()`, `intersection()`, `difference()` - Phép toán tập hợp
-- `toList()` - Chuyển sang List
-
-**Map:**
-
-- `map[key] = value` - Thêm/sửa phần tử
-- `remove(key)`, `clear()` - Xóa phần tử
-- `containsKey()`, `containsValue()` - Kiểm tra tồn tại
-- `keys`, `values`, `entries` - Lấy keys, values, entries
-- `forEach()` - Duyệt Map
-
-### Khi nào sử dụng Collection nào?
-
-1. **Sử dụng List khi:**
-
-   - Cần lưu trữ dữ liệu có thứ tự
-   - Cho phép dữ liệu trùng lặp
-   - Cần truy cập theo vị trí (index)
-   - Ví dụ: danh sách điểm kiểm tra, lịch sử hoạt động
-
-2. **Sử dụng Set khi:**
-
-   - Cần đảm bảo dữ liệu duy nhất (không trùng)
-   - Thực hiện phép toán tập hợp
-   - Kiểm tra tồn tại nhanh
-   - Ví dụ: danh sách sinh viên, từ khóa tag
-
-3. **Sử dụng Map khi:**
-   - Cần tra cứu dữ liệu theo key
-   - Lưu trữ cặp dữ liệu có liên quan
-   - Cần truy cập nhanh theo key
-   - Ví dụ: tra điểm theo môn, thông tin cá nhân
-
----
-
-## 9. Bài tập về nhà
-
-1. **Mở rộng Chương trình Quản lý Môn học:**
-
-   - Thêm tính năng phân loại môn học (bắt buộc/tự chọn) bằng Map
-   - Tính tổng tín chỉ theo từng loại
-   - Thêm chức năng lưu lịch sử thay đổi
-
-2. **Tạo Game đoán số nâng cao:**
-
-   - Sử dụng List để lưu lịch sử các lần đoán
-   - Sử dụng Set để lưu các số đã đoán (tránh trùng)
-   - Sử dụng Map để thống kê số lần đoán theo từng số
-   - Hiển thị thống kê chi tiết
-
-3. **Chương trình quản lý lớp học:**
-
-   - Map lưu thông tin học sinh: tên ➜ thông tin cá nhân (tuổi, lớp, điểm TB)
-   - List lưu danh sách môn học theo thứ tự
-   - Set lưu danh sách học sinh giỏi (điểm TB >= 8.0)
-   - Thống kê và báo cáo đa dạng
-
-4. **Ứng dụng từ điển đơn giản:**
-   - Map&lt;String, String&gt; để lưu từ vựng Anh-Việt
-   - Tìm kiếm từ (không phân biệt hoa thường)
-   - Thêm từ mới vào từ điển
-   - Thống kê số lượng từ theo từng chữ cái đầu
-
----
-
-_Chúc các em học tốt! Hãy thực hành nhiều để nắm vững kiến thức về Collection trong Dart. Collection là nền tảng quan trọng để xây dựng các ứng dụng phức tạp hơn._
