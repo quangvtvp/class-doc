@@ -166,42 +166,6 @@ void main() {
 }
 ```
 
-**Bài tập 2:** Tạo một `Map` để lưu thông tin của em, bao gồm: `ten`, `lop`, `truong`. Sau đó:
-
-1.  In ra tên lớp của em.
-2.  Thêm một thông tin mới: `soThich` với giá trị là sở thích của em.
-3.  In ra toàn bộ thông tin.
-
-<!-- <details>
-<summary>Nhấn vào đây để xem gợi ý</summary>
-
-```dart
-void main() {
-  // Tạo map chứa thông tin cá nhân
-  Map<String, String> thongTinCaNhan = {
-    'ten': 'Nguyễn Văn An',
-    'lop': '10A1',
-    'truong': 'THPT ABC',
-  };
-  print('Thông tin ban đầu: $thongTinCaNhan');
-
-  // 1. In ra tên lớp
-  print('Lớp: ${thongTinCaNhan['lop']}');
-
-  // 2. Thêm sở thích
-  thongTinCaNhan['soThich'] = 'Đá bóng';
-  print('Thông tin sau khi thêm sở thích: $thongTinCaNhan');
-
-  // 3. In ra toàn bộ thông tin
-  print('\n--- Thông tin chi tiết ---');
-  thongTinCaNhan.forEach((key, value) {
-    print('$key: $value');
-  });
-}
-```
-
-</details> -->
-
 ### 2.5. Duyệt List
 
 #### a) Sử dụng vòng lặp for thông thường
@@ -240,6 +204,49 @@ void main() {
   monHoc.forEach((mon) => print('* $mon'));
 }
 ```
+
+**Bài tập 2:** Tạo một `List<int>` chứa điểm số của 5 bài kiểm tra. Sau đó:
+
+1.  In ra điểm cao nhất và thấp nhất.
+2.  Thêm điểm của bài kiểm tra thứ 6.
+3.  Tính điểm trung bình của tất cả các bài kiểm tra.
+
+<details>
+<summary>Nhấn vào đây để xem gợi ý</summary>
+
+```dart
+void main() {
+  // Tạo list chứa điểm 5 bài kiểm tra
+  List<int> diemKiemTra = [8, 7, 9, 6, 8];
+  print('Điểm các bài kiểm tra: $diemKiemTra');
+
+  // 1. Tìm điểm cao nhất và thấp nhất
+  int diemCaoNhat = diemKiemTra[0];
+  int diemThapNhat = diemKiemTra[0];
+
+  for (int diem in diemKiemTra) {
+    if (diem > diemCaoNhat) diemCaoNhat = diem;
+    if (diem < diemThapNhat) diemThapNhat = diem;
+  }
+
+  print('Điểm cao nhất: $diemCaoNhat');
+  print('Điểm thấp nhất: $diemThapNhat');
+
+  // 2. Thêm điểm bài kiểm tra thứ 6
+  diemKiemTra.add(10);
+  print('Sau khi thêm bài thứ 6: $diemKiemTra');
+
+  // 3. Tính điểm trung bình
+  int tongDiem = 0;
+  for (int diem in diemKiemTra) {
+    tongDiem += diem;
+  }
+  double diemTrungBinh = tongDiem / diemKiemTra.length;
+  print('Điểm trung bình: ${diemTrungBinh.toStringAsFixed(1)}');
+}
+```
+
+</details>
 
 #### d) Lọc phần tử với `where` (quan trọng)
 
@@ -302,6 +309,27 @@ void main() {
 
 **Bài tập 3:** Tạo danh sách tên học sinh trong lớp, sử dụng `where` để lọc ra những tên có độ dài >= 10 ký tự.
 
+<details>
+<summary>Nhấn vào đây để xem gợi ý</summary>
+
+```dart
+void main() {
+  List<String> danhSachLop = [
+    'An', 'Nguyễn Thị Bình', 'Trần Văn Cường', 'Lê Hoa',
+    'Phạm Thị Mai Linh', 'Vũ Đức Minh', 'Đỗ Thị Thanh Hương'
+  ];
+
+  print('Danh sách lớp: $danhSachLop');
+
+  // Lọc ra những tên có độ dài >= 10 ký tự
+  // Sử dụng where để tìm danh sách tên dài hơn hoặc bằng 10 ký tự
+  // sử dụng contains để tìm tên có chứa từ "Thị"
+
+}
+```
+
+</details>
+
 <!-- <details>
 <summary>Nhấn vào đây để xem gợi ý</summary>
 
@@ -355,14 +383,26 @@ void main() {
   List<int> diem = [8, 6, 9, 7, 10, 5];
 
   // Sắp xếp
+  // sort() - sắp xếp List theo thứ tự tăng dần (từ nhỏ đến lớn)
+  // Không cần tham số, sử dụng thứ tự tự nhiên của kiểu dữ liệu
   diem.sort();
   print('Điểm sau khi sắp xếp: $diem');
 
   // Sắp xếp giảm dần
+  // sort() với hàm so sánh tùy chỉnh
+  // (a, b) => b.compareTo(a) - đây là cú pháp lambda (arrow function)
+  // => được gọi là "arrow operator" (toán tử mũi tên)
+  // Cú pháp: (tham số) => biểu thức trả về
+  // Lambda function là cách viết rút gọn của function, không cần từ khóa function
+  // Ở đây: nhận 2 tham số a, b và trả về kết quả của b.compareTo(a)
+  // Nếu b > a thì compareTo trả về số dương → sắp xếp giảm dần
   diem.sort((a, b) => b.compareTo(a));
   print('Điểm sắp xếp giảm dần: $diem');
 
   // Biến đổi phần tử với map
+  // map() - biến đổi từng phần tử trong List thành giá trị mới
+  // (d) => 'Điểm: $d' - hàm lambda nhận mỗi phần tử d và trả về chuỗi "Điểm: {giá trị của d}"
+  // .toList() - chuyển kết quả Iterable thành List
   List<String> diemChuoi = diem.map((d) => 'Điểm: $d').toList();
   print('Điểm dạng chuỗi: $diemChuoi');
 }
@@ -845,6 +885,7 @@ void main() {
 ### 6. Bài tập về nhà
 
 **Bài tập 1: Quản lý chi tiêu**
+
 - Tạo một `Map<String, double>` để lưu các khoản chi tiêu trong ngày.
 - Tính tổng số tiền đã chi.
 - In ra khoản chi nhiều nhất.
@@ -884,6 +925,7 @@ void main() {
 </details> -->
 
 **Bài tập 2: Danh sách yêu thích**
+
 - Tạo một `List<String>` chứa 5 bài hát yêu thích.
 - Sắp xếp theo thứ tự alphabet.
 - Sử dụng `where` để lọc ra các bài hát có tên dài >= 10 ký tự.
@@ -918,4 +960,7 @@ void main() {
 ---
 
 _Chúc các em học tốt! `List` và `Map` là hai công cụ quan trọng nhất trong lập trình. Hãy thực hành nhiều để nắm vững nhé! 💪_
-````
+
+```
+
+```
