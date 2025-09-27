@@ -14,6 +14,8 @@ const config: Config = {
           path: 'docs',
           routeBasePath: '/',
           sidebarPath: require.resolve('./sidebars.ts'),
+          sidebarCollapsible: true,
+          sidebarCollapsed: false,
         },
         blog: {
           showReadingTime: true,
@@ -39,6 +41,8 @@ const config: Config = {
         path: 'lessons',
         routeBasePath: '/lessons',
         sidebarPath: require.resolve('./sidebars-lessons.ts'),
+        sidebarCollapsible: true,
+        sidebarCollapsed: false,
       },
     ],
     [
@@ -48,6 +52,8 @@ const config: Config = {
         path: 'tutorials',
         routeBasePath: '/tutorials',
         sidebarPath: require.resolve('./sidebars-tutorials.ts'),
+        sidebarCollapsible: true,
+        sidebarCollapsed: false,
       },
     ],
   ],
@@ -81,8 +87,15 @@ const config: Config = {
   },
 
   themeConfig: {
+    docs: {
+      sidebar: {
+        hideable: true,
+        autoCollapseCategories: true,
+      },
+    },
     navbar: {
       title: '',
+      hideOnScroll: false,
       items: [
         {
           type: 'doc',

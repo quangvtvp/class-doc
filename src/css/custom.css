@@ -4,6 +4,9 @@
  * work well for content-centric websites.
  */
 
+/* Import custom components */
+@import '../components/SidebarToggle/styles.css';
+
 /* You can override the default Infima variables here. */
 :root {
   --ifm-color-primary: #2e8555;
@@ -27,4 +30,59 @@
   --ifm-color-primary-lighter: #32d8b4;
   --ifm-color-primary-lightest: #4fddbf;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+/* Custom sidebar styles */
+.theme-doc-sidebar-container {
+  transition: margin-left 0.3s ease;
+}
+
+/* Improve sidebar toggle button */
+.theme-doc-sidebar-menu button {
+  transition: all 0.2s ease;
+}
+
+.theme-doc-sidebar-menu button:hover {
+  background-color: var(--ifm-hover-overlay);
+  border-radius: 4px;
+}
+
+/* Smooth animation for sidebar hiding/showing */
+.navbar-sidebar {
+  transition: transform 0.3s ease;
+}
+
+/* Better mobile experience for sidebar toggle */
+@media (max-width: 996px) {
+  .theme-doc-sidebar-container {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+  
+  .theme-doc-sidebar-container--show {
+    transform: translateX(0);
+  }
+}
+
+/* Improve content area when sidebar is hidden */
+.main-wrapper {
+  transition: margin-left 0.3s ease;
+}
+
+/* Custom scrollbar for sidebar */
+.theme-doc-sidebar-menu::-webkit-scrollbar {
+  width: 6px;
+}
+
+.theme-doc-sidebar-menu::-webkit-scrollbar-track {
+  background: var(--ifm-scrollbar-track-color);
+}
+
+.theme-doc-sidebar-menu::-webkit-scrollbar-thumb {
+  background: var(--ifm-scrollbar-thumb-color);
+  border-radius: 3px;
+}
+
+.theme-doc-sidebar-menu::-webkit-scrollbar-thumb:hover {
+  background: var(--ifm-scrollbar-thumb-hover-color);
 }

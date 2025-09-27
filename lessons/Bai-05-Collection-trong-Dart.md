@@ -34,6 +34,9 @@ Dart có 3 loại Collection chính: **List**, **Set** và **Map**
 - Cho phép trùng lặp
 - Có thể thay đổi kích thước
 
+ ![Cấu trúc List với index](https://media.geeksforgeeks.org/wp-content/uploads/CommonArticleDesign3-min.png)
+*Hình: Cấu trúc của List với index bắt đầu từ 0*
+
 ### 2.2. Khai báo và khởi tạo List
 
 ```dart
@@ -322,27 +325,6 @@ void main() {
   print('Danh sách lớp: $danhSachLop');
 
   // Lọc ra những tên có độ dài >= 10 ký tự
-  // Sử dụng where để tìm danh sách tên dài hơn hoặc bằng 10 ký tự
-  // sử dụng contains để tìm tên có chứa từ "Thị"
-
-}
-```
-
-</details>
-
-<!-- <details>
-<summary>Nhấn vào đây để xem gợi ý</summary>
-
-```dart
-void main() {
-  List<String> danhSachLop = [
-    'An', 'Nguyễn Thị Bình', 'Trần Văn Cường', 'Lê Hoa',
-    'Phạm Thị Mai Linh', 'Vũ Đức Minh', 'Đỗ Thị Thanh Hương'
-  ];
-
-  print('Danh sách lớp: $danhSachLop');
-
-  // Lọc ra những tên có độ dài >= 10 ký tự
   List<String> tenDai = danhSachLop.where((ten) => ten.length >= 10).toList();
   print('Tên dài (>= 10 ký tự): $tenDai');
 
@@ -354,7 +336,7 @@ void main() {
 }
 ```
 
-</details> -->
+</details>
 
 ### 2.7. Các phương thức hữu ích khác của List (tham khảo)
 
@@ -407,6 +389,20 @@ void main() {
   print('Điểm dạng chuỗi: $diemChuoi');
 }
 ```
+
+### 2.8. Tóm tắt các thao tác với List
+
+| Thao tác             | Mô tả                        | Ví dụ                         |
+| :------------------- | :--------------------------- | :---------------------------- |
+| **Lấy số lượng**     | `length`                     | `monHoc.length` (kết quả: 5)  |
+| **Truy cập**         | `list[index]`                | `monHoc[0]` (kết quả: 'Toán') |
+| **Thêm vào cuối**    | `add()`                      | `monHoc.add('Sinh');`         |
+| **Sửa phần tử**      | `list[index] = newValue`     | `monHoc[1] = 'Vật Lý';`       |
+| **Xóa phần tử**      | `remove()` hoặc `removeAt()` | `monHoc.remove('Hóa');`       |
+| **Kiểm tra tồn tại** | `contains()`                 | `monHoc.contains('Toán')`     |
+| **Tìm vị trí**       | `indexOf()`                  | `monHoc.indexOf('Lý')`        |
+| **Sắp xếp**          | `sort()`                     | `monHoc.sort();`              |
+| **Lọc phần tử**      | `where()`                    | `diem.where((d) => d >= 8)`   |
 
 ---
 
@@ -498,7 +494,7 @@ void main() {
 
 **Bài tập 4:** Tạo hai `Set` chứa sở thích của hai bạn, tìm sở thích chung.
 
-<!-- <details>
+<details>
 <summary>Nhấn vào đây để xem gợi ý</summary>
 
 ```dart
@@ -519,7 +515,7 @@ void main() {
 }
 ```
 
-</details> -->
+</details>
 
 ### 3.6. Các phương thức hữu ích khác của Set (tham khảo)
 
@@ -545,6 +541,19 @@ void main() {
 }
 ```
 
+### 3.7. Tóm tắt các thao tác với Set
+
+| Thao tác         | Mô tả            | Ví dụ                            |
+| :--------------- | :--------------- | :------------------------------- |
+| **Thêm phần tử** | `add()`          | `monHoc.add('Sinh');`            |
+| **Xóa phần tử**  | `remove()`       | `monHoc.remove('Hóa');`          |
+| **Kiểm tra**     | `contains()`     | `monHoc.contains('Toán')` (true) |
+| **Lấy số lượng** | `length`         | `monHoc.length` (kết quả: 3)     |
+| **Phép hợp**     | `union()`        | `setA.union(setB)`               |
+| **Phép giao**    | `intersection()` | `setA.intersection(setB)`        |
+| **Phép hiệu**    | `difference()`   | `setA.difference(setB)`          |
+| **Chuyển List**  | `toList()`       | `monHoc.toList()`                |
+
 ---
 
 ## 4. Map - Từ điển Key-Value
@@ -555,6 +564,9 @@ void main() {
 
 - **Key** (khóa): duy nhất, dùng để tìm kiếm
 - **Value** (giá trị): có thể trùng lặp, là dữ liệu được lưu trữ
+
+![Cấu trúc List trong Dart](https://www.scaler.com/topics/images/iterate-hashmap-in-java_thumbnail.webp)
+*Hình: Cấu trúc của Map với cặp key-value*
 
 **Ví dụ thực tế:**
 
@@ -733,9 +745,23 @@ void main() {
 }
 ```
 
+### 4.6. Tóm tắt các thao tác với Map
+
+| Thao tác           | Mô tả              | Ví dụ                                  |
+| :----------------- | :----------------- | :------------------------------------- |
+| **Truy cập**       | `map[key]`         | `diemHocKy['Toán']` (kết quả: 8.5)     |
+| **Thêm/Sửa**       | `map[key] = value` | `diemHocKy['Văn'] = 8.0;`              |
+| **Xóa**            | `remove(key)`      | `diemHocKy.remove('Lý');`              |
+| **Kiểm tra Key**   | `containsKey(key)` | `diemHocKy.containsKey('Toán')` (true) |
+| **Kiểm tra Value** | `containsValue()`  | `diemHocKy.containsValue(8.5)` (true)  |
+| **Lấy số lượng**   | `length`           | `diemHocKy.length` (kết quả: 3)        |
+| **Lấy các Key**    | `keys`             | `diemHocKy.keys`                       |
+| **Lấy các Value**  | `values`           | `diemHocKy.values`                     |
+| **Duyệt Map**      | `forEach()`        | `map.forEach((k,v) => print('$k:$v'))` |
+
 **Bài tập 5:** Bài tập đếm số lần xuất hiện của từng từ trong một câu.
 
-<!-- <details>
+<details>
 <summary>Nhấn vào đây để xem gợi ý</summary>
 
 ```dart
@@ -765,11 +791,11 @@ void main() {
 }
 ```
 
-</details> -->
+</details>
 
 ---
 
-## 4. So sánh List, Set và Map
+## 5. So sánh List, Set và Map
 
 <!-- ![So sánh List và Map](images/list-vs-map.png)
 *Hình 4: Bảng so sánh trực quan giữa List, Set và Map* -->
@@ -785,7 +811,7 @@ void main() {
 
 ---
 
-## 5. Mini Project: Chương trình Quản lý Môn học
+## 6. Mini Project: Chương trình Quản lý Môn học
 
 **Mô tả:** Chúng ta sẽ xây dựng một chương trình đơn giản để quản lý điểm các môn học. Chương trình sẽ nhập dữ liệu từ bàn phím và thực hiện các thao tác cơ bản.
 
@@ -797,13 +823,11 @@ void main() {
 
 ### Các tính năng chính của chương trình:
 
-1. **Quản lý danh sách môn học** - Sử dụng Map&lt;String, int&gt;
-2. **Quản lý điểm số** - Sử dụng Map&lt;String, double&gt;
-3. **Thêm/Xóa môn học** - Thao tác với Map
-4. **Sắp xếp** - Theo tên (alphabet) và theo số tín chỉ
-5. **Tìm kiếm** - Tìm môn học theo từ khóa
-6. **Thống kê** - Tính toán các chỉ số thống kê
-7. **Xếp loại điểm** - Phân loại theo thang điểm
+1. **Thêm/Xóa môn học** - Thao tác với Map
+2. **Sắp xếp** - Theo tên (alphabet) và theo số tín chỉ
+3. **Tìm kiếm** - Tìm môn học theo từ khóa
+4. **Thống kê** - Tính toán các chỉ số thống kê
+5. **Tìm môn có điểm giỏi** - Tìm các môn có điểm giỏi (>= 8.0)
 
 ### Phân tích Mini Project:
 
@@ -811,7 +835,7 @@ void main() {
 - Chúng ta dùng `List<String>` để lưu danh sách các môn giỏi.
 - Sử dụng `stdin.readLineSync()` để nhập dữ liệu từ bàn phím.
 
-<!-- <details>
+<details>
 <summary>Nhấn vào đây để xem gợi ý</summary>
 
 ```dart
@@ -878,11 +902,11 @@ void main() {
   }
 }
 ```
-</details> -->
+</details>
 
 ---
 
-### 6. Bài tập về nhà
+### 7. Bài tập về nhà
 
 **Bài tập 1: Quản lý chi tiêu**
 

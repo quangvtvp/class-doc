@@ -1,0 +1,67 @@
+/* SidebarToggle Styles */
+.sidebar-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.2s ease;
+}
+
+.sidebar-toggle:hover {
+  background-color: var(--ifm-color-emphasis-200);
+}
+
+.sidebar-toggle:active {
+  background-color: var(--ifm-color-emphasis-300);
+}
+
+.sidebar-toggle__icon {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 18px;
+  height: 14px;
+}
+
+.sidebar-toggle__icon span {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background-color: var(--ifm-color-content);
+  border-radius: 1px;
+  transition: all 0.3s ease;
+}
+
+.sidebar-toggle--open .sidebar-toggle__icon span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.sidebar-toggle--open .sidebar-toggle__icon span:nth-child(2) {
+  opacity: 0;
+}
+
+.sidebar-toggle--open .sidebar-toggle__icon span:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -6px);
+}
+
+/* Dark theme adjustments */
+[data-theme='dark'] .sidebar-toggle:hover {
+  background-color: var(--ifm-color-emphasis-100);
+}
+
+[data-theme='dark'] .sidebar-toggle:active {
+  background-color: var(--ifm-color-emphasis-200);
+}
+
+/* Responsive adjustments */
+@media (max-width: 996px) {
+  .sidebar-toggle {
+    display: none; /* Hide on mobile as Docusaurus handles it */
+  }
+}
