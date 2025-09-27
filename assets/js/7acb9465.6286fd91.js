@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkclass_doc=self.webpackChunkclass_doc||[]).push([[8484],{9204:s=>{s.exports=JSON.parse('{"metadata":{"permalink":"/class-doc/blog","page":1,"postsPerPage":10,"totalPages":1,"totalCount":5,"blogDescription":"Blog","blogTitle":"Blog"}}')}}]);
