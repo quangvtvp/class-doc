@@ -42,6 +42,11 @@ const sidebars: SidebarsConfig = {
           id: 'Bai-06-function',
           label: 'Buổi 6: Functions (Hàm)',
         },
+        {
+          type: 'doc',
+          id: 'bai-07-object-and-class',
+          label: 'Buổi 7: Object và Class',
+        },
       ],
     },
   ],
