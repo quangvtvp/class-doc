@@ -282,124 +282,96 @@ void main() {
 
 ## 6. Từ khoá `this`
 
-### 6.1. `this` là gì?
+`this` là từ khoá chỉ **chính đối tượng đang làm việc**. Nhờ `this` chúng ta phân biệt được
+giữa thuộc tính của object và biến/tham số trùng tên ở bên ngoài.
 
-**`this`** là một từ khóa đặc biệt trong Dart (và nhiều ngôn ngữ OOP khác), dùng để **tham chiếu đến đối tượng hiện tại** – tức là object đang được thao tác trong ngữ cảnh hiện tại.
+### 6.1. `this` trong constructor
 
-### 6.2. Tại sao cần `this`?
+Khi tham số của constructor có cùng tên với thuộc tính, `this` giúp gán đúng giá trị.
 
-Khi tên tham số của constructor hoặc phương thức **trùng với tên thuộc tính** của class, ta cần `this` để phân biệt:
-- `this.name` → thuộc tính của object
-- `name` (không có `this`) → tham số của hàm
-
-**Ví dụ không dùng `this` (sai):**
-```dart
-class Student {
-  String name;
-  int age;
-
-  Student(String name, int age) {
-    // ❌ Lỗi: name = name; (gán tham số cho chính nó, không gán vào thuộc tính)
-    name = name;
-    age = age;
-  }
-}
-```
-Dart sẽ không hiểu bạn muốn gán vào thuộc tính `name` của object, mà chỉ gán tham số `name` cho chính nó → **thuộc tính không được khởi tạo**.
-
-**Ví dụ dùng `this` (đúng):**
-```dart
-class Student {
-  String name;
-  int age;
-
-  Student(String name, int age) {
-    // ✅ Đúng: this.name là thuộc tính, name là tham số
-    this.name = name;
-    this.age = age;
-  }
-}
-```
-
-### 6.3. Cách viết gọn với `this` trong Constructor
-
-Dart hỗ trợ cú pháp **shorthand** rất tiện lợi: đặt `this.` ngay trong danh sách tham số.
-
-**Cú pháp:**
-```dart
-ClassName(this.property1, this.property2, ...);
-```
-
-**Ví dụ:**
 ```dart
 class Student {
   String name;
   int age;
   double grade;
 
-  // Constructor ngắn gọn
-  Student(this.name, this.age, this.grade);
-}
-```
-Cách viết này tương đương với:
-```dart
-Student(String name, int age, double grade) {
-  this.name = name;
-  this.age = age;
-  this.grade = grade;
-}
-```
-
-### 6.4. Sử dụng `this` trong phương thức
-
-Bên trong phương thức, ta có thể dùng `this` để truy cập thuộc tính hoặc gọi phương thức khác của chính object đó.
-
-**Ví dụ:**
-```dart
-class Student {
-  String name;
-  int age;
-  double grade;
-
-  Student(this.name, this.age, this.grade);
-
-  void showInfo() {
-    // Có thể dùng this.name hoặc chỉ name (nếu không trùng tên biến local)
-    print('Tên: ${this.name}, Tuổi: ${this.age}, Điểm: ${this.grade}');
-  }
-
-  void celebrate() {
-    if (this.grade >= 8.0) {
-      print('${this.name} được khen thưởng!');
-      // Gọi phương thức khác của chính object này
-      this.showInfo();
-    }
-  }
+  Student(String name, int age, double grade)
+      : this.name = name,
+        this.age = age,
+        this.grade = grade;
 }
 
 void main() {
   var s1 = Student('An', 16, 8.5);
-  s1.celebrate();
-  // Output:
-  // An được khen thưởng!
-  // Tên: An, Tuổi: 16, Điểm: 8.5
+  print(s1.name); // An
 }
 ```
 
-**Lưu ý:**
-- Trong hầu hết trường hợp, nếu không có xung đột tên, bạn có thể **bỏ `this`** và Dart vẫn hiểu đúng.
-- Tuy nhiên, dùng `this` giúp code **rõ ràng hơn**, đặc biệt khi làm việc với nhiều biến local.
+Trong ví dụ ở phần 3, ta dùng cú pháp rút gọn `Student(this.name, this.age, this.grade);`. Cả hai đều dựa trên `this` để truy cập thuộc tính của object hiện tại.
 
-### 6.5. Tóm tắt
+### 6.2. `this` trong phương thức
 
-| Tình huống | Cách dùng | Ví dụ |
-|:-----------|:----------|:------|
-| Phân biệt thuộc tính và tham số trùng tên | `this.propertyName = parameterName;` | `this.name = name;` |
-| Constructor gọn | `ClassName(this.prop1, this.prop2);` | `Student(this.name, this.age);` |
-| Truy cập thuộc tính trong method | `this.propertyName` | `this.grade >= 8.0` |
-| Gọi method khác của object | `this.methodName()` | `this.showInfo();` |
+`this` giúp các phương thức nhìn thấy thuộc tính của chính mình, đặc biệt khi tên biến bị trùng hoặc khi muốn nhấn mạnh rằng giá trị đến từ object hiện tại.
 
----
+```dart
+class Student {
+  String name;
+  double grade;
+
+  Student(this.name, this.grade);
+
+  void updateGrade(double grade) {
+    if (grade < 0 || grade > 10) {
+      print('Điểm không hợp lệ');
+      return;
+    }
+    this.grade = grade;
+    print('$name có điểm mới: ${this.grade}');
+  }
+}
+
+void main() {
+  var s1 = Student('Bình', 7.8);
+  s1.updateGrade(8.6); // Bình có điểm mới: 8.6
+}
+```
+
+Trong phương thức `updateGrade`, biến tham số `grade` che khuất thuộc tính `grade`. Nhờ `this.grade` chúng ta cập nhật đúng trường của đối tượng.
+
+### 6.3. Trả về chính đối tượng (`return this`)
+
+`this` còn được dùng để trả về object hiện tại, giúp gọi nhiều phương thức liên tiếp (method chaining).
+
+```dart
+class Player {
+  int score = 0;
+
+  Player addScore(int value) {
+    score += value;
+    return this;
+  }
+
+  void showScore() {
+    print('Điểm hiện tại: $score');
+  }
+}
+
+void main() {
+  Player()
+      .addScore(10)
+      .addScore(5)
+      .showScore(); // Điểm hiện tại: 15
+}
+```
+
+### 6.4. Khi nào cần dùng `this`?
+
+- **Tránh nhầm lẫn tên**: Constructor hoặc method có tham số trùng tên thuộc tính.
+- **Nhấn mạnh đối tượng hiện tại**: Đọc code dễ hơn, nhất là trong method dài.
+- **Truyền chính object đi nơi khác**: Ví dụ trả về `this` hoặc truyền `this` vào hàm khác.
+
+🎯 Ghi nhớ: mỗi khi bạn thấy “làm việc với chính object đang xử lý”, hãy nghĩ tới `this` để code rõ ràng và an toàn hơn.
+
 
 ## 7. Tạo instance (đối tượng)
 
@@ -576,6 +548,9 @@ class Student {
   double grade;
 
   Student({required this.name, required this.age, this.grade = 0.0});
+  void showInfo() {
+    print('Tên: $name, Tuổi: $age, Điểm: $grade');
+  }
 }
 
 void main() {
