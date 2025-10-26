@@ -851,22 +851,29 @@ Tạo class `StudentGrades` để quản lý điểm của học sinh với:
    - `_getGrade(double average)`: xếp loại (Giỏi >=8, Khá >=6.5, TB >=5, Yếu &lt;5)
 
 4. **Public methods:**
-   - `updateScore(String subject, double score)`: cập nhật điểm (có validate)
-   - `showReport()`: hiển thị báo cáo học tập
+   - `updateScore(String subject, double score)`:
+     - Nhận tên môn học ('Toán', 'Lý', 'Hóa') và điểm mới
+     - Sử dụng `_validateScore()` để kiểm tra
+     - Nếu hợp lệ: cập nhật điểm và in thông báo "✅ Đã cập nhật điểm [Môn]: [Điểm]"
+     - Nếu không hợp lệ: in thông báo lỗi
+   - `showReport()`:
+     - In báo cáo học tập bao gồm: tên học sinh, điểm 3 môn, điểm TB (làm tròn 2 chữ số), xếp loại
+     - Sử dụng `_calculateAverage()` và `_getGrade()`
 
-**Test code:**
+**Ví dụ đầu ra mong muốn:**
 
-```dart
-void main() {
-  var student = StudentGrades('Nguyễn Văn An');
+```
+✅ Đã cập nhật điểm Toán: 8.5
+✅ Đã cập nhật điểm Lý: 7.0
+❌ Điểm phải từ 0 đến 10!
+✅ Đã cập nhật điểm Hóa: 9.0
 
-  student.updateScore('Toán', 8.5);
-  student.updateScore('Lý', 7.0);
-  student.updateScore('Hóa', 12.0);  // ❌ Không hợp lệ
-  student.updateScore('Hóa', 9.0);   // ✅ Hợp lệ
-
-  student.showReport();
-}
+📊 BÁO CÁO HỌC TẬP: Nguyễn Văn An
+   Toán: 8.5
+   Lý: 7.0
+   Hóa: 9.0
+   Điểm TB: 8.17
+   Xếp loại: Giỏi
 ```
 
 <details>
@@ -959,75 +966,7 @@ void main() {
 
 </details>
 
-### 8.5. Ví dụ tổng hợp: Hệ thống quản lý thư viện
-
-```dart
-class Library {
-  String bookTitle;
-  String author;
-  int _availableCopies; // Private: số sách còn
-  int _totalCopies;     // Private: tổng số sách
-
-  Library(this.bookTitle, this.author, this._totalCopies)
-    : _availableCopies = _totalCopies;
-
-  // Private method: kiểm tra có sách không
-  bool _hasAvailableCopies() {
-    return _availableCopies > 0;
-  }
-
-  // Private method: ghi log
-  void _logAction(String action, bool success) {
-    String status = success ? '✅' : '❌';
-    print('$status $action "$bookTitle" - Còn: $_availableCopies/$_totalCopies');
-  }
-
-  // Public method: mượn sách
-  void borrow() {
-    if (!_hasAvailableCopies()) {
-      print('❌ Hết sách "$bookTitle"!');
-      _logAction('Mượn', false);
-      return;
-    }
-    _availableCopies--;
-    _logAction('Mượn', true);
-  }
-
-  // Public method: trả sách
-  void returnBook() {
-    if (_availableCopies >= _totalCopies) {
-      print('❌ Không thể trả thêm (đã đủ $_totalCopies cuốn)!');
-      return;
-    }
-    _availableCopies++;
-    _logAction('Trả', true);
-  }
-
-  // Public method: hiển thị thông tin
-  void showInfo() {
-    print('\n📚 "$bookTitle" - Tác giả: $author');
-    print('   Còn lại: $_availableCopies/$_totalCopies cuốn');
-  }
-}
-
-void main() {
-  var book = Library('Dế Mèn Phiêu Lưu Ký', 'Tô Hoài', 3);
-
-  book.showInfo();
-  book.borrow();
-  book.borrow();
-  book.borrow();
-  book.borrow(); // ❌ Hết sách
-  book.returnBook();
-  book.showInfo();
-
-  // ❌ Không thể truy cập private
-  // book._availableCopies = 10;    // Lỗi: private property
-  // book._hasAvailableCopies();    // Lỗi: private method
-}
-```
-
-### 8.6. Lưu ý về Private trong Dart
+### 8.5. Lưu ý về Private trong Dart
 
 ⚠️ **Quan trọng:** Trong Dart, "private" chỉ có hiệu lực ở **cấp độ file (library)**, không phải cấp độ class.
 
@@ -1046,7 +985,7 @@ void hackAccount() {
 
 💡 **Best practice:** Để bảo vệ tốt hơn, tách class ra file riêng và chỉ export những gì cần thiết.
 
-### 8.7. Tóm tắt
+### 8.6. Tóm tắt
 
 | Loại                 | Cú pháp          | Truy cập        | Khi nào dùng                      |
 | :------------------- | :--------------- | :-------------- | :-------------------------------- |
