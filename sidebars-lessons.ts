@@ -47,6 +47,11 @@ const sidebars: SidebarsConfig = {
           id: 'bai-07-object-and-class',
           label: 'Buổi 7: Object và Class',
         },
+        {
+          type: 'doc',
+          id: 'Bai-11-async',
+          label: 'Lập trình bất đồng bộ',
+        }
       ],
     },
   ],
