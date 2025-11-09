@@ -131,7 +131,7 @@ Cách dùng `.then()` khá dài dòng và có thể dẫn đến "Callback Hell"
 
 ---
 
-## 4. `async` và `await` - Cú pháp "ngọt ngào" cho Future
+## 4. `async` và `await` - Cú pháp cho Future
 
 `async` và `await` là hai từ khóa giúp bạn viết code bất đồng bộ trông giống như code đồng bộ, giúp code dễ đọc và dễ hiểu hơn rất nhiều.
 
