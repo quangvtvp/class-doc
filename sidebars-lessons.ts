@@ -51,6 +51,11 @@ const sidebars: SidebarsConfig = {
           type: 'doc',
           id: 'Bai-11-async',
           label: 'Lập trình bất đồng bộ',
+        },
+        {
+          type: 'doc',
+          id: 'flutter-01-basic-structure-layout',
+          label: 'Flutter application',
         }
       ],
     },
