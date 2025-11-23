@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="docs-wrapper plugin-docs plugin-id-lessons docs-version-current docs-doc-page docs-doc-id-game roadmap/roadmap" data-has-hydrated="false">
+<head>
+<meta charset="UTF-8">
+<meta name="generator" content="Docusaurus v3.7.0">
+<title data-rh="true">Khóa Học Phát Triển Game 2D với Flutter | Flutter</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://quangvtvp.github.io/class-doc/lessons/game roadmap/roadmap/"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-lessons-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-lessons-current"><meta data-rh="true" property="og:title" content="Khóa Học Phát Triển Game 2D với Flutter | Flutter"><meta data-rh="true" name="description" content="Xây Dựng Game Thực Tế với Casual Games Toolkit"><meta data-rh="true" property="og:description" content="Xây Dựng Game Thực Tế với Casual Games Toolkit"><link data-rh="true" rel="icon" href="/class-doc/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://quangvtvp.github.io/class-doc/lessons/game roadmap/roadmap/"><link data-rh="true" rel="alternate" href="https://quangvtvp.github.io/class-doc/lessons/game roadmap/roadmap/" hreflang="en"><link data-rh="true" rel="alternate" href="https://quangvtvp.github.io/class-doc/lessons/game roadmap/roadmap/" hreflang="x-default"><link rel="alternate" type="application/rss+xml" href="/class-doc/blog/rss.xml" title="Flutter RSS Feed">
+<link rel="alternate" type="application/atom+xml" href="/class-doc/blog/atom.xml" title="Flutter Atom Feed"><link rel="stylesheet" href="/class-doc/assets/css/styles.21641482.css">
+<script src="/class-doc/assets/js/runtime~main.7eccb330.js" defer="defer"></script>
+<script src="/class-doc/assets/js/main.27ae26f6.js" defer="defer"></script>
+</head>
+<body class="navigation-with-keyboard">
+<script>!function(){function t(t){document.documentElement.setAttribute("data-theme",t)}var e=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme")}catch(t){}}();t(null!==e?e:"light")}(),function(){try{const n=new URLSearchParams(window.location.search).entries();for(var[t,e]of n)if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}()</script><div id="__docusaurus"><div role="region" aria-label="Skip to main content"><a class="skipToContent_fXgn" href="#__docusaurus_skipToContent_fallback">Skip to main content</a></div><nav aria-label="Main" class="navbar navbar--fixed-top"><div class="navbar__inner"><div class="navbar__items"><button aria-label="Toggle navigation bar" aria-expanded="false" class="navbar__toggle clean-btn" type="button"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg></button><a class="navbar__brand" href="/class-doc/"><b class="navbar__title text--truncate"></b></a><a class="navbar__item navbar__link" href="/class-doc/">Trang Chủ</a><a class="navbar__item navbar__link" href="/class-doc/lessons/">Bài Giảng</a><a class="navbar__item navbar__link" href="/class-doc/tutorials/">Tutorials</a></div><div class="navbar__items navbar__items--right"><div class="toggle_vylO colorModeToggle_DEke"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type="button" disabled="" title="Switch between dark and light mode (currently light mode)" aria-label="Switch between dark and light mode (currently light mode)" aria-live="polite" aria-pressed="false"><svg viewBox="0 0 24 24" width="24" height="24" class="lightToggleIcon_pyhR"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" class="darkToggleIcon_wfgR"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg></button></div><div class="navbarSearchContainer_Bca1"></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div id="__docusaurus_skipToContent_fallback" class="main-wrapper mainWrapper_z2l0"><div class="docsWrapper_hBAB"><button aria-label="Scroll back to top" class="clean-btn theme-back-to-top-button backToTopButton_sjWU" type="button"></button><div class="docRoot_UBD9"><main class="docMainContainer_TBSr docMainContainerEnhanced_lQrH"><div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="tocCollapsible_ETCw theme-doc-toc-mobile tocMobile_ITEo"><button type="button" class="clean-btn tocCollapsibleButton_TO0P">On this page</button></div><div class="theme-doc-markdown markdown"><header><h1>Khóa Học Phát Triển Game 2D với Flutter</h1></header>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="xây-dựng-game-thực-tế-với-casual-games-toolkit">Xây Dựng Game Thực Tế với Casual Games Toolkit<a href="#xây-dựng-game-thực-tế-với-casual-games-toolkit" class="hash-link" aria-label="Direct link to Xây Dựng Game Thực Tế với Casual Games Toolkit" title="Direct link to Xây Dựng Game Thực Tế với Casual Games Toolkit">​</a></h2>
+<p><strong>Đối Tượng</strong>: Lập trình viên Dart chưa có kinh nghiệm Flutter<br>
+<strong>Định Dạng Khóa Học</strong>: 13 bài (9 bài học + 3 bài dự án + 1 bài thi cuối khóa)<br>
+<strong>Mục Tiêu</strong>: Xây dựng một game 2D hoàn chỉnh và hiểu các nguyên lý cơ bản phát triển game Flutter<br>
+<strong>Phương Pháp</strong>: Học thông qua việc xây dựng các thành phần game trong mỗi bài học</p>
+<hr>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="tổng-quan-khóa-học">Tổng Quan Khóa Học<a href="#tổng-quan-khóa-học" class="hash-link" aria-label="Direct link to Tổng Quan Khóa Học" title="Direct link to Tổng Quan Khóa Học">​</a></h2>
+<p>Khóa học này dạy phát triển game Flutter thông qua <strong>thực hành xây dựng thực tế</strong>. Mỗi bài học tập trung vào việc tạo một thành phần game cụ thể mà bạn sẽ sử dụng trong dự án cuối kỳ. Các khái niệm Flutter được giới thiệu khi cần thiết trong quá trình xây dựng các tính năng game thực tế.</p>
+<p><strong>Cấu Trúc Khóa Học:</strong></p>
+<ul>
+<li><strong>Bài 1-9</strong>: Xây dựng các thành phần game riêng lẻ (widgets, cơ chế, hệ thống)</li>
+<li><strong>Bài 10-12</strong>: Tích hợp các thành phần thành một dự án game hoàn chỉnh</li>
+<li><strong>Bài 13</strong>: Thi cuối khóa - Xây dựng game độc lập</li>
+</ul>
+<hr>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="-các-bài-học-lý-thuyết-1-9">📚 CÁC BÀI HỌC LÝ THUYẾT (1-9)<a href="#-các-bài-học-lý-thuyết-1-9" class="hash-link" aria-label="Direct link to 📚 CÁC BÀI HỌC LÝ THUYẾT (1-9)" title="Direct link to 📚 CÁC BÀI HỌC LÝ THUYẾT (1-9)">​</a></h2>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="bài-1-thiết-lập-màn-hình-game--điều-hướng">Bài 1: Thiết Lập Màn Hình Game &amp; Điều Hướng<a href="#bài-1-thiết-lập-màn-hình-game--điều-hướng" class="hash-link" aria-label="Direct link to Bài 1: Thiết Lập Màn Hình Game &amp; Điều Hướng" title="Direct link to Bài 1: Thiết Lập Màn Hình Game &amp; Điều Hướng">​</a></h3>
+<p><strong>Bạn Sẽ Xây Dựng</strong>: Menu chính và điều hướng màn hình game</p>
+<p><strong>Thành Phần Game:</strong></p>
+<ul>
+<li>Màn hình menu chính với nút &quot;Chơi&quot; và &quot;Cài đặt&quot;</li>
+<li>Điều hướng giữa các màn hình</li>
+<li>Bố cục màn hình game cơ bản</li>
+</ul>
+<p><strong>Khái Niệm Flutter Học Được:</strong></p>
+<ul>
+<li>Cơ bản về Widgets (Stateless/Stateful)</li>
+<li>MaterialApp và routing</li>
+<li>Stack, Container, Center widgets</li>
+<li>GestureDetector để xử lý nhấn nút</li>
+<li>Navigator.push/pop</li>
+</ul>
+<p><strong>Kết Quả Thực Tế</strong>: Khung game có thể điều hướng với luồng menu → game → menu</p>
+<hr>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="bài-2-tài-nguyên-game--các-yếu-tố-hình-ảnh">Bài 2: Tài Nguyên Game &amp; Các Yếu Tố Hình Ảnh<a href="#bài-2-tài-nguyên-game--các-yếu-tố-hình-ảnh" class="hash-link" aria-label="Direct link to Bài 2: Tài Nguyên Game &amp; Các Yếu Tố Hình Ảnh" title="Direct link to Bài 2: Tài Nguyên Game &amp; Các Yếu Tố Hình Ảnh">​</a></h3>
+<p><strong>Bạn Sẽ Xây Dựng</strong>: Hệ thống render sprite</p>
+<p><strong>Thành Phần Game:</strong></p>
+<ul>
+<li>Hiển thị sprite game (người chơi, kẻ địch, vật phẩm)</li>
+<li>Tải và tổ chức tài nguyên game</li>
+<li>Định vị các phần tử trên màn hình</li>
+</ul>
+<p><strong>Khái Niệm Flutter Học Được:</strong></p>
+<ul>
+<li>Cấu hình asset trong pubspec.yaml</li>
+<li>Widget Image.asset</li>
+<li>Widget Positioned cho định vị tuyệt đối</li>
+<li>Cấu trúc thư mục asset tốt nhất</li>
+</ul>
+<p><strong>Kết Quả Thực Tế</strong>: Màn hình game với các sprite được định vị chính xác</p>
+<hr>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="bài-3-xử-lý-chạm--điều-khiển-người-chơi">Bài 3: Xử Lý Chạm &amp; Điều Khiển Người Chơi<a href="#bài-3-xử-lý-chạm--điều-khiển-người-chơi" class="hash-link" aria-label="Direct link to Bài 3: Xử Lý Chạm &amp; Điều Khiển Người Chơi" title="Direct link to Bài 3: Xử Lý Chạm &amp; Điều Khiển Người Chơi">​</a></h3>
+<p><strong>Bạn Sẽ Xây Dựng</strong>: Bộ điều khiển di chuyển người chơi</p>
+<p><strong>Thành Phần Game:</strong></p>
+<ul>
+<li>Chạm để di chuyển người chơi</li>
+<li>Kéo để điều khiển vị trí</li>
+<li>Phát hiện cử chỉ vuốt</li>
+</ul>
+<p><strong>Khái Niệm Flutter Học Được:</strong></p>
+<ul>
+<li>GestureDetector (onTap, onPanUpdate, onPanEnd)</li>
+<li>Tọa độ chạm và vị trí màn hình</li>
+<li>setState() để cập nhật UI</li>
+<li>Quản lý state cục bộ</li>
+</ul>
+<p><strong>Kết Quả Thực Tế</strong>: Nhân vật người chơi có thể điều khiển và phản hồi với chạm</p>
+<hr>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="bài-4-hoạt-hình--vòng-lặp-game">Bài 4: Hoạt Hình &amp; Vòng Lặp Game<a href="#bài-4-hoạt-hình--vòng-lặp-game" class="hash-link" aria-label="Direct link to Bài 4: Hoạt Hình &amp; Vòng Lặp Game" title="Direct link to Bài 4: Hoạt Hình &amp; Vòng Lặp Game">​</a></h3>
+<p><strong>Bạn Sẽ Xây Dựng</strong>: Hệ thống hoạt hình và vòng lặp cập nhật</p>
+<p><strong>Thành Phần Game:</strong></p>
+<ul>
+<li>Hoạt hình đi bộ/đứng yên của người chơi</li>
+<li>Vòng lặp game cơ bản</li>
+<li>Sinh kẻ địch theo thời gian</li>
+<li>Di chuyển tự động</li>
+</ul>
+<p><strong>Khái Niệm Flutter Học Được:</strong></p>
+<ul>
+<li>AnimationController và Ticker</li>
+<li>Tween animations</li>
+<li>Timer và Duration</li>
+<li>Cập nhật theo frame</li>
+</ul>
+<p><strong>Kết Quả Thực Tế</strong>: Nhân vật có hoạt hình và kẻ địch xuất hiện tự động</p>
+<hr>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="bài-5-phát-hiện-va-chạm--điểm-số">Bài 5: Phát Hiện Va Chạm &amp; Điểm Số<a href="#bài-5-phát-hiện-va-chạm--điểm-số" class="hash-link" aria-label="Direct link to Bài 5: Phát Hiện Va Chạm &amp; Điểm Số" title="Direct link to Bài 5: Phát Hiện Va Chạm &amp; Điểm Số">​</a></h3>
+<p><strong>Bạn Sẽ Xây Dựng</strong>: Hệ thống va chạm và theo dõi điểm</p>
+<p><strong>Thành Phần Game:</strong></p>
+<ul>
+<li>Phát hiện va chạm giữa các đối tượng</li>
+<li>Hiển thị điểm số (HUD)</li>
+<li>Hệ thống mạng sống</li>
+<li>Phát hiện game over</li>
+</ul>
+<p><strong>Khái Niệm Flutter Học Được:</strong></p>
+<ul>
+<li>Tính toán Rect và Offset</li>
+<li>Phương thức overlaps()</li>
+<li>Provider cho quản lý state</li>
+<li>ChangeNotifier pattern</li>
+</ul>
+<p><strong>Kết Quả Thực Tế</strong>: Hệ thống va chạm hoạt động với điểm số và màn hình game over</p>
+<hr>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="bài-6-hiệu-ứng-âm-thanh--nhạc-nền">Bài 6: Hiệu Ứng Âm Thanh &amp; Nhạc Nền<a href="#bài-6-hiệu-ứng-âm-thanh--nhạc-nền" class="hash-link" aria-label="Direct link to Bài 6: Hiệu Ứng Âm Thanh &amp; Nhạc Nền" title="Direct link to Bài 6: Hiệu Ứng Âm Thanh &amp; Nhạc Nền">​</a></h3>
+<p><strong>Bạn Sẽ Xây Dựng</strong>: Trình quản lý âm thanh</p>
+<p><strong>Thành Phần Game:</strong></p>
+<ul>
+<li>Nhạc nền</li>
+<li>Hiệu ứng âm thanh (thu thập, va chạm, thắng, thua)</li>
+<li>Bật/tắt âm thanh</li>
+</ul>
+<p><strong>Khái Niệm Flutter Học Được:</strong></p>
+<ul>
+<li>Hệ thống âm thanh Casual Games Toolkit</li>
+<li>Sử dụng AudioController</li>
+<li>Phát âm thanh khi có sự kiện</li>
+<li>Quản lý tài nguyên âm thanh</li>
+</ul>
+<p><strong>Kết Quả Thực Tế</strong>: Game với nhạc nền và hiệu ứng âm thanh phản hồi</p>
+<hr>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="bài-7-cài-đặt--lưu-trữ-dữ-liệu">Bài 7: Cài Đặt &amp; Lưu Trữ Dữ Liệu<a href="#bài-7-cài-đặt--lưu-trữ-dữ-liệu" class="hash-link" aria-label="Direct link to Bài 7: Cài Đặt &amp; Lưu Trữ Dữ Liệu" title="Direct link to Bài 7: Cài Đặt &amp; Lưu Trữ Dữ Liệu">​</a></h3>
+<p><strong>Bạn Sẽ Xây Dựng</strong>: Màn hình cài đặt và hệ thống lưu</p>
+<p><strong>Thành Phần Game:</strong></p>
+<ul>
+<li>Màn hình cài đặt (âm thanh, độ khó)</li>
+<li>Lưu điểm cao</li>
+<li>Lưu trữ tùy chọn người chơi</li>
+</ul>
+<p><strong>Khái Niệm Flutter Học Được:</strong></p>
+<ul>
+<li>SharedPreferences</li>
+<li>async/await để tải dữ liệu</li>
+<li>Mô hình dữ liệu cài đặt</li>
+<li>Form inputs và switches</li>
+</ul>
+<p><strong>Kết Quả Thực Tế</strong>: Màn hình cài đặt với điểm cao được lưu trữ</p>
+<hr>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="bài-8-hiệu-ứng-hình-ảnh--particle">Bài 8: Hiệu Ứng Hình Ảnh &amp; Particle<a href="#bài-8-hiệu-ứng-hình-ảnh--particle" class="hash-link" aria-label="Direct link to Bài 8: Hiệu Ứng Hình Ảnh &amp; Particle" title="Direct link to Bài 8: Hiệu Ứng Hình Ảnh &amp; Particle">​</a></h3>
+<p><strong>Bạn Sẽ Xây Dựng</strong>: Hiệu ứng particle và animations nâng cao</p>
+<p><strong>Thành Phần Game:</strong></p>
+<ul>
+<li>Hiệu ứng nổ particle khi va chạm</li>
+<li>Hoạt hình popup điểm số</li>
+<li>Hiệu ứng rung màn hình</li>
+<li>Transform và scale effects</li>
+</ul>
+<p><strong>Khái Niệm Flutter Học Được:</strong></p>
+<ul>
+<li>CustomPainter cho particles</li>
+<li>Overlay widgets</li>
+<li>Opacity và fade animations</li>
+<li>Transform widget (xoay, scale)</li>
+</ul>
+<p><strong>Kết Quả Thực Tế</strong>: Game với hiệu ứng hình ảnh hấp dẫn</p>
+<hr>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="bài-9-tổng-hợp--tối-ưu-hóa">Bài 9: Tổng Hợp &amp; Tối Ưu Hóa<a href="#bài-9-tổng-hợp--tối-ưu-hóa" class="hash-link" aria-label="Direct link to Bài 9: Tổng Hợp &amp; Tối Ưu Hóa" title="Direct link to Bài 9: Tổng Hợp &amp; Tối Ưu Hóa">​</a></h3>
+<p><strong>Bạn Sẽ Xây Dựng</strong>: Hoàn thiện và tối ưu các thành phần</p>
+<p><strong>Thành Phần Game:</strong></p>
+<ul>
+<li>Review tất cả các thành phần đã học</li>
+<li>Tối ưu hiệu suất</li>
+<li>Xử lý edge cases</li>
+<li>Chuẩn bị cho dự án cuối kỳ</li>
+</ul>
+<p><strong>Khái Niệm Flutter Học Được:</strong></p>
+<ul>
+<li>Best practices cho game Flutter</li>
+<li>Quản lý memory</li>
+<li>Performance profiling</li>
+<li>Code organization</li>
+</ul>
+<p><strong>Kết Quả Thực Tế</strong>: Hiểu rõ cách tích hợp tất cả thành phần vào một game hoàn chỉnh</p>
+<hr>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="-các-bài-học-dự-án-10-12">🎮 CÁC BÀI HỌC DỰ ÁN (10-12)<a href="#-các-bài-học-dự-án-10-12" class="hash-link" aria-label="Direct link to 🎮 CÁC BÀI HỌC DỰ ÁN (10-12)" title="Direct link to 🎮 CÁC BÀI HỌC DỰ ÁN (10-12)">​</a></h2>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="-các-bài-học-dự-án-10-12-1">🎮 CÁC BÀI HỌC DỰ ÁN (10-12)<a href="#-các-bài-học-dự-án-10-12-1" class="hash-link" aria-label="Direct link to 🎮 CÁC BÀI HỌC DỰ ÁN (10-12)" title="Direct link to 🎮 CÁC BÀI HỌC DỰ ÁN (10-12)">​</a></h2>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="bài-10-thiết-kế-game-của-bạn">Bài 10: Thiết Kế Game Của Bạn<a href="#bài-10-thiết-kế-game-của-bạn" class="hash-link" aria-label="Direct link to Bài 10: Thiết Kế Game Của Bạn" title="Direct link to Bài 10: Thiết Kế Game Của Bạn">​</a></h3>
+<p><strong>Lập Kế Hoạch Dự Án Cuối Kỳ</strong></p>
+<p><strong>Hoạt Động:</strong></p>
+<ul>
+<li>Chọn loại game của bạn (endless runner, bắt trái cây, game chạm, v.v.)</li>
+<li>Thiết kế cơ chế game sử dụng các thành phần đã học (Bài 1-9)</li>
+<li>Lập kế hoạch bố cục màn hình và luồng</li>
+<li>Tạo danh sách tài nguyên và quy tắc game</li>
+<li>Vẽ wireframe/mockup các màn hình</li>
+</ul>
+<p><strong>Sản Phẩm Bàn Giao</strong>: Tài liệu thiết kế game bao gồm:</p>
+<ul>
+<li>Mô tả ý tưởng game chi tiết</li>
+<li>Kế hoạch sử dụng các thành phần từ 9 bài học</li>
+<li>Mockup màn hình</li>
+<li>Quy tắc và hệ thống tính điểm</li>
+<li>Danh sách assets cần thiết</li>
+</ul>
+<hr>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="bài-11-xây-dựng-game-của-bạn">Bài 11: Xây Dựng Game Của Bạn<a href="#bài-11-xây-dựng-game-của-bạn" class="hash-link" aria-label="Direct link to Bài 11: Xây Dựng Game Của Bạn" title="Direct link to Bài 11: Xây Dựng Game Của Bạn">​</a></h3>
+<p><strong>Phiên Triển Khai - Phần 1</strong></p>
+<p><strong>Hoạt Động:</strong></p>
+<ul>
+<li>Thiết lập cấu trúc dự án Flutter</li>
+<li>Triển khai các màn hình cơ bản (Menu, Game, Settings)</li>
+<li>Tích hợp các thành phần đã học:<!-- -->
+<ul>
+<li>Điều hướng &amp; màn hình (Bài 1)</li>
+<li>Sprites &amp; assets (Bài 2)</li>
+<li>Input &amp; điều khiển (Bài 3)</li>
+<li>Hoạt hình &amp; vòng lặp (Bài 4)</li>
+<li>Va chạm &amp; điểm số (Bài 5)</li>
+</ul>
+</li>
+</ul>
+<p><strong>Sản Phẩm Bàn Giao</strong>: Game có gameplay cơ bản hoạt động được</p>
+<hr>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="bài-12-hoàn-thiện-game-của-bạn">Bài 12: Hoàn Thiện Game Của Bạn<a href="#bài-12-hoàn-thiện-game-của-bạn" class="hash-link" aria-label="Direct link to Bài 12: Hoàn Thiện Game Của Bạn" title="Direct link to Bài 12: Hoàn Thiện Game Của Bạn">​</a></h3>
+<p><strong>Phiên Triển Khai - Phần 2</strong></p>
+<p><strong>Hoạt Động:</strong></p>
+<ul>
+<li>Tích hợp các thành phần nâng cao:<!-- -->
+<ul>
+<li>Âm thanh &amp; nhạc nền (Bài 6)</li>
+<li>Cài đặt &amp; lưu dữ liệu (Bài 7)</li>
+<li>Hiệu ứng hình ảnh (Bài 8)</li>
+<li>Tối ưu hóa (Bài 9)</li>
+</ul>
+</li>
+<li>Sửa lỗi và kiểm thử</li>
+<li>Hoàn thiện UI/UX</li>
+<li>Kiểm thử trên thiết bị thật</li>
+</ul>
+<p><strong>Sản Phẩm Bàn Giao</strong>: Game 2D hoàn chỉnh, được hoàn thiện và sẵn sàng chơi</p>
+<hr>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="-dự-án-cuối-khóa-bài-13">📝 DỰ ÁN CUỐI KHÓA (Bài 13)<a href="#-dự-án-cuối-khóa-bài-13" class="hash-link" aria-label="Direct link to 📝 DỰ ÁN CUỐI KHÓA (Bài 13)" title="Direct link to 📝 DỰ ÁN CUỐI KHÓA (Bài 13)">​</a></h2>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="bài-13-dự-án-cuối-khóa---xây-dựng-game-độc-lập">Bài 13: Dự Án Cuối Khóa - Xây Dựng Game Độc Lập<a href="#bài-13-dự-án-cuối-khóa---xây-dựng-game-độc-lập" class="hash-link" aria-label="Direct link to Bài 13: Dự Án Cuối Khóa - Xây Dựng Game Độc Lập" title="Direct link to Bài 13: Dự Án Cuối Khóa - Xây Dựng Game Độc Lập">​</a></h3>
+<p><strong>Đánh Giá Tổng Hợp Kỹ Năng</strong></p>
+<p><strong>Yêu Cầu:</strong>
+Xây dựng một game 2D mới <strong>hoàn toàn khác</strong> với dự án bài 10-12. Sinh viên làm <strong>ở nhà</strong> và submit code + video demo.</p>
+<p><strong>Thời gian:</strong> 1 tuần để hoàn thành</p>
+<p><strong>Đề Bài:</strong>
+Sinh viên sẽ được giao một trong các đề bài sau (random hoặc tự chọn):</p>
+<ol>
+<li>
+<p><strong>Game Học Từ Vựng (Vocabulary Learning Game)</strong></p>
+<ul>
+<li>Từ vựng tiếng Anh hoặc tiếng Hàn rơi từ trên xuống</li>
+<li>Hiển thị nghĩa tiếng Việt, chọn từ đúng</li>
+<li>Tap vào từ đúng để ghi điểm</li>
+<li>Sai 3 lần = game over</li>
+<li>Có ít nhất 20-30 từ vựng</li>
+</ul>
+</li>
+<li>
+<p><strong>Game Ghép Từ (Word Matching)</strong></p>
+<ul>
+<li>Hiển thị từ tiếng Anh/Hàn bên trái, nghĩa bên phải</li>
+<li>Kéo thả để ghép đúng cặp</li>
+<li>Có timer và điểm số</li>
+<li>Nhiều cấp độ (dễ → khó)</li>
+</ul>
+</li>
+<li>
+<p><strong>Game Nhảy Tránh (Jump &amp; Dodge)</strong></p>
+<ul>
+<li>Nhân vật chạy tự động</li>
+<li>Tap để nhảy tránh chướng ngại vật</li>
+<li>Tốc độ tăng dần</li>
+</ul>
+</li>
+<li>
+<p><strong>Game Lật Thẻ (Card Flip)</strong></p>
+<ul>
+<li>Lật thẻ tìm cặp giống nhau</li>
+<li>Đếm số lượt lật</li>
+<li>Đồng hồ đếm ngược</li>
+</ul>
+</li>
+<li>
+<p><strong>Game Đuổi Bắt (Chase Game)</strong></p>
+<ul>
+<li>Điều khiển nhân vật bắt vật phẩm</li>
+<li>Tránh bom/chướng ngại vật</li>
+<li>Thời gian giới hạn</li>
+</ul>
+</li>
+</ol>
+<p><strong>Tiêu Chí Chấm Điểm (100 điểm):</strong></p>
+<table><thead><tr><th>Tiêu Chí</th><th>Điểm</th><th>Mô Tả</th></tr></thead><tbody><tr><td><strong>Màn hình &amp; Navigation</strong></td><td>10</td><td>Menu chính, game screen, navigation hoạt động</td></tr><tr><td><strong>Hiển thị Sprites</strong></td><td>10</td><td>Load và hiển thị assets đúng vị trí</td></tr><tr><td><strong>Xử lý Input</strong></td><td>15</td><td>Tap/drag/swipe hoạt động chính xác</td></tr><tr><td><strong>Hoạt hình &amp; Chuyển động</strong></td><td>15</td><td>Sprite có animation mượt mà</td></tr><tr><td><strong>Game Loop</strong></td><td>15</td><td>Vòng lặp game và timing hoạt động</td></tr><tr><td><strong>Va chạm</strong></td><td>15</td><td>Phát hiện va chạm chính xác</td></tr><tr><td><strong>Điểm &amp; Game Over</strong></td><td>10</td><td>Tính điểm và phát hiện game over</td></tr><tr><td><strong>Code Quality</strong></td><td>5</td><td>Code sạch, có comments, structure tốt</td></tr><tr><td><strong>Sáng tạo</strong></td><td>5</td><td>Thêm tính năng/hiệu ứng riêng</td></tr></tbody></table>
+<p><strong>Lưu Ý:</strong></p>
+<ul>
+<li>Không bắt buộc có âm thanh (bonus +5 điểm nếu có)</li>
+<li>Không bắt buộc lưu điểm cao (bonus +5 điểm nếu có)</li>
+<li>Focus vào gameplay hoạt động tốt</li>
+<li>Có thể tham khảo code từ 9 bài học trước</li>
+<li><strong>Không được sao chép code dự án bài 10-12</strong></li>
+<li>Đối với game học ngôn ngữ: Data từ vựng có thể hardcode trong code</li>
+</ul>
+<p><strong>Thời Gian &amp; Cách Nộp:</strong></p>
+<ul>
+<li><strong>Thời gian làm bài:</strong> 1 tuần (làm ở nhà)</li>
+<li><strong>Hình thức nộp:</strong>
+<ul>
+<li>Link GitHub repository (public) hoặc file ZIP</li>
+<li>Video demo game chạy được (2-3 phút)</li>
+<li>File README với hướng dẫn chạy</li>
+</ul>
+</li>
+</ul>
+<p><strong>Sản Phẩm Bàn Giao:</strong></p>
+<ul>
+<li>✅ Source code đầy đủ (Flutter project)</li>
+<li>✅ Video demo gameplay (MP4, 2-3 phút)</li>
+<li>✅ File README.md bao gồm:<!-- -->
+<ul>
+<li>Tên game và mô tả</li>
+<li>Hướng dẫn cài đặt và chạy</li>
+<li>Các tính năng đã triển khai</li>
+<li>Screenshot/GIF demo (nếu có)</li>
+<li>Danh sách thành phần từ 9 bài học đã sử dụng</li>
+</ul>
+</li>
+</ul>
+<p><strong>Hạn Nộp:</strong></p>
+<ul>
+<li>Submit trước deadline qua email/platform của lớp</li>
+<li>Trễ hạn: -10 điểm/ngày</li>
+</ul>
+<hr>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="-thiết-lập-yêu-cầu">📦 Thiết Lập Yêu Cầu<a href="#-thiết-lập-yêu-cầu" class="hash-link" aria-label="Direct link to 📦 Thiết Lập Yêu Cầu" title="Direct link to 📦 Thiết Lập Yêu Cầu">​</a></h2>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="các-package-cần-cài-đặt">Các Package Cần Cài Đặt:<a href="#các-package-cần-cài-đặt" class="hash-link" aria-label="Direct link to Các Package Cần Cài Đặt:" title="Direct link to Các Package Cần Cài Đặt:">​</a></h3>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_biex"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">dependencies</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key atrule" style="color:#00a4db">flutter</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">sdk</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> flutter</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key atrule" style="color:#00a4db">provider</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> ^6.0.0</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key atrule" style="color:#00a4db">shared_preferences</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> ^2.0.0</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key atrule" style="color:#00a4db">audioplayers</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> ^5.0.0  </span><span class="token comment" style="color:#999988;font-style:italic"># hoặc games_services audio</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">dev_dependencies</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key atrule" style="color:#00a4db">flutter_test</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">sdk</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> flutter</span><br></span></code></pre><div class="buttonGroup__atx"><button type="button" aria-label="Copy code to clipboard" title="Copy" class="clean-btn"><span class="copyButtonIcons_eSgA" aria-hidden="true"><svg viewBox="0 0 24 24" class="copyButtonIcon_y97N"><path fill="currentColor" d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"></path></svg><svg viewBox="0 0 24 24" class="copyButtonSuccessIcon_LjdS"><path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"></path></svg></span></button></div></div></div>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="cấu-trúc-dự-án">Cấu Trúc Dự Án:<a href="#cấu-trúc-dự-án" class="hash-link" aria-label="Direct link to Cấu Trúc Dự Án:" title="Direct link to Cấu Trúc Dự Án:">​</a></h3>
+<div class="codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_biex"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">lib/</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">├── main.dart</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">├── screens/</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">│   ├── menu_screen.dart</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">│   ├── game_screen.dart</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">│   ├── settings_screen.dart</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">│   └── game_over_screen.dart</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">├── components/</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">│   ├── player.dart</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">│   ├── enemy.dart</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">│   └── collectible.dart</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">├── managers/</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">│   ├── game_state.dart</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">│   ├── audio_manager.dart</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">│   └── collision_manager.dart</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">└── utils/</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    └── constants.dart</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">assets/</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">├── images/</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">├── audio/</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">└── fonts/</span><br></span></code></pre><div class="buttonGroup__atx"><button type="button" aria-label="Copy code to clipboard" title="Copy" class="clean-btn"><span class="copyButtonIcons_eSgA" aria-hidden="true"><svg viewBox="0 0 24 24" class="copyButtonIcon_y97N"><path fill="currentColor" d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"></path></svg><svg viewBox="0 0 24 24" class="copyButtonSuccessIcon_LjdS"><path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"></path></svg></span></button></div></div></div>
+<hr>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="-ví-dụ-ý-tưởng-game-cho-dự-án-cuối-kỳ">🎯 Ví Dụ Ý Tưởng Game Cho Dự Án Cuối Kỳ<a href="#-ví-dụ-ý-tưởng-game-cho-dự-án-cuối-kỳ" class="hash-link" aria-label="Direct link to 🎯 Ví Dụ Ý Tưởng Game Cho Dự Án Cuối Kỳ" title="Direct link to 🎯 Ví Dụ Ý Tưởng Game Cho Dự Án Cuối Kỳ">​</a></h2>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="1-bắt-trái-cây-fruit-catcher">1. <strong>Bắt Trái Cây (Fruit Catcher)</strong><a href="#1-bắt-trái-cây-fruit-catcher" class="hash-link" aria-label="Direct link to 1-bắt-trái-cây-fruit-catcher" title="Direct link to 1-bắt-trái-cây-fruit-catcher">​</a></h3>
+<ul>
+<li>Trái cây rơi từ trên xuống</li>
+<li>Người chơi di chuyển giỏ trái/phải</li>
+<li>Bắt trái cây tốt, tránh bom</li>
+<li>Điểm số dựa trên số lượng bắt được</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="2-chạm--nổ-tap--pop">2. <strong>Chạm &amp; Nổ (Tap &amp; Pop)</strong><a href="#2-chạm--nổ-tap--pop" class="hash-link" aria-label="Direct link to 2-chạm--nổ-tap--pop" title="Direct link to 2-chạm--nổ-tap--pop">​</a></h3>
+<ul>
+<li>Bong bóng nổi lên từ dưới</li>
+<li>Chạm để làm nổ trước khi chúng chạm đỉnh</li>
+<li>Màu sắc khác nhau = điểm khác nhau</li>
+<li>Tốc độ tăng theo thời gian</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="3-ghép-chữ-nhanh-word-blitz">3. <strong>Ghép Chữ Nhanh (Word Blitz)</strong><a href="#3-ghép-chữ-nhanh-word-blitz" class="hash-link" aria-label="Direct link to 3-ghép-chữ-nhanh-word-blitz" title="Direct link to 3-ghép-chữ-nhanh-word-blitz">​</a></h3>
+<ul>
+<li>Các chữ cái rơi xuống màn hình</li>
+<li>Chạm các chữ cái để đánh vần từ</li>
+<li>Từ hợp lệ cho điểm</li>
+<li>Thử thách với đồng hồ</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="4-bay-vô-tận-endless-flyer">4. <strong>Bay Vô Tận (Endless Flyer)</strong><a href="#4-bay-vô-tận-endless-flyer" class="hash-link" aria-label="Direct link to 4-bay-vô-tận-endless-flyer" title="Direct link to 4-bay-vô-tận-endless-flyer">​</a></h3>
+<ul>
+<li>Nhân vật tự động bay về phía trước</li>
+<li>Chạm để vỗ cánh/nhảy</li>
+<li>Tránh chướng ngại vật</li>
+<li>Thu thập xu</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="5-ghép-đôi-trí-nhớ-memory-match">5. <strong>Ghép Đôi Trí Nhớ (Memory Match)</strong><a href="#5-ghép-đôi-trí-nhớ-memory-match" class="hash-link" aria-label="Direct link to 5-ghép-đôi-trí-nhớ-memory-match" title="Direct link to 5-ghép-đôi-trí-nhớ-memory-match">​</a></h3>
+<ul>
+<li>Game lật thẻ bài</li>
+<li>Ghép các cặp thẻ giống nhau</li>
+<li>Đồng hồ và bộ đếm nước đi</li>
+<li>Các cấp độ khó</li>
+</ul>
+<hr>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="-kết-quả-học-tập">✅ Kết Quả Học Tập<a href="#-kết-quả-học-tập" class="hash-link" aria-label="Direct link to ✅ Kết Quả Học Tập" title="Direct link to ✅ Kết Quả Học Tập">​</a></h2>
+<p>Sau khi hoàn thành khóa học, bạn sẽ:</p>
+<ul>
+<li>✅ Hiểu hệ thống widget Flutter thông qua các thành phần game</li>
+<li>✅ Xử lý input chạm và cử chỉ</li>
+<li>✅ Tạo hoạt hình mượt mà và hiệu ứng hình ảnh</li>
+<li>✅ Triển khai vòng lặp game và hệ thống timing</li>
+<li>✅ Phát hiện va chạm giữa các đối tượng game</li>
+<li>✅ Quản lý trạng thái game với Provider</li>
+<li>✅ Tích hợp âm thanh và hiệu ứng âm thanh</li>
+<li>✅ Lưu và tải dữ liệu game</li>
+<li>✅ Xây dựng một game 2D hoàn chỉnh, có thể chơi được</li>
+<li>✅ Có nền tảng để tạo các game phức tạp hơn</li>
+</ul>
+<hr>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="-triết-lý-khóa-học">📖 Triết Lý Khóa Học<a href="#-triết-lý-khóa-học" class="hash-link" aria-label="Direct link to 📖 Triết Lý Khóa Học" title="Direct link to 📖 Triết Lý Khóa Học">​</a></h2>
+<p><strong>Học Bằng Thực Hành</strong>: Mỗi bài học tạo ra một thành phần game hoạt động<br>
+<strong>Xây Dựng Dần Dần</strong>: Mỗi thành phần được xây dựng dựa trên các bài học trước<br>
+<strong>Tập Trung Thực Tế</strong>: Lý thuyết chỉ được giới thiệu khi cần thiết<br>
+<strong>Sản Phẩm Game Thực Tế</strong>: Kết thúc với một game thực sự mà bạn có thể khoe với người khác</p></div></article><nav class="pagination-nav docusaurus-mt-lg" aria-label="Docs pages"></nav></div></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#xây-dựng-game-thực-tế-với-casual-games-toolkit" class="table-of-contents__link toc-highlight">Xây Dựng Game Thực Tế với Casual Games Toolkit</a></li><li><a href="#tổng-quan-khóa-học" class="table-of-contents__link toc-highlight">Tổng Quan Khóa Học</a></li><li><a href="#-các-bài-học-lý-thuyết-1-9" class="table-of-contents__link toc-highlight">📚 CÁC BÀI HỌC LÝ THUYẾT (1-9)</a><ul><li><a href="#bài-1-thiết-lập-màn-hình-game--điều-hướng" class="table-of-contents__link toc-highlight">Bài 1: Thiết Lập Màn Hình Game &amp; Điều Hướng</a></li><li><a href="#bài-2-tài-nguyên-game--các-yếu-tố-hình-ảnh" class="table-of-contents__link toc-highlight">Bài 2: Tài Nguyên Game &amp; Các Yếu Tố Hình Ảnh</a></li><li><a href="#bài-3-xử-lý-chạm--điều-khiển-người-chơi" class="table-of-contents__link toc-highlight">Bài 3: Xử Lý Chạm &amp; Điều Khiển Người Chơi</a></li><li><a href="#bài-4-hoạt-hình--vòng-lặp-game" class="table-of-contents__link toc-highlight">Bài 4: Hoạt Hình &amp; Vòng Lặp Game</a></li><li><a href="#bài-5-phát-hiện-va-chạm--điểm-số" class="table-of-contents__link toc-highlight">Bài 5: Phát Hiện Va Chạm &amp; Điểm Số</a></li><li><a href="#bài-6-hiệu-ứng-âm-thanh--nhạc-nền" class="table-of-contents__link toc-highlight">Bài 6: Hiệu Ứng Âm Thanh &amp; Nhạc Nền</a></li><li><a href="#bài-7-cài-đặt--lưu-trữ-dữ-liệu" class="table-of-contents__link toc-highlight">Bài 7: Cài Đặt &amp; Lưu Trữ Dữ Liệu</a></li><li><a href="#bài-8-hiệu-ứng-hình-ảnh--particle" class="table-of-contents__link toc-highlight">Bài 8: Hiệu Ứng Hình Ảnh &amp; Particle</a></li><li><a href="#bài-9-tổng-hợp--tối-ưu-hóa" class="table-of-contents__link toc-highlight">Bài 9: Tổng Hợp &amp; Tối Ưu Hóa</a></li></ul></li><li><a href="#-các-bài-học-dự-án-10-12" class="table-of-contents__link toc-highlight">🎮 CÁC BÀI HỌC DỰ ÁN (10-12)</a></li><li><a href="#-các-bài-học-dự-án-10-12-1" class="table-of-contents__link toc-highlight">🎮 CÁC BÀI HỌC DỰ ÁN (10-12)</a><ul><li><a href="#bài-10-thiết-kế-game-của-bạn" class="table-of-contents__link toc-highlight">Bài 10: Thiết Kế Game Của Bạn</a></li><li><a href="#bài-11-xây-dựng-game-của-bạn" class="table-of-contents__link toc-highlight">Bài 11: Xây Dựng Game Của Bạn</a></li><li><a href="#bài-12-hoàn-thiện-game-của-bạn" class="table-of-contents__link toc-highlight">Bài 12: Hoàn Thiện Game Của Bạn</a></li></ul></li><li><a href="#-dự-án-cuối-khóa-bài-13" class="table-of-contents__link toc-highlight">📝 DỰ ÁN CUỐI KHÓA (Bài 13)</a><ul><li><a href="#bài-13-dự-án-cuối-khóa---xây-dựng-game-độc-lập" class="table-of-contents__link toc-highlight">Bài 13: Dự Án Cuối Khóa - Xây Dựng Game Độc Lập</a></li></ul></li><li><a href="#-thiết-lập-yêu-cầu" class="table-of-contents__link toc-highlight">📦 Thiết Lập Yêu Cầu</a><ul><li><a href="#các-package-cần-cài-đặt" class="table-of-contents__link toc-highlight">Các Package Cần Cài Đặt:</a></li><li><a href="#cấu-trúc-dự-án" class="table-of-contents__link toc-highlight">Cấu Trúc Dự Án:</a></li></ul></li><li><a href="#-ví-dụ-ý-tưởng-game-cho-dự-án-cuối-kỳ" class="table-of-contents__link toc-highlight">🎯 Ví Dụ Ý Tưởng Game Cho Dự Án Cuối Kỳ</a><ul><li><a href="#1-bắt-trái-cây-fruit-catcher" class="table-of-contents__link toc-highlight">1. <strong>Bắt Trái Cây (Fruit Catcher)</strong></a></li><li><a href="#2-chạm--nổ-tap--pop" class="table-of-contents__link toc-highlight">2. <strong>Chạm &amp; Nổ (Tap &amp; Pop)</strong></a></li><li><a href="#3-ghép-chữ-nhanh-word-blitz" class="table-of-contents__link toc-highlight">3. <strong>Ghép Chữ Nhanh (Word Blitz)</strong></a></li><li><a href="#4-bay-vô-tận-endless-flyer" class="table-of-contents__link toc-highlight">4. <strong>Bay Vô Tận (Endless Flyer)</strong></a></li><li><a href="#5-ghép-đôi-trí-nhớ-memory-match" class="table-of-contents__link toc-highlight">5. <strong>Ghép Đôi Trí Nhớ (Memory Match)</strong></a></li></ul></li><li><a href="#-kết-quả-học-tập" class="table-of-contents__link toc-highlight">✅ Kết Quả Học Tập</a></li><li><a href="#-triết-lý-khóa-học" class="table-of-contents__link toc-highlight">📖 Triết Lý Khóa Học</a></li></ul></div></div></div></div></main></div></div></div></div>
+</body>
+</html>
