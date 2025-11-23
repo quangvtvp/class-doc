@@ -52,11 +52,35 @@ const sidebars: SidebarsConfig = {
           id: 'Bai-11-async',
           label: 'Lập trình bất đồng bộ',
         },
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Phần 2: Lập trình Flutter',
+      collapsed: false,
+      items: [
         {
           type: 'doc',
           id: 'flutter-01-basic-structure-layout',
           label: 'Flutter application',
-        }
+        },
+        {
+          type: 'category',
+          label: 'Bài 13: Mini Game Dự Đoán Nghề Nghiệp',
+          collapsed: false,
+          items: [
+            {
+              type: 'doc',
+              id: 'Bai-13-Mini-Game-Du-Doan-Nghe-Nghiep/intro',
+              label: '1. Giới thiệu',
+            },
+            {
+              type: 'doc',
+              id: 'Bai-13-Mini-Game-Du-Doan-Nghe-Nghiep/tutorial',
+              label: '2. Hướng dẫn Code',
+            },
+          ],
+        },
       ],
     },
   ],
