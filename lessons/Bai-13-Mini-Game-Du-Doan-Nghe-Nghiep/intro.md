@@ -1,66 +1,97 @@
 ---
 sidebar_position: 1
-title: "🔮 Giới thiệu: Máy Đoán Nghề Nghiệp"
-description: Tổng quan về Mini Game dự đoán nghề nghiệp tương lai
+title: "Giới thiệu: AI Gợi Ý Ngành Học"
+description: Tổng quan về ứng dụng AI phân tích và gợi ý ngành nghề phù hợp
 ---
 
-# 🔮 Máy Đoán Nghề Nghiệp
+# AI Gợi Ý Ngành Học
 
-Chào các em! 👋 Hôm nay chúng ta sẽ cùng nhau xây dựng một ứng dụng cực kỳ vui nhộn mang tên **"Máy Đoán Nghề Nghiệp"**.
+Chào các em! Hôm nay chúng ta sẽ cùng nhau xây dựng một ứng dụng thực tế: **AI Gợi Ý Ngành Học**.
 
-Đây là một mini game giúp các em thực hành kỹ năng xây dựng giao diện (UI) và xử lý logic cơ bản trong Flutter.
+Đây là một ứng dụng giúp các em thực hành kỹ năng xây dựng giao diện (UI), quản lý trạng thái (State), và tích hợp API trong Flutter.
 
-## 🎮 Game này có gì thú vị?
+## Ứng dụng này làm gì?
 
-Game hoạt động như một "thầy bói" công nghệ:
+Ứng dụng hoạt động như một "cố vấn hướng nghiệp AI":
 
-1.  Bạn nhập tên một người bạn.
-2.  Bấm nút "Dự đoán".
-3.  Máy sẽ chọn ngẫu nhiên một nghề nghiệp hài hước cho người đó và hiển thị ra màn hình.
+1. Người dùng nhập tên và đặc điểm của học sinh.
+2. Bấm nút "Phân tích với AI".
+3. Ứng dụng gọi Gemini API để phân tích và đưa ra gợi ý ngành học phù hợp.
 
-### Các tính năng chính:
+### Các tính năng chính
 
-1.  **Form nhập liệu đẹp mắt**:
+1. **Form nhập liệu**: Sử dụng `TextField` để nhập Tên và Đặc điểm của học sinh.
 
-    - Sử dụng `TextField` để nhập Tên và Mô tả.
-    - Trang trí khung nhập liệu với viền và đổ bóng (Shadow).
+2. **Tích hợp AI (Gemini API)**: Gọi API để nhận gợi ý ngành học dựa trên đặc điểm đã nhập.
 
-2.  **Cỗ máy Đoán (Random Logic)**:
+3. **Danh sách kết quả**: Hiển thị danh sách các học sinh đã được phân tích cùng với kết quả gợi ý.
 
-    - Hệ thống tự động chọn ngẫu nhiên 1 nghề nghiệp từ danh sách có sẵn.
-    - Tự động tạo màu Avatar đại diện ngẫu nhiên.
+---
 
-3.  **Danh sách kết quả**:
-    - Hiển thị danh sách các người bạn đã được "xem bói" ngay bên dưới.
-    - Danh sách có thể cuộn được khi quá dài.
-
-## 🛠️ Kiến thức lập trình sẽ học
+## Kiến thức lập trình sẽ học
 
 Qua bài thực hành này, các em sẽ nắm vững các Widget và kỹ thuật quan trọng:
 
-### 1. Cấu trúc & Bố cục (Layout)
+### 1. Cấu trúc và Bố cục (Layout)
 
-- **`Column` & `Row`**: Hai widget cơ bản nhất để sắp xếp giao diện dọc và ngang.
-- **`Expanded`**: Widget cực kỳ quan trọng để chia không gian màn hình, giúp phần danh sách tự động chiếm hết chỗ trống còn lại.
-- **`SingleChildScrollView`**: Tạo khả năng cuộn cho nội dung khi bị tràn màn hình.
+| Widget | Mô tả |
+|--------|-------|
+| `Scaffold` | Khung chính của màn hình, chứa AppBar và body |
+| `Column` | Sắp xếp các widget theo chiều dọc |
+| `Expanded` | Chiếm hết không gian còn lại trong Column/Row |
+| `SingleChildScrollView` | Cho phép cuộn nội dung khi tràn màn hình |
+| `Padding` | Thêm khoảng cách xung quanh widget |
+| `SizedBox` | Tạo khoảng cách cố định giữa các widget |
 
-### 2. Nhập liệu & Tương tác
+### 2. Widget hiển thị dữ liệu
 
-- **`TextField`**: Ô nhập văn bản.
-- **`TextEditingController`**: giúp code đọc được những gì người dùng nhập vào.
-- **`ElevatedButton`**: Nút bấm để kích hoạt hành động.
+| Widget | Mô tả |
+|--------|-------|
+| `Card` | Thẻ có đổ bóng, thường dùng để nhóm thông tin |
+| `ListTile` | Widget chuẩn để hiển thị một dòng thông tin (leading, title, subtitle) |
+| `CircleAvatar` | Hiển thị avatar hình tròn |
+| `Text` | Hiển thị văn bản |
 
-### 3. Trang trí (Decoration)
+### 3. Nhập liệu và Tương tác
 
-- **`Container` với `BoxDecoration`**: Tạo khung, bo góc (borderRadius), viền (border) và đổ bóng (boxShadow) để giao diện trông chuyên nghiệp hơn.
+| Widget/Class | Mô tả |
+|--------------|-------|
+| `TextField` | Ô nhập văn bản |
+| `TextEditingController` | Đọc và quản lý nội dung TextField |
+| `ElevatedButton` | Nút bấm để kích hoạt hành động |
+| `ScaffoldMessenger.showSnackBar` | Hiển thị thông báo ở cuối màn hình |
 
 ### 4. Quản lý trạng thái (State Management)
 
-- **`StatelessWidget`**: Chúng ta sẽ xây dựng toàn bộ màn hình chỉ bằng Widget không trạng thái để đơn giản hóa.
-- **`ValueNotifier`**: Cách để cập nhật giao diện (thêm người mới vào danh sách) mà không cần dùng `setState`.
+| Khái niệm | Mô tả |
+|-----------|-------|
+| `StatelessWidget` | Widget không có trạng thái, chỉ hiển thị UI tĩnh |
+| `StatefulWidget` | Widget có trạng thái, UI có thể thay đổi |
+| `setState()` | Hàm báo Flutter vẽ lại UI khi dữ liệu thay đổi |
 
-:::tip Thử thách nhỏ
-Trước khi bắt đầu, hãy thử nghĩ ra 5 nghề nghiệp "kỳ quặc" nhất mà em có thể tưởng tượng (ví dụ: _Chuyên gia ngủ gật_, _Kỹ sư chém gió_...) để đưa vào game nhé!
-:::
+### 5. Xử lý bất đồng bộ (Async)
 
-Sẵn sàng chưa? Hãy chuyển sang bài hướng dẫn để bắt đầu code nào! 🚀
+| Khái niệm | Mô tả |
+|-----------|-------|
+| `async/await` | Cú pháp xử lý tác vụ bất đồng bộ |
+| `Future` | Đại diện cho một giá trị sẽ có trong tương lai |
+| `showDialog` | Hiển thị dialog (dùng cho loading) |
+| `mounted` | Kiểm tra widget còn tồn tại trước khi dùng context |
+
+---
+
+## Lộ trình học
+
+Chúng ta sẽ xây dựng ứng dụng theo 5 phiên bản, mỗi phiên bản thêm một khái niệm mới:
+
+| Version | Nội dung | Kiến thức chính |
+|---------|----------|-----------------|
+| V1 | Form tĩnh | StatelessWidget, TextField, Button |
+| V2 | Thêm danh sách cứng | for loop, ListTile, Expanded |
+| V3 | Danh sách động | StatefulWidget, setState, TextEditingController |
+| V4 | Thêm loading | async/await, showDialog, mounted |
+| V5 | Tích hợp AI | Gọi API, xử lý lỗi với try/catch |
+
+---
+
+Sẵn sàng chưa? Hãy chuyển sang bài hướng dẫn để bắt đầu code nào!

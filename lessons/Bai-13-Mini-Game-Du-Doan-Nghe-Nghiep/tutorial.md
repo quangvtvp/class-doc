@@ -1,58 +1,61 @@
 ---
 sidebar_position: 2
-title: "💻 Hướng dẫn Code: Máy Đoán"
-description: Từng bước xây dựng game Máy Đoán Nghề Nghiệp
+title: "Hướng dẫn Code: AI Gợi Ý Ngành Học"
+description: Từng bước xây dựng ứng dụng AI Gợi Ý Ngành Học
 ---
 
-# 💻 Hướng dẫn Code: Máy Đoán Nghề Nghiệp
+# Hướng dẫn Code: AI Gợi Ý Ngành Học
 
-Trong bài này, chúng ta sẽ xây dựng ứng dụng theo quy trình 5 giai đoạn, đi từ việc tạo dữ liệu, xây dựng giao diện tĩnh, đến xử lý logic và cuối cùng là làm cho nó hoạt động (động).
+Trong bài này, chúng ta sẽ xây dựng ứng dụng qua 5 phiên bản (version), mỗi version thêm một khái niệm mới. Cách tiếp cận này giúp các em hiểu rõ từng bước trước khi chuyển sang bước tiếp theo.
 
-## Giai đoạn 1: Khởi tạo & Tư duy dữ liệu
+---
 
-Trước khi vẽ giao diện, ta cần biết ta sẽ hiển thị cái gì.
+## Bước 0: Chuẩn bị
 
-### Bước 1.1: Tạo Model dữ liệu
+### Tạo Model dữ liệu
 
-Tạo file `lib/models/member.dart`. Đây là "khuôn mẫu" cho một người chơi.
+Tạo file `lib/models/member.dart`. Đây là class đại diện cho một người dùng trong ứng dụng.
 
 ```dart
-import 'dart:ui'; // Để dùng được kiểu dữ liệu Color
-
 class Member {
-  final String name;          // Tên người chơi
-  final String description;   // Mô tả ngắn
-  final String funnyJob;      // Nghề nghiệp được dự đoán (kết quả)
-  final Color avatarColor;    // Màu đại diện ngẫu nhiên
+  final String name;        // Tên người dùng
+  final String description; // Đặc điểm
+  String? idealJob;         // Kết quả gợi ý từ AI (có thể null)
 
   Member({
     required this.name,
     required this.description,
-    required this.funnyJob,
-    required this.avatarColor,
+    this.idealJob,
   });
 }
 ```
 
-### Bước 1.2: Dựng khung màn hình cơ bản
+**Giải thích:**
+- `final` nghĩa là giá trị không thể thay đổi sau khi khởi tạo
+- `String?` nghĩa là giá trị có thể null (chưa có)
+- `required` nghĩa là bắt buộc phải truyền vào khi tạo object
 
-Tạo file `lib/screens/member_funny_game_screen.dart`. Chúng ta bắt đầu với một `StatelessWidget` và khung `Scaffold` cơ bản.
+---
+
+## Version 1: StatelessWidget - Form tĩnh
+
+**Mục tiêu:** Học cách tạo giao diện cơ bản với TextField và Button.
+
+Tạo file `lib/screens/member_screen_v1.dart`:
 
 ```dart
 import 'package:flutter/material.dart';
-import '../models/member.dart';
 
-class MemberFunnyGameScreen extends StatelessWidget {
-  MemberFunnyGameScreen({super.key});
+class MemberScreenV1 extends StatelessWidget {
+  const MemberScreenV1({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade100, // Màu nền xám nhẹ
       appBar: AppBar(
-        title: const Text('Máy Đoán Nghề Nghiệp'),
+        title: const Text('Danh sách thành viên'),
         centerTitle: true,
-        backgroundColor: const Color(0xFF7E57C2), // Màu tím chủ đạo
+        backgroundColor: const Color(0xFF7E57C2),
         foregroundColor: Colors.white,
       ),
       body: Padding(
@@ -60,7 +63,35 @@ class MemberFunnyGameScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Chúng ta sẽ thêm các phần tiếp theo vào đây
+            // Ô nhập Tên
+            const TextField(
+              decoration: InputDecoration(
+                labelText: 'Tên',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 12),
+            
+            // Ô nhập Mô tả
+            const TextField(
+              decoration: InputDecoration(
+                labelText: 'Mô tả',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 12),
+            
+            // Nút bấm
+            ElevatedButton(
+              onPressed: () {
+                // Chưa làm gì cả
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF7E57C2),
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Thêm thành viên'),
+            ),
           ],
         ),
       ),
@@ -69,326 +100,482 @@ class MemberFunnyGameScreen extends StatelessWidget {
 }
 ```
 
----
+### Kiến thức Version 1
 
-## Giai đoạn 2: Xây dựng Form nhập liệu
+| Widget | Công dụng |
+|--------|-----------|
+| `Scaffold` | Khung chính của màn hình, có sẵn AppBar và body |
+| `AppBar` | Thanh tiêu đề ở trên cùng |
+| `Padding` | Thêm khoảng cách 16px xung quanh nội dung |
+| `Column` | Xếp các widget con theo chiều dọc |
+| `TextField` | Ô để người dùng nhập văn bản |
+| `SizedBox` | Tạo khoảng cách 12px giữa các widget |
+| `ElevatedButton` | Nút bấm có nền màu |
 
-Chúng ta sẽ tạo một khu vực đẹp mắt để người dùng nhập tên.
-
-### Bước 2.1: Tạo khung trang trí (Container)
-
-Trong `Column` ở `body`, thêm một `Container` để làm nền cho form.
-
-```dart
-// ... bên trong Column
-Container(
-  padding: const EdgeInsets.all(16),
-  decoration: BoxDecoration(
-    color: Colors.white,
-    borderRadius: BorderRadius.circular(16), // Bo góc
-    border: Border.all(color: const Color(0xFFB39DDB), width: 2), // Viền tím nhạt
-    boxShadow: [ // Đổ bóng nhẹ
-      BoxShadow(
-        color: const Color(0xFFB39DDB).withOpacity(0.3),
-        blurRadius: 10,
-        offset: const Offset(0, 4),
-      ),
-    ],
-  ),
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    children: [
-      // Các ô nhập liệu sẽ nằm ở đây
-    ],
-  ),
-),
-```
-
-### Bước 2.2: Thêm ô nhập liệu (TextField)
-
-Bên trong `Column` của Container vừa tạo, hãy thêm tiêu đề và 2 `TextField`.
-
-```dart
-const Text(
-  'Nhập thông tin để Đoán',
-  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF7E57C2)),
-),
-const SizedBox(height: 12),
-
-// Ô nhập Tên
-TextField(
-  decoration: const InputDecoration(
-    labelText: 'Tên',
-    hintText: 'Nhập tên người cần xem bói',
-    border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
-    prefixIcon: Icon(Icons.person_outline, color: Color(0xFF7E57C2)),
-  ),
-),
-const SizedBox(height: 12),
-
-// Ô nhập Mô tả
-TextField(
-  decoration: const InputDecoration(
-    labelText: 'Mô tả ngắn',
-    border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
-    prefixIcon: Icon(Icons.description_outlined, color: Color(0xFF7E57C2)),
-  ),
-),
-```
-
-### Bước 2.3: Thêm nút bấm (Button)
-
-Cuối cùng trong Form, thêm nút bấm. Dùng `Row` và `MainAxisAlignment.end` để đẩy nút sang phải.
-
-```dart
-const SizedBox(height: 16),
-Row(
-  mainAxisAlignment: MainAxisAlignment.end,
-  children: [
-    ElevatedButton.icon(
-      onPressed: () {
-        // Chưa xử lý logic, để trống tạm thời
-      },
-      icon: const Icon(Icons.auto_awesome),
-      label: const Text('Dự đoán ngay'),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF7E57C2),
-        foregroundColor: Colors.white,
-      ),
-    ),
-  ],
-),
-```
+**Lưu ý:**
+- `crossAxisAlignment: CrossAxisAlignment.stretch` làm cho các widget con giãn hết chiều ngang
+- `const` đánh dấu widget không thay đổi, giúp Flutter tối ưu hiệu năng
 
 ---
 
-## Giai đoạn 3: Xây dựng khu vực hiển thị kết quả
+## Version 2: StatelessWidget - Thêm danh sách cứng
 
-Phần này nằm bên dưới Form nhập liệu (bên ngoài Container form).
+**Mục tiêu:** Học cách hiển thị danh sách với for loop, ListTile, và Expanded.
 
-### Bước 3.1: Chia không gian với Expanded
-
-Sau Container form, ta thêm tiêu đề danh sách và widget `Expanded`.
-`Expanded` rất quan trọng: nó bảo Flutter rằng "hãy dùng tất cả khoảng trống còn lại bên dưới để chứa danh sách này".
+Tạo file `lib/screens/member_screen_v2.dart`:
 
 ```dart
-// ... Sau Container Form
-const SizedBox(height: 16),
-const Text(
-  'Kết quả dự đoán nghề nghiệp',
-  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-),
-const SizedBox(height: 8),
+import 'package:flutter/material.dart';
+import '../models/member.dart';
 
-Expanded(
-  child: SingleChildScrollView( // Cho phép cuộn nếu danh sách dài
-    child: Column(
-      children: [
-        // Danh sách thẻ thành viên sẽ hiện ở đây
-        // Tạm thời để trống hoặc text mẫu
-        Text('Chưa có ai được Đoán'),
-      ],
-    ),
-  ),
-),
-```
-
-### Bước 3.2: Thiết kế thẻ thành viên (\_MemberCard)
-
-Để code gọn, ta tạo một Widget riêng tên là `_MemberCard` ở cuối file.
-
-```dart
-class _MemberCard extends StatelessWidget {
-  final Member member;
-  const _MemberCard({required this.member});
+class MemberScreenV2 extends StatelessWidget {
+  const MemberScreenV2({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 6),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)],
+    // Dữ liệu mẫu cứng
+    final List<Member> members = [
+      Member(name: 'An', description: 'Học sinh chăm chỉ'),
+      Member(name: 'Bình', description: 'Giỏi toán'),
+      Member(name: 'Chi', description: 'Thích vẽ'),
+    ];
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Danh sách thành viên'),
+        centerTitle: true,
+        backgroundColor: const Color(0xFF7E57C2),
+        foregroundColor: Colors.white,
       ),
-      child: Row(
-        children: [
-          // Avatar bên trái
-          CircleAvatar(
-            radius: 24,
-            backgroundColor: member.avatarColor,
-            child: Text(member.name[0].toUpperCase(), style: const TextStyle(color: Colors.white)),
-          ),
-          const SizedBox(width: 12),
-          // Thông tin bên phải
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(member.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                Text(member.description, style: const TextStyle(fontSize: 13)),
-                const SizedBox(height: 4),
-                Text(
-                  'Nghề nghiệp tương lai: ${member.funnyJob}',
-                  style: const TextStyle(color: Colors.teal, fontStyle: FontStyle.italic),
-                ),
-              ],
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Form nhập liệu (giống V1)
+            const TextField(
+              decoration: InputDecoration(
+                labelText: 'Tên',
+                border: OutlineInputBorder(),
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 12),
+            const TextField(
+              decoration: InputDecoration(
+                labelText: 'Mô tả',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 12),
+            ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF7E57C2),
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Thêm thành viên'),
+            ),
+
+            const SizedBox(height: 24),
+
+            // Tiêu đề danh sách
+            const Text(
+              'Danh sách:',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+
+            // Danh sách thành viên
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    for (final member in members)
+                      Card(
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            child: Text(member.name[0].toUpperCase()),
+                          ),
+                          title: Text(member.name),
+                          subtitle: Text(member.description),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 ```
 
+### Kiến thức Version 2
+
+| Widget/Syntax | Công dụng |
+|---------------|-----------|
+| `Expanded` | Chiếm hết không gian còn lại trong Column |
+| `SingleChildScrollView` | Cho phép cuộn khi nội dung dài hơn màn hình |
+| `for (... in ...)` | Vòng lặp để tạo widget cho mỗi phần tử trong danh sách |
+| `Card` | Thẻ có đổ bóng nhẹ |
+| `ListTile` | Widget chuẩn hiển thị 1 dòng thông tin |
+| `CircleAvatar` | Hiển thị avatar hình tròn |
+
+**Quan trọng về Expanded:**
+- Column có chiều cao vô hạn nếu không giới hạn
+- Expanded bảo Flutter: "hãy dùng tất cả chỗ trống còn lại cho widget này"
+- Bắt buộc dùng khi có danh sách cuộn bên trong Column
+
 ---
 
-## Giai đoạn 4: Xử lý Logic
+## Version 3: StatefulWidget - Danh sách động
 
-Quay lại class `MemberFunnyGameScreen`, chúng ta cần thêm "bộ não" cho ứng dụng.
+**Mục tiêu:** Học cách quản lý trạng thái với StatefulWidget và setState.
 
-### Bước 4.1: Khai báo Controller và Random
-
-Khai báo các biến này ở đầu class `MemberFunnyGameScreen`. Đừng quên gán controller vào 2 `TextField` ở Giai đoạn 2 nhé!
+Tạo file `lib/screens/member_screen_v3.dart`:
 
 ```dart
-  // Controller để đọc dữ liệu từ TextField
+import 'package:flutter/material.dart';
+import '../models/member.dart';
+
+class MemberScreenV3 extends StatefulWidget {
+  const MemberScreenV3({super.key});
+
+  @override
+  State<MemberScreenV3> createState() => _MemberScreenV3State();
+}
+
+class _MemberScreenV3State extends State<MemberScreenV3> {
+  // BIẾN TRẠNG THÁI - sẽ thay đổi theo thời gian
+  List<Member> _members = [];
+
+  // CONTROLLER - để đọc giá trị từ TextField
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descController = TextEditingController();
 
-  final Random _random = Random();
-```
-
-### Bước 4.2: Chuẩn bị dữ liệu ngẫu nhiên
-
-Thêm danh sách nghề nghiệp và hàm tạo màu.
-
-```dart
-  final List<String> _funnyJobs = const [
-    'Chuyên gia săn sale Shopee 1k',
-    'Tổng thống nước Ngủ Ngày',
-    'Tiến sĩ văn học chuyên ngành chém gió',
-    'Vận động viên lướt Facebook Olympic',
-    'Thám tử tư chuyên soi crush',
-  ];
-
-  Color _randomAvatarColor() {
-    // Các em có thể thêm nhiều màu hơn vào đây
-    final colors = [Colors.purple, Colors.blue, Colors.pink, Colors.orange];
-    return colors[_random.nextInt(colors.length)];
-  }
-```
-
-### Bước 4.3: Viết hàm thêm thành viên (\_addMember)
-
-```dart
-  void _addMember(BuildContext context) {
+  // HÀM THÊM THÀNH VIÊN
+  void _addMember() {
     final name = _nameController.text.trim();
+    final desc = _descController.text.trim();
 
-    // 1. Kiểm tra nếu chưa nhập tên
+    // Kiểm tra tên rỗng
     if (name.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Vui lòng nhập tên để xem bói nhé!')),
+        const SnackBar(content: Text('Vui lòng nhập tên!')),
       );
       return;
     }
 
-    // 2. Random nghề nghiệp và màu sắc
-    final funnyJob = _funnyJobs[_random.nextInt(_funnyJobs.length)];
-    final color = _randomAvatarColor();
-
-    // 3. Tạo đối tượng Member mới
     final newMember = Member(
       name: name,
-      description: _descController.text.isEmpty ? 'Người bí ẩn' : _descController.text,
-      funnyJob: funnyJob,
-      avatarColor: color,
+      description: desc.isEmpty ? 'Chưa có mô tả' : desc,
     );
 
-    // ... (Phần cập nhật danh sách sẽ làm ở Giai đoạn 5)
+    // GỌI setState ĐỂ CẬP NHẬT GIAO DIỆN
+    setState(() {
+      _members = [..._members, newMember];
+    });
 
-    // 4. Xóa trắng ô nhập sau khi thêm
+    // Xóa nội dung TextField
     _nameController.clear();
     _descController.clear();
   }
+
+  @override
+  void dispose() {
+    // Giải phóng controller khi widget bị hủy
+    _nameController.dispose();
+    _descController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Danh sách thành viên'),
+        centerTitle: true,
+        backgroundColor: const Color(0xFF7E57C2),
+        foregroundColor: Colors.white,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Form với Controller
+            TextField(
+              controller: _nameController,  // Gắn controller
+              decoration: const InputDecoration(
+                labelText: 'Tên',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _descController,  // Gắn controller
+              decoration: const InputDecoration(
+                labelText: 'Mô tả',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 12),
+            ElevatedButton(
+              onPressed: _addMember,  // Gọi hàm khi nhấn
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF7E57C2),
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Thêm thành viên'),
+            ),
+
+            const SizedBox(height: 24),
+
+            const Text(
+              'Danh sách:',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+
+            // Danh sách động
+            Expanded(
+              child: _members.isEmpty
+                  ? const Center(child: Text('Chưa có thành viên nào'))
+                  : SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          for (final member in _members)
+                            Card(
+                              child: ListTile(
+                                leading: CircleAvatar(
+                                  child: Text(member.name[0].toUpperCase()),
+                                ),
+                                title: Text(member.name),
+                                subtitle: Text(member.description),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 ```
+
+### Kiến thức Version 3
+
+**StatelessWidget vs StatefulWidget:**
+
+| Đặc điểm | StatelessWidget | StatefulWidget |
+|----------|-----------------|----------------|
+| Trạng thái | Không có | Có (lưu trong State) |
+| UI thay đổi | Không | Có (khi gọi setState) |
+| Cấu trúc | 1 class | 2 class (Widget + State) |
+| Dùng khi | UI tĩnh | UI cần cập nhật |
+
+**Các khái niệm quan trọng:**
+
+| Khái niệm | Giải thích |
+|-----------|------------|
+| `TextEditingController` | Đọc và quản lý nội dung của TextField |
+| `setState(() {...})` | Báo Flutter vẽ lại UI với dữ liệu mới |
+| `dispose()` | Được gọi khi widget bị hủy, dùng để giải phóng tài nguyên |
+| `[..._members, newMember]` | Tạo danh sách mới = danh sách cũ + phần tử mới |
+
+**Tại sao dùng `[..._members, newMember]` thay vì `_members.add()`?**
+
+Flutter so sánh object để quyết định có vẽ lại không. Nếu dùng `add()`, biến `_members` vẫn trỏ đến cùng một list, Flutter có thể không nhận ra sự thay đổi. Tạo list mới đảm bảo Flutter luôn nhận thấy sự thay đổi.
 
 ---
 
-## Giai đoạn 5: Kết nối dữ liệu (State Management)
+## Version 4: Thêm Loading Modal
 
-Đây là bước quan trọng nhất để danh sách tự động cập nhật khi bấm nút.
+**Mục tiêu:** Học cách xử lý bất đồng bộ (async/await) và hiển thị loading.
 
-### Bước 5.1: Khai báo ValueNotifier
-
-Thay vì dùng `List<Member>` thường, ta dùng `ValueNotifier`.
+Thay đổi hàm `_addMember` thành async:
 
 ```dart
-  // Biến này sẽ thông báo cho UI biết khi danh sách thay đổi
-  final ValueNotifier<List<Member>> _membersNotifier = ValueNotifier([]);
-```
+// Hàm thêm thành viên với loading
+Future<void> _addMember() async {
+  final name = _nameController.text.trim();
+  final desc = _descController.text.trim();
 
-### Bước 5.2: Cập nhật hàm \_addMember
+  if (name.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Vui lòng nhập tên!')),
+    );
+    return;
+  }
 
-Thêm dòng code này vào vị trí `...` ở Bước 4.3.
-
-```dart
-    // CẬP NHẬT TRẠNG THÁI:
-    // Tạo danh sách mới = Danh sách cũ + Thành viên mới
-    _membersNotifier.value = [..._membersNotifier.value, newMember];
-```
-
-### Bước 5.3: Hiển thị danh sách động
-
-Thay thế phần `Text('Chưa có ai được Đoán')` ở Giai đoạn 3 bằng `ValueListenableBuilder`.
-
-```dart
-Expanded(
-  child: ValueListenableBuilder<List<Member>>(
-    valueListenable: _membersNotifier, // Lắng nghe biến này
-    builder: (context, members, child) {
-      return SingleChildScrollView(
-        child: Column(
-          children: [
-            // Dùng vòng lặp để tạo ra các thẻ MemberCard
-            for (final member in members)
-              _MemberCard(member: member),
-
-            // Hiển thị thông báo nếu danh sách rỗng
-            if (members.isEmpty)
-              Padding(
-                padding: const EdgeInsets.only(top: 32.0),
-                child: Text(
-                  'Chưa có ai được Đoán, hãy nhập tên để bắt đầu!',
-                  style: TextStyle(color: Colors.grey.shade600),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-          ],
+  // HIỂN THỊ LOADING MODAL
+  showDialog(
+    context: context,
+    barrierDismissible: false,  // Không đóng khi nhấn bên ngoài
+    builder: (context) {
+      return const PopScope(
+        canPop: false,  // Không cho phép back
+        child: Center(
+          child: Card(
+            child: Padding(
+              padding: EdgeInsets.all(20),
+              child: CircularProgressIndicator(),
+            ),
+          ),
         ),
       );
     },
+  );
+
+  // GIẢ LẬP DELAY 3 GIÂY (thay bằng gọi API thực tế)
+  await Future.delayed(const Duration(seconds: 3));
+
+  // KIỂM TRA WIDGET CÒN TỒN TẠI KHÔNG
+  if (!mounted) return;
+
+  // ĐÓNG LOADING MODAL
+  Navigator.of(context).pop();
+
+  final newMember = Member(
+    name: name,
+    description: desc.isEmpty ? 'Chưa có mô tả' : desc,
+  );
+
+  setState(() {
+    _members = [..._members, newMember];
+  });
+
+  _nameController.clear();
+  _descController.clear();
+}
+```
+
+### Kiến thức Version 4
+
+| Khái niệm | Giải thích |
+|-----------|------------|
+| `async` | Đánh dấu hàm có thể chờ đợi (bất đồng bộ) |
+| `await` | Chờ một Future hoàn thành |
+| `Future<void>` | Kiểu trả về cho hàm async không trả về giá trị |
+| `showDialog` | Hiển thị một dialog modal |
+| `barrierDismissible: false` | Không cho đóng dialog khi nhấn bên ngoài |
+| `PopScope(canPop: false)` | Không cho phép nút back đóng dialog |
+| `mounted` | Kiểm tra widget còn tồn tại không (tránh lỗi) |
+| `Navigator.of(context).pop()` | Đóng dialog hoặc quay lại màn hình trước |
+
+**Tại sao cần kiểm tra `mounted`?**
+
+Khi đang chờ `await`, người dùng có thể thoát khỏi màn hình. Nếu widget đã bị hủy mà ta vẫn dùng `context`, ứng dụng sẽ crash. Kiểm tra `mounted` giúp tránh lỗi này.
+
+---
+
+## Version 5: Tích hợp Gemini AI
+
+**Mục tiêu:** Gọi API thực tế để nhận gợi ý từ AI.
+
+Ở version này, chúng ta sử dụng `GeminiService` đã được chuẩn bị sẵn. Các em chỉ cần gọi hàm như sau:
+
+```dart
+import '../services/gemini_service.dart';
+
+// Trong hàm _addMember, thay Future.delayed bằng:
+try {
+  // Gọi Gemini API
+  final suggestion = await GeminiService.suggestMajor(
+    name: name,
+    description: desc,
+  );
+
+  if (!mounted) return;
+  Navigator.of(context).pop();  // Đóng loading
+
+  final newMember = Member(
+    name: name,
+    description: desc,
+    idealJob: suggestion,  // Lưu kết quả AI
+  );
+
+  setState(() {
+    _members = [..._members, newMember];
+  });
+
+  _nameController.clear();
+  _descController.clear();
+} catch (e) {
+  // Xử lý lỗi
+  if (mounted) {
+    Navigator.of(context).pop();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Lỗi: $e')),
+    );
+  }
+}
+```
+
+**Hiển thị kết quả trong ListTile:**
+
+```dart
+ListTile(
+  leading: CircleAvatar(
+    backgroundColor: const Color(0xFF7E57C2),
+    child: Text(
+      member.name[0].toUpperCase(),
+      style: const TextStyle(color: Colors.white),
+    ),
+  ),
+  title: Text('${member.name} - ${member.description}'),
+  subtitle: Text(
+    member.idealJob ?? 'Đang chờ phân tích...',
   ),
 ),
 ```
 
-### Bước 5.4: Gắn hàm vào nút bấm
+### Kiến thức Version 5
 
-Cuối cùng, quay lại nút `ElevatedButton` ở Giai đoạn 2 và gọi hàm `_addMember`.
+| Khái niệm | Giải thích |
+|-----------|------------|
+| `try/catch` | Bắt và xử lý lỗi khi gọi API |
+| `??` | Toán tử null-coalescing: dùng giá trị bên phải nếu bên trái null |
+| `'${...}'` | String interpolation: chèn biến vào chuỗi |
 
-```dart
-onPressed: () => _addMember(context),
-```
+---
 
 ## Tổng kết
 
-Chúc mừng các em! 🎉 Các em đã hoàn thành ứng dụng "Máy Đoán".
-Hãy chạy thử lệnh `flutter run` và xem kết quả nhé.
+Chúc mừng các em đã hoàn thành ứng dụng AI Gợi Ý Ngành Học!
+
+**Tóm tắt những gì đã học:**
+
+| Version | Kiến thức |
+|---------|-----------|
+| V1 | Scaffold, Column, TextField, Button |
+| V2 | Expanded, for loop, ListTile, Card |
+| V3 | StatefulWidget, setState, TextEditingController |
+| V4 | async/await, showDialog, mounted |
+| V5 | try/catch, API integration |
 
 **Bài tập về nhà:**
 
-1.  Thêm nút "Xóa danh sách" để reset game.
-2.  Thêm nhiều nghề nghiệp hài hước hơn nữa vào danh sách.
-3.  Thêm random ảnh avatar trong 1 list ảnh cho trước thay vì chỉ random màu sắc.
+1. Thêm nút "Xóa tất cả" để reset danh sách.
+2. Thêm validation: đặc điểm phải có ít nhất 10 ký tự.
+3. Thay đổi màu sắc CircleAvatar dựa trên tên (mỗi tên một màu khác nhau).
+
+---
+
+## Bài tập nâng cao: Leaderboard
+
+Tạo một ứng dụng Leaderboard với các yêu cầu sau:
+
+**Yêu cầu:**
+- Form nhập liệu gồm 2 trường: Name (tên) và Score (điểm số)
+- Hiển thị danh sách người chơi sắp xếp theo điểm giảm dần (cao nhất ở trên)
+- Top 3 người đứng đầu hiển thị icon huy chương với màu tương ứng:
+  - Hạng 1: Vàng (Colors.amber)
+  - Hạng 2: Bạc (Colors.grey)
+  - Hạng 3: Đồng (Colors.brown)
+
