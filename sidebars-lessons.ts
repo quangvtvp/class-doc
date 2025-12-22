@@ -76,6 +76,11 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
+              id: 'Bai-13-Mini-Game-Du-Doan-Nghe-Nghiep/stateful_widget_guide',
+              label: 'Kiến thức bổ trợ: StatefulWidget',
+            },
+            {
+              type: 'doc',
               id: 'Bai-13-Mini-Game-Du-Doan-Nghe-Nghiep/tutorial',
               label: '2. Hướng dẫn Code',
             },
