@@ -104,6 +104,8 @@ ListView.separated(
 
 ### 1.5 Ví dụ: ListView cuộn ngang
 
+![Simple Horizontal ListView](images/lesson-14/simple-horizontal.png)
+
 <details>
 <summary>Code: Horizontal ListView example</summary>
 
@@ -141,6 +143,8 @@ SizedBox(
 ### 2.2 Các cách tạo GridView
 
 #### Cách 1: GridView.count (cố định số cột)
+
+![Simple Grid View](images/lesson-14/simple-grid.png)
 
 <details>
 <summary>Code: GridView.count example</summary>
@@ -264,6 +268,8 @@ GridView.builder(
 
 **Mục tiêu:** Tạo danh sách item, tap để chọn/bỏ chọn.
 
+![Selectable List](images/lesson-14/list-color-selectable.png)
+
 <details>
 <summary>Code: SelectableListScreen</summary>
 
@@ -331,6 +337,8 @@ class _SelectableListScreenState extends State<SelectableListScreen> {
 ---
 
 ### 🎮 Mini Project 2: Grid Card Preview (Chuẩn bị cho Game)
+
+![Game Card Preview](images/lesson-14/game-card.png)
 
 **Mục tiêu:** Tạo grid 4x4 hiển thị các emoji - làm tiền đề cho game Memory Card ở bài sau.
 
