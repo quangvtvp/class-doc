@@ -88,13 +88,13 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
-          id: 'Bai-14-listview-gridview',
-          label: 'Bài 14: ListView & GridView',
+          id: 'Bai-15-listview-gridview',
+          label: 'Bài 15: ListView & GridView',
         },
         {
           type: 'doc',
-          id: 'Bai-15-memory-card-game',
-          label: 'Bài 15: Memory Card Game',
+          id: 'Bai-16-memory-card-game',
+          label: 'Bài 16: Memory Card Game',
         },
       ],
     },

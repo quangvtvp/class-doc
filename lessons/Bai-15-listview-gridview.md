@@ -1,10 +1,10 @@
 ---
-sidebar_position: 14
-title: "Bài 14: ListView & GridView"
+sidebar_position: 15
+title: "Bài 15: ListView & GridView"
 description: Học cách sử dụng ListView và GridView để hiển thị danh sách trong Flutter
 ---
 
-# Bài 14: ListView & GridView
+# Bài 15: ListView & GridView
 
 Chào các em! Sau khi đã thành thạo StatefulWidget và quản lý trạng thái, hôm nay chúng ta sẽ học về hai widget quan trọng để hiển thị danh sách: **ListView** và **GridView**.
 

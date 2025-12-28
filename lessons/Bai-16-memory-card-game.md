@@ -1,10 +1,10 @@
 ---
-sidebar_position: 15
-title: "Bài 15: Memory Card Game với Animation & Sound"
+sidebar_position: 16
+title: "Bài 16: Memory Card Game với Animation & Sound"
 description: Hoàn thiện game lật thẻ tìm cặp với hiệu ứng và âm thanh
 ---
 
-# Bài 15: Memory Card Game với Animation & Sound
+# Bài 16: Memory Card Game với Animation & Sound
 
 Chào các em! Ở bài trước, chúng ta đã học cách tạo Grid và hiển thị các thẻ bài. Hôm nay, chúng ta sẽ hoàn thiện game **Memory Card** với đầy đủ:
 - ✅ Logic so sánh 2 thẻ
