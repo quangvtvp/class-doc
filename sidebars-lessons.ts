@@ -96,6 +96,11 @@ const sidebars: SidebarsConfig = {
           id: 'Bai-16-memory-card-game',
           label: 'Bài 16: Memory Card Game',
         },
+        {
+          type: 'doc',
+          id: 'Bai-17-navigation-data-passing',
+          label: 'Bài 17: Navigation & Data Passing',
+        },
       ],
     },
   ],
