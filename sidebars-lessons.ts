@@ -106,6 +106,11 @@ const sidebars: SidebarsConfig = {
           id: 'Bai-18-http-request',
           label: 'Bài 18: HTTP Request',
         },
+        {
+          type: 'doc',
+          id: 'Bai-19-Lap-Trinh-Cong-Tac-GitHub-Copilot',
+          label: 'Bài 19: Lập Trình Cộng Tác với GitHub Copilot',
+        },
       ],
     },
   ],
