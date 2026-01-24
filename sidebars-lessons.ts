@@ -101,6 +101,11 @@ const sidebars: SidebarsConfig = {
           id: 'Bai-17-navigation-data-passing',
           label: 'Bài 17: Navigation & Data Passing',
         },
+        {
+          type: 'doc',
+          id: 'Bai-18-http-request',
+          label: 'Bài 18: HTTP Request',
+        },
       ],
     },
   ],
