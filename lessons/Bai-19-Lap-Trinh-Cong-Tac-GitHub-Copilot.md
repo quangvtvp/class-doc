@@ -14,6 +14,8 @@ Trong thời đại AI phát triển mạnh mẽ, việc biết cách **làm vi�
 
 ## Mục tiêu bài học
 
+Sau buổi học này, các em sẽ:
+
 - ✅ Hiểu được **cơ chế hoạt động** của các AI coding (ChatGPT, Gemini, GitHub Copilot)
 - ✅ Biết tại sao AI hay **"ảo giác"** và cách phòng tránh
 - ✅ Nắm vững tầm quan trọng của **context** khi làm việc với AI
@@ -24,7 +26,50 @@ Trong thời đại AI phát triển mạnh mẽ, việc biết cách **làm vi�
 
 ## Phần 1: AI Coding hoạt động như thế nào?
 
-### 1.1. LLM - "Bộ não" của AI
+### 1.1. 🎮 Game đoán từ - Hiểu cơ chế LLM
+
+Trước khi đọc lý thuyết, hãy thử chơi game này để tự trải nghiệm cách AI "suy nghĩ".
+
+**Cách chơi:** Đọc câu và đoán từ tiếp theo!
+
+| Câu chưa hoàn thành           | Em đoán từ gì? | Đáp án phổ biến |
+| ----------------------------- | -------------- | --------------- |
+| "Xin chào, tôi tên là..."     | ?              | (tên người)     |
+| "1, 2, 3, 4, ..."             | ?              | 5               |
+| "Hà Nội là thủ đô của..."     | ?              | Việt Nam        |
+| "Con mèo kêu..."              | ?              | meo meo         |
+| "import 'package:flutter/..." | ?              | material.dart   |
+
+**💡 Bài học rút ra:**
+
+- Các em vừa làm **ĐÚNG như cách AI hoạt động!**
+- AI không "hiểu" nghĩa - nó **đoán từ tiếp theo** dựa trên những gì đã thấy trước đó
+- Càng có nhiều **context** (ngữ cảnh), càng đoán **chính xác** hơn
+
+### 1.2. Thử nghiệm với AI thật
+
+Hãy tự thử các prompt sau trên ChatGPT hoặc Copilot để thấy cách AI hoạt động!
+
+**Thử nghiệm 1:** Gõ vào ChatGPT:
+
+```
+Hoàn thành câu sau: "Tôi đi học về, mở cửa nhà thì thấy..."
+```
+
+→ AI sẽ đoán tiếp câu chuyện!
+
+**Thử nghiệm 2:** Gõ tiếp:
+
+```
+Hoàn thành code:
+class MyApp extends
+```
+
+→ AI đoán `StatelessWidget` hoặc `StatefulWidget` vì đó là pattern phổ biến!
+
+---
+
+### 1.3. LLM - "Bộ não" của AI
 
 **LLM** (Large Language Model) là "bộ não" đằng sau ChatGPT, Gemini, và GitHub Copilot. Hãy tưởng tượng LLM như một **học sinh siêu giỏi** đã đọc hàng tỷ trang sách, code, và tài liệu trên internet.
 
@@ -37,22 +82,36 @@ Trong thời đại AI phát triển mạnh mẽ, việc biết cách **làm vi�
 │   (Tỷ dòng code,    →    (Học patterns,  →  (Dự đoán từ        │
 │    tài liệu, sách)        quy luật)          tiếp theo)        │
 │                                                                 │
+│   Ví dụ đơn giản:                                               │
+│   "Con chó" → 99% là "sủa" (vì AI thấy pattern này nhiều)      │
+│   "for (int i" → 90% là "= 0;" (vì code thường viết vậy)       │
+│                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
 **Điểm quan trọng:**
 
-| Đặc điểm                  | Giải thích                                                            |
-| ------------------------- | --------------------------------------------------------------------- |
-| **Dự đoán từ tiếp theo**  | LLM không "hiểu" code, nó **dự đoán** từ tiếp theo dựa trên xác suất  |
-| **Không có trí nhớ**      | Mỗi cuộc hội thoại là độc lập, AI không nhớ project của em từ hôm qua |
-| **Phụ thuộc vào context** | AI chỉ biết những gì em cung cấp trong cuộc hội thoại hiện tại        |
+| Đặc điểm                  | Giải thích                                                            | Ví dụ thực tế                      |
+| ------------------------- | --------------------------------------------------------------------- | ---------------------------------- |
+| **Dự đoán từ tiếp theo**  | LLM không "hiểu" code, nó **dự đoán** từ tiếp theo dựa trên xác suất  | Như game đoán từ vừa chơi!         |
+| **Không có trí nhớ**      | Mỗi cuộc hội thoại là độc lập, AI không nhớ project của em từ hôm qua | Chat mới = AI quên hết             |
+| **Phụ thuộc vào context** | AI chỉ biết những gì em cung cấp trong cuộc hội thoại hiện tại        | Như hỏi đường mà không nói địa chỉ |
 
-### 1.2. Tại sao AI hay "Ảo giác" (Hallucination)?
+### 1.4. Tại sao AI hay "Ảo giác" (Hallucination)?
 
 **Hallucination** là hiện tượng AI tự tin đưa ra thông tin **sai** hoặc **bịa đặt**.
 
-**Ví dụ trong Flutter:**
+> 🎭 **Ví dụ ngoài đời:** Hỏi AI "Ai là tổng thống Việt Nam năm 2020?" - AI có thể tự tin trả lời một cái tên... hoàn toàn sai! (Việt Nam có Chủ tịch nước, không phải Tổng thống)
+
+#### Ví dụ ảo giác trong cuộc sống:
+
+| Câu hỏi                                    | AI có thể trả lời    | Sự thật                                        |
+| ------------------------------------------ | -------------------- | ---------------------------------------------- |
+| "Sách 'Đắc Nhân Tâm' có bao nhiêu chương?" | "15 chương" (tự tin) | Có thể sai vì AI đoán!                         |
+| "Quán phở ngon nhất Hà Nội ở đâu?"         | Địa chỉ cụ thể       | Có thể là địa chỉ không tồn tại!               |
+| "Công thức nấu phở có gì?"                 | Liệt kê nguyên liệu  | Có thể thiếu/thừa vì AI "trộn" nhiều công thức |
+
+#### Ví dụ ảo giác trong lập trình:
 
 ```dart
 // ❌ AI có thể gợi ý code SAI như này:
@@ -70,19 +129,22 @@ Text(
 
 **Nguyên nhân AI "ảo giác":**
 
-| Nguyên nhân                        | Giải thích                                                |
-| ---------------------------------- | --------------------------------------------------------- |
-| 📅 **Kiến thức cũ**                | AI được train trên data cũ, Flutter có thể đã thay đổi    |
-| 🔀 **Trộn lẫn thông tin**          | AI "nhớ" nhiều widget tương tự, có thể nhầm lẫn cách dùng |
-| 🤷 **Không biết nói "Không biết"** | AI luôn cố gắng trả lời, hiếm khi thừa nhận không biết    |
+| Nguyên nhân                        | Giải thích                                             | Ví dụ dễ hiểu                                       |
+| ---------------------------------- | ------------------------------------------------------ | --------------------------------------------------- |
+| 📅 **Kiến thức cũ**                | AI được train trên data cũ, thế giới đã thay đổi       | Như đọc sách địa lý năm 2010, không biết có cầu mới |
+| 🔀 **Trộn lẫn thông tin**          | AI "nhớ" nhiều thứ tương tự, có thể nhầm lẫn           | Như nhớ mặt bạn A nhưng gọi tên bạn B               |
+| 🤷 **Không biết nói "Không biết"** | AI luôn cố gắng trả lời, hiếm khi thừa nhận không biết | Như bạn sĩ diện không dám nói "tao không biết"      |
 
-**Ví dụ ảo giác phổ biến:**
+**Ví dụ ảo giác phổ biến trong Flutter:**
 
-| Loại ảo giác         | Ví dụ                                                     |
-| -------------------- | --------------------------------------------------------- |
-| Widget không tồn tại | `CoolButton` (bịa tên)                                    |
-| API đã cũ            | `FlatButton` (đã đổi thành `TextButton`)                  |
-| Tham số sai          | `Container(text: "Hi")` - Container không có tham số text |
+| Loại ảo giác          | Ví dụ                                                     | Cách phát hiện           |
+| --------------------- | --------------------------------------------------------- | ------------------------ |
+| Widget không tồn tại  | `CoolButton`, `SuperCard` (bịa tên)                       | Hover xem có gợi ý không |
+| API đã cũ             | `FlatButton` (đã đổi thành `TextButton`)                  | Thấy gạch vàng warning   |
+| Tham số sai           | `Container(text: "Hi")` - Container không có tham số text | Lỗi đỏ khi compile       |
+| Package không tồn tại | `import 'package:super_ui/super_ui.dart'`                 | Lỗi khi pub get          |
+
+> ⚠️ **Quy tắc vàng:** Luôn **chạy thử code** và **kiểm tra lỗi** trước khi tin AI!
 
 ---
 
@@ -94,7 +156,37 @@ Text(
 
 > 🎭 **Ví dụ:** Em nhờ một người lạ chỉ đường đến "quán cà phê". Người đó sẽ hỏi: "Quán nào? Ở đâu?". Nếu em chỉ nói "quán cà phê" mà không nói thêm gì, họ sẽ **đoán bừa** → Giống như AI khi thiếu context!
 
-### 2.2. So sánh Prompt có Context vs Không có Context
+### 2.2. 🧪 Thí nghiệm: Cùng 1 câu hỏi, 3 cách hỏi
+
+Hãy thử chạy 3 prompt sau trên ChatGPT/Copilot và quan sát sự khác biệt!
+
+#### Thí nghiệm 1: Hỏi về cuộc sống
+
+| Cấp độ               | Prompt                                                                      | Kết quả AI trả về                         |
+| -------------------- | --------------------------------------------------------------------------- | ----------------------------------------- |
+| ❌ **Không context** | "Cho tôi công thức"                                                         | AI hỏi lại: "Công thức gì?" hoặc đoán bừa |
+| 😐 **Ít context**    | "Cho tôi công thức nấu phở"                                                 | AI cho công thức chung chung              |
+| ✅ **Đủ context**    | "Cho tôi công thức nấu phở bò Nam Định cho 4 người, tôi không ăn được hành" | AI cho công thức chi tiết, đúng yêu cầu   |
+
+#### Thí nghiệm 2: Hỏi về code Flutter
+
+| Cấp độ               | Prompt                                                                                                                 | Kết quả AI trả về              |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------ |
+| ❌ **Không context** | "Tạo button"                                                                                                           | Button đơn giản, không style   |
+| 😐 **Ít context**    | "Tạo button màu xanh trong Flutter"                                                                                    | ElevatedButton màu xanh cơ bản |
+| ✅ **Đủ context**    | "Tạo button 'Đăng nhập' trong Flutter: màu xanh dương (#2196F3), bo góc 12px, full width, khi nhấn thì print('Login')" | Code chính xác như mong muốn   |
+
+💡 **Hãy thử:** Chạy cả 3 prompt và so sánh code output để thấy sự khác biệt!
+
+#### Thí nghiệm 3: Nhờ việc ngoài đời
+
+| Cấp độ               | Prompt                                                                                                 | AI sẽ hiểu                     |
+| -------------------- | ------------------------------------------------------------------------------------------------------ | ------------------------------ |
+| ❌ **Không context** | "Viết email"                                                                                           | Email gì? Cho ai? Về việc gì?  |
+| 😐 **Ít context**    | "Viết email xin nghỉ học"                                                                              | Thiếu: lý do, ngày nào, gửi ai |
+| ✅ **Đủ context**    | "Viết email xin nghỉ học gửi cô giáo chủ nhiệm, lý do bị ốm, nghỉ ngày mai (thứ 3), giọng văn lịch sự" | Email hoàn chỉnh, đúng tone    |
+
+### 2.3. So sánh Prompt có Context vs Không có Context (Flutter)
 
 **❌ Prompt THIẾU context:**
 
@@ -117,13 +209,14 @@ Tạo màn hình Login cho app Flutter với:
 
 → AI hiểu rõ và tạo code phù hợp!
 
-### 2.3. Các loại Context cần cung cấp
+### 2.4. Các loại Context cần cung cấp
 
-| Loại Context | Ví dụ                                         |
-| ------------ | --------------------------------------------- |
-| **UI**       | Màu sắc, layout, các widget cần dùng          |
-| **Logic**    | Khi nhấn nút thì làm gì, validate như thế nào |
-| **Cấu trúc** | StatelessWidget hay StatefulWidget, tên file  |
+| Loại Context  | Ví dụ                                         | Tại sao cần?                      |
+| ------------- | --------------------------------------------- | --------------------------------- |
+| **UI**        | Màu sắc, layout, các widget cần dùng          | Để UI đúng design                 |
+| **Logic**     | Khi nhấn nút thì làm gì, validate như thế nào | Để code hoạt động đúng            |
+| **Cấu trúc**  | StatelessWidget hay StatefulWidget, tên file  | Để code phù hợp với project       |
+| **Ràng buộc** | Không dùng package ngoài, code đơn giản       | Tránh AI dùng thứ mình không muốn |
 
 ---
 
@@ -234,14 +327,36 @@ Tạo ProfileCard widget hiển thị thông tin user.
 | **Sửa lỗi**    | Code bị lỗi           | "Code này lỗi [error], giúp em sửa"       |
 | **Cải tiến**   | Muốn code đẹp hơn     | "Làm đẹp UI này, thêm padding và màu sắc" |
 
-### 4.3. Những điều KHÔNG nên làm
+### 4.3. 📊 Bảng so sánh: Prompt TỆ vs Prompt TỐT
 
-| ❌ Tránh               | Tại sao                 |
-| ---------------------- | ----------------------- |
-| "Làm app cho em"       | Quá chung chung         |
-| "Sửa lỗi đi"           | Không mô tả lỗi gì      |
-| Copy 500 dòng code     | AI khó focus vào vấn đề |
-| "Tạo app giống TikTok" | Scope quá lớn           |
+Đây là phần quan trọng! Hãy xem sự khác biệt rõ ràng giữa prompt tệ và prompt tốt.
+
+#### Ví dụ trong cuộc sống:
+
+| ❌ Prompt TỆ          | ✅ Prompt TỐT                                                                                       | Tại sao tốt hơn?               |
+| --------------------- | --------------------------------------------------------------------------------------------------- | ------------------------------ |
+| "Giúp tôi học"        | "Giúp tôi ôn tập Toán chương hàm số lớp 10, tập trung vào dạng bài tìm tập xác định"                | Cụ thể môn, chương, dạng bài   |
+| "Viết văn cho tôi"    | "Viết đoạn văn 150 từ nghị luận xã hội về tác hại của điện thoại, phong cách học sinh cấp 3"        | Rõ độ dài, thể loại, đối tượng |
+| "Dịch sang tiếng Anh" | "Dịch sang tiếng Anh đoạn giới thiệu bản thân sau, giọng formal cho phỏng vấn xin việc: [đoạn văn]" | Rõ ngữ cảnh sử dụng            |
+
+#### Ví dụ trong lập trình Flutter:
+
+| ❌ Prompt TỆ  | ✅ Prompt TỐT                                                                                                 | Kết quả khác biệt           |
+| ------------- | ------------------------------------------------------------------------------------------------------------- | --------------------------- |
+| "Tạo app"     | "Tạo StatelessWidget hiển thị Card chứa tên và avatar người dùng"                                             | Từ cả app → 1 widget cụ thể |
+| "Sửa lỗi đi"  | "Code này lỗi 'setState() called after dispose()'. Em đang dùng StatefulWidget gọi API. Giúp em sửa"          | AI hiểu ngay vấn đề         |
+| "Làm đẹp UI"  | "Thêm padding 16 cho Card, bo góc 12, đổ bóng nhẹ elevation 2, màu nền trắng"                                 | UI đúng như ý muốn          |
+| "Tạo list"    | "Tạo ListView.builder hiển thị 10 sản phẩm, mỗi item là Card có hình ảnh 80x80 bên trái, tên và giá bên phải" | Layout rõ ràng              |
+| "Xử lý click" | "Khi nhấn vào item trong ListView, navigate sang màn DetailScreen và truyền product id qua constructor"       | Logic hoàn chỉnh            |
+
+### 4.4. Những điều KHÔNG nên làm
+
+| ❌ Tránh               | Tại sao                 | Thay bằng                                 |
+| ---------------------- | ----------------------- | ----------------------------------------- |
+| "Làm app cho em"       | Quá chung chung         | Chia nhỏ thành từng màn hình              |
+| "Sửa lỗi đi"           | Không mô tả lỗi gì      | Dán lỗi cụ thể + giải thích bối cảnh      |
+| Copy 500 dòng code     | AI khó focus vào vấn đề | Chỉ copy phần liên quan + chỉ rõ dòng lỗi |
+| "Tạo app giống TikTok" | Scope quá lớn           | "Tạo màn hình feed video cuộn dọc"        |
 
 ---
 
@@ -249,11 +364,12 @@ Tạo ProfileCard widget hiển thị thông tin user.
 
 ### 5.1. Các chế độ của Copilot
 
-| Chế độ       | Mô tả                       | Dùng khi                  |
-| ------------ | --------------------------- | ------------------------- |
-| 💬 **Ask**   | Hỏi đáp, giải thích         | Học concept, hỏi cách làm |
-| ✏️ **Edit**  | Sửa code trong file đang mở | Refactor, sửa nhỏ         |
-| 🤖 **Agent** | AI tự động làm nhiều bước   | Tạo feature mới           |
+| Chế độ       | Mô tả                                              | Dùng khi                     |
+| ------------ | -------------------------------------------------- | ---------------------------- |
+| 💬 **Ask**   | Hỏi đáp, giải thích                                | Học concept, hỏi cách làm    |
+| ✏️ **Edit**  | Sửa code trong file đang mở                        | Refactor, sửa nhỏ            |
+| 🤖 **Agent** | AI tự động làm nhiều bước                          | Tạo feature mới              |
+| 📋 **Plan**  | AI lên kế hoạch trước, em review rồi mới thực hiện | Task phức tạp, cần kiểm soát |
 
 ### 5.2. Agent Mode
 
@@ -296,67 +412,159 @@ Chờ em confirm rồi mới code.
 
 ---
 
-## Phần 6: Thực hành
+## Phần 6: Thực hành 💻
 
-### 6.1. Chuẩn bị
+Phần này chia thành 3 mini-task, mỗi task khoảng 12-15 phút. Hãy làm theo từng bước!
 
-- Flutter project mới
-- Extension GitHub Copilot trong VS Code
-- Đã đăng nhập tài khoản GitHub
+### 6.1. Chuẩn bị (5 phút)
 
-### 6.2. Bài thực hành: Tạo màn hình Profile đơn giản
+**Checklist trước khi bắt đầu:**
 
-**Bước 1: Lên kế hoạch**
+- [ ] Mở VS Code với Flutter project (có thể dùng project cũ hoặc tạo mới)
+- [ ] Đảm bảo extension GitHub Copilot đã cài và đăng nhập
+- [ ] Mở Copilot Chat: `Ctrl+Shift+I` (Windows) hoặc `Cmd+Shift+I` (Mac)
 
-Mở Copilot Chat, chọn Agent Mode, nhập:
+---
+
+### 6.2. Mini-Task 1: Hỏi AI giải thích code (12 phút)
+
+**Mục tiêu:** Học cách dùng AI để hiểu code, không chỉ để tạo code.
+
+**Bước 1:** Copy đoạn code sau vào file Dart:
+
+```dart
+class ProductCard extends StatelessWidget {
+  final String name;
+  final double price;
+  final VoidCallback onTap;
+
+  const ProductCard({
+    super.key,
+    required this.name,
+    required this.price,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            children: [
+              const Icon(Icons.shopping_bag, size: 40),
+              const SizedBox(width: 16),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                  Text('${price.toStringAsFixed(0)}đ'),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+```
+
+**Bước 2:** Bôi đen code, nhấn chuột phải → "Copilot" → "Explain"
+
+**Bước 3:** Đọc giải thích và trả lời câu hỏi:
+
+- `VoidCallback` là gì?
+- Tại sao dùng `const` trước `EdgeInsets.all`?
+- `crossAxisAlignment.start` có nghĩa gì?
+
+**⏱️ Checkpoint:** Các em đã hiểu cách dùng Explain chưa?
+
+---
+
+### 6.3. Mini-Task 2: Dùng Ask Mode để tạo widget (15 phút)
+
+**Mục tiêu:** Tạo widget mới với prompt có đầy đủ context.
+
+**Bước 1:** Mở Copilot Chat, chọn mode **Ask**
+
+**Bước 2:** Nhập prompt (đã có sẵn context đầy đủ):
 
 ```
-@workspace Em muốn tạo màn hình Profile đơn giản cho app Flutter với:
+Tạo StatelessWidget tên UserInfoCard hiển thị thông tin người dùng:
 
-1. AppBar có tiêu đề "Hồ sơ cá nhân"
-2. CircleAvatar lớn ở giữa màn hình (dùng icon person)
-3. Bên dưới có Card hiển thị:
-   - Tên: "Nguyễn Văn A"
-   - Email: "nguyenvana@email.com"
-   - Số điện thoại: "0123456789"
-4. Nút "Chỉnh sửa" ở cuối màn hình
+- Là một Card bo góc 12
+- Bên trong có Row:
+  + Bên trái: CircleAvatar với icon person, size 50
+  + Bên phải: Column chứa 2 Text (tên user bold, email màu xám)
+- Có padding 16 bên trong Card
+- Nhận 2 tham số: String name, String email
 
-Yêu cầu:
-- Sử dụng StatelessWidget
-- Màu chủ đạo xanh dương
-- Code đơn giản, dễ hiểu
-
-Hãy lên kế hoạch trước, chờ em confirm.
+Chỉ tạo widget, không cần main() hay MaterialApp.
 ```
 
-**Bước 2: Review plan và confirm**
+**Bước 3:** Nhận code từ Copilot, **ĐỌC HIỂU** trước khi copy
 
-Đọc kỹ plan, nếu OK thì gõ "OK, bắt đầu code"
-
-**Bước 3: Hỏi giải thích**
-
-Sau khi nhận code:
+**Bước 4:** Hỏi tiếp để hiểu:
 
 ```
-Giải thích code vừa tạo:
-1. CircleAvatar hoạt động như thế nào?
-2. Card và ListTile dùng để làm gì?
-3. Tại sao dùng Column và các widget được sắp xếp như vậy?
+Giải thích tại sao dùng Column với crossAxisAlignment.start?
 ```
 
-**Bước 4: Tự mở rộng**
+**⏱️ Checkpoint:** Code có chạy được không? Có hiểu các widget không?
+
+---
+
+### 6.4. Mini-Task 3: Dùng Agent Mode để tạo màn hình (15 phút)
+
+**Mục tiêu:** Trải nghiệm Agent Mode - AI tự động tạo và sửa file.
+
+**Bước 1:** Mở Copilot Chat, chọn mode **Agent**
+
+**Bước 2:** Nhập prompt:
+
+```
+@workspace Tạo màn hình Profile đơn giản trong file lib/screens/profile_screen.dart:
+
+1. AppBar tiêu đề "Hồ sơ"
+2. Body có Column căn giữa:
+   - CircleAvatar lớn (radius 50) với icon person
+   - SizedBox height 20
+   - Text tên "Nguyễn Văn A" (bold, size 24)
+   - Text email "nguyenvana@email.com" (màu xám)
+3. StatelessWidget, không cần xử lý logic
+
+Hãy tạo file và viết code.
+```
+
+**Bước 3:** Xem Copilot tự động:
+
+- Tạo folder `screens` nếu chưa có
+- Tạo file `profile_screen.dart`
+- Viết code hoàn chỉnh
+
+**Bước 4:** Review code và chạy thử
+
+**⏱️ Checkpoint:** File đã được tạo chưa? App có chạy được không?
+
+---
+
+### 6.5. Tự mở rộng (nếu còn thời gian)
 
 Thử tự prompt để:
 
-- Thêm nút "Đăng xuất" màu đỏ
-- Thêm thông tin "Ngày sinh"
-- Đổi màu chủ đạo sang màu tím
+- Thêm nút "Chỉnh sửa" màu xanh dương
+- Thêm thông tin số điện thoại
+- Thêm Divider giữa các thông tin
 
-### 6.3. Checklist tự kiểm tra
+### 6.6. Checklist cuối buổi
 
-- [ ] Hiểu cách các widget trong code hoạt động
-- [ ] Có thể tự thêm/sửa thông tin hiển thị
-- [ ] Có thể giải thích code cho bạn khác
+- [ ] Biết cách dùng **Explain** để hiểu code
+- [ ] Biết cách dùng **Ask** để tạo widget
+- [ ] Biết cách dùng **Agent** để tạo file mới
+- [ ] Hiểu tầm quan trọng của context trong prompt
 
 ---
 
@@ -419,26 +627,32 @@ Thử tự prompt để:
 
 ## Bài tập về nhà
 
-### Bài 1: Thử thách "Thám tử Bug" 🕵️‍♂️
+> **💡 Mẹo:** Làm bài tập theo thứ tự từ dễ đến khó. Bài 1 và 2 là bắt buộc, Bài 3 là thử thách thêm.
 
-Hãy copy đoạn code lỗi sau vào VS Code và hỏi Copilot cách sửa:
+### Bài 1: Debug với AI (⭐ Dễ - 15 phút)
+
+**Mục tiêu:** Luyện kỹ năng hỏi AI để hiểu và sửa lỗi.
+
+Hãy copy đoạn code lỗi sau vào VS Code:
 
 ```dart
-// Code lỗi: Bấm nút nhưng số không tăng?
+// Code lỗi: Bấm nút nhưng số không tăng trên màn hình?
 class Counter extends StatelessWidget {
   int count = 0;
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text("Số lần bấm: $count"),
+        Text("Số lần bấm: $count", style: TextStyle(fontSize: 24)),
+        SizedBox(height: 20),
         ElevatedButton(
           onPressed: () {
-            count++; // Tại sao UI không cập nhật?
-            print(count);
+            count++;
+            print("Count = $count"); // In ra console thì thấy số tăng
           },
-          child: Text("Tăng số"),
+          child: Text("Bấm tôi!"),
         ),
       ],
     );
@@ -446,33 +660,107 @@ class Counter extends StatelessWidget {
 }
 ```
 
-**Yêu cầu:**
+**Các bước làm:**
 
-1. Hỏi Copilot: "Tại sao code này không cập nhật UI khi bấm nút?"
-2. Áp dụng cách sửa mà Copilot gợi ý.
-3. Ghi lại giải thích của Copilot về sự khác nhau giữa `StatelessWidget` và `StatefulWidget`.
-
-### Bài 2: Tạo Mini-Game "Oẳn Tù Tì" 🎮
-
-Sử dụng **Agent Mode** hoặc **Plan Mode** để tạo game Oẳn Tù Tì (Rock-Paper-Scissors) đơn giản.
-
-**Gợi ý Prompt:**
-
-```
-Tạo game Oẳn Tù Tì đơn giản:
-- UI: 3 nút hình (Búa, Bao, Kéo)
-- Logic:
-  + Người chơi chọn 1 nút
-  + Máy chọn ngẫu nhiên
-  + So sánh kết quả (Thắng/Thua/Hòa)
-- Hiển thị kết quả lên màn hình
-```
-
-**Yêu cầu:**
-
-- Review code xem AI xử lý logic random và so sánh như thế nào.
-- Thử yêu cầu AI thêm tính năng: "Tính điểm" (Thắng +1 điểm).
+1. Chạy thử code, nhấn nút vài lần, quan sát console và màn hình
+2. Bôi đen code, hỏi Copilot: _"Tại sao khi bấm nút, console in ra số tăng nhưng màn hình không đổi?"_
+3. Làm theo hướng dẫn của Copilot để sửa
+4. **Ghi chép lại:** StatelessWidget và StatefulWidget khác nhau thế nào?
 
 ---
 
-_Chúc các em làm việc hiệu quả cùng AI! Nhớ rằng: AI là trợ thủ, nhưng em mới là người điều khiển! 🚀_
+### Bài 2: Tạo Card thông tin (⭐⭐ Trung bình - 20 phút)
+
+**Mục tiêu:** Luyện kỹ năng viết prompt có đầy đủ context.
+
+Dùng Copilot tạo widget hiển thị thông tin một bài hát yêu thích.
+
+**Yêu cầu widget:**
+
+- Tên: `SongCard`
+- Hiển thị: tên bài hát, ca sĩ, thời lượng
+- Có icon nhạc bên trái
+- Có nút play bên phải
+
+**Các bước làm:**
+
+1. **Tự viết prompt** với đầy đủ context (tham khảo công thức ở Phần 4)
+2. Nhận code từ Copilot
+3. Hỏi tiếp: _"Giải thích widget này hoạt động như thế nào?"_
+4. Chạy thử và chụp ảnh kết quả
+
+**Nộp bài:** Screenshot màn hình + prompt em đã dùng
+
+---
+
+### Bài 3: Thử thách sáng tạo (⭐⭐⭐ Khó - 30 phút) - TÙY CHỌN
+
+**Mục tiêu:** Áp dụng tất cả kỹ năng đã học để tạo một màn hình hoàn chỉnh.
+
+**Chọn 1 trong 2 đề:**
+
+**Đề A - Màn hình Hồ sơ Game:**
+
+```
+Tạo màn hình hiển thị hồ sơ người chơi game với:
+- Avatar tròn lớn ở trên
+- Tên người chơi (nickname)
+- Level và số điểm kinh nghiệm
+- 3 badge/huy hiệu đã đạt được (dùng icon)
+- Nút "Chỉnh sửa hồ sơ"
+```
+
+**Đề B - Màn hình Thời tiết:**
+
+```
+Tạo màn hình hiển thị thời tiết với:
+- Icon thời tiết lớn (mặt trời/mây/mưa)
+- Nhiệt độ hiện tại (số lớn)
+- Tên thành phố
+- Độ ẩm và tốc độ gió
+- Dùng màu gradient cho background
+```
+
+**Quy trình làm:**
+
+1. Phân tích yêu cầu → Liệt kê các widget cần dùng
+2. Viết prompt cho từng phần (không làm 1 lần)
+3. Review và hiểu code từng phần
+4. Ghép lại thành màn hình hoàn chỉnh
+5. Hỏi AI giải thích bất kỳ phần nào chưa hiểu
+
+**Nộp bài:** Video ngắn (1-2 phút) demo app và giải thích 1 phần code em thấy hay.
+
+---
+
+## 📝 Mẫu ghi chép bài học
+
+Các em có thể dùng mẫu sau để ghi chép:
+
+```
+🗓️ Ngày: ___________
+
+1. AI hoạt động như thế nào?
+   → Trả lời: ________________________________
+
+2. "Ảo giác" của AI là gì?
+   → Trả lời: ________________________________
+
+3. Tại sao context quan trọng?
+   → Trả lời: ________________________________
+
+4. Một prompt tốt cần có gì?
+   → Trả lời: ________________________________
+
+5. Điều em thấy hay nhất về việc dùng AI:
+   → _______________________________________
+
+6. Điều em cần cẩn thận khi dùng AI:
+   → _______________________________________
+```
+
+---
+
+_Chúc các em làm việc hiệu quả cùng AI! Nhớ rằng: **AI là trợ thủ, nhưng em mới là người điều khiển!** 🚀_
+
+_Có thắc mắc gì, hãy hỏi trên nhóm lớp hoặc dùng chính Copilot để tìm hiểu thêm!_
