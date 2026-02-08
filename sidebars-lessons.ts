@@ -111,6 +111,11 @@ const sidebars: SidebarsConfig = {
           id: 'Bai-19-Lap-Trinh-Cong-Tac-GitHub-Copilot',
           label: 'Bài 19: Lập Trình Cộng Tác với GitHub Copilot',
         },
+        {
+          type: 'doc',
+          id: 'end-course-project',
+          label: 'Dự án cuối khoá',
+        }
       ],
     },
   ],
