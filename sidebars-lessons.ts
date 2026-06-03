@@ -118,6 +118,28 @@ const sidebars: SidebarsConfig = {
         }
       ],
     },
+    {
+      type: 'category',
+      label: 'Agentic software development',
+      collapsed: false,
+      items: [
+        {
+          type: 'doc',
+          id: 'agentic software development/Bai-01-Tu-Game-Caro-Offline-Den-He-Thong-Ung-Dung',
+          label: 'Buổi 1: Tổng quan kiến trúc hệ thống',
+        },
+        {
+          type: 'doc',
+          id: 'agentic software development/Bai-02-Ra-Soat-Project-Khoa-1-Va-Dinh-Huong-Nang-Cap',
+          label: 'Buổi 2: Rà soát project khóa 1',
+        },
+        {
+          type: 'doc',
+          id: 'agentic software development/Bai-03-Thiet-Lap-Backend-Foundation-Va-Auth-Co-Ban',
+          label: 'Buổi 3: Backend foundation và Supabase Auth',
+        },
+      ],
+    },
   ],
 };
 
