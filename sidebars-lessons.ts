@@ -138,6 +138,11 @@ const sidebars: SidebarsConfig = {
           id: 'agentic software development/Bai-03-Thiet-Lap-Backend-Foundation-Va-Auth-Co-Ban',
           label: 'Buổi 3: Backend foundation và Supabase Auth',
         },
+        {
+          type: 'doc',
+          id: 'agentic software development/Bai-05-Prompt-Engineering-Co-Ban-Cho-Xay-Dung-Ung-Dung',
+          label: 'Buổi 5: Prompt engineering cơ bản',
+        },
       ],
     },
   ],
