@@ -143,6 +143,11 @@ const sidebars: SidebarsConfig = {
           id: 'agentic software development/Bai-05-Prompt-Engineering-Co-Ban-Cho-Xay-Dung-Ung-Dung',
           label: 'Buổi 5: Prompt engineering cơ bản',
         },
+        {
+          type: 'doc',
+          id: 'agentic software development/Bai-06-Context-Engineering-Va-Review-Output-AI',
+          label: 'Buổi 6: Context engineering và review output AI',
+        },
       ],
     },
   ],
