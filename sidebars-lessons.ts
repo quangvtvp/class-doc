@@ -148,6 +148,11 @@ const sidebars: SidebarsConfig = {
           id: 'agentic software development/Bai-06-Context-Engineering-Va-Review-Output-AI',
           label: 'Buổi 6: Context engineering và review output AI',
         },
+        {
+          type: 'doc',
+          id: 'agentic software development/Bai-07-Database-Va-Storage-Luu-Avatar-File-Va-Replay-Game-Caro',
+          label: 'Buổi 7: Database và Storage',
+        },
       ],
     },
   ],

@@ -42,7 +42,7 @@ Buổi 6: Context engineering và quy trình review output của AI.
 
 Cụm nội dung này đưa học sinh đến gần hơn với trải nghiệm của một sản phẩm thật thông qua dữ liệu người dùng. Các em sẽ được làm quen với khái niệm storage ở mức high-level, hiểu sự khác nhau giữa lưu file và lưu dữ liệu có cấu trúc, rồi triển khai các tính năng đầu tiên như avatar và hồ sơ cá nhân.
 
-Buổi 7: Giới thiệu storage và xây dựng tính năng upload avatar.
+Buổi 7: Database và Storage - Lưu avatar, file và replay game caro.
 
 Buổi 8: Hoàn thiện profile và lưu dữ liệu người dùng.
 
@@ -82,7 +82,7 @@ Buổi 18: Sử dụng GitHub cùng AI để tổ chức công việc phát tri�
 
 Thay vì lập kế hoạch ngay từ đầu khi trải nghiệm kỹ thuật còn mơ hồ, giai đoạn này được đặt gần cuối khóa để học sinh có đủ cơ sở thực tế trước khi chốt phiên bản sản phẩm cuối cùng. Các em sẽ quay lại với tư duy định hình sản phẩm, cân đối phạm vi, ưu tiên tính năng và chuẩn bị quy trình cộng tác cho dự án cuối khóa. Đây là bước nối giữa quá trình học tính năng rời rạc và giai đoạn xây dựng sản phẩm hoàn chỉnh.
 
-Buổi 19: Định hình sản phẩm và chốt phạm vi cho dự án cuối khóa. 
+Buổi 19: Định hình sản phẩm và chốt phạm vi cho dự án cuối khóa.
 
 Buổi 20: GitHub CLI và buổi chốt kế hoạch cho dự án cuối khóa. Product planning với AI
 
