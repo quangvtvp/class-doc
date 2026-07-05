@@ -1,3 +1,4 @@
+
 # Buổi 7: Database và Storage - Lưu avatar, file và replay game caro
 
 ## Mục tiêu bài học
@@ -34,14 +35,14 @@ Với game caro hoặc project nhóm, dữ liệu có thể chia thành hai nhó
 
 ### Ví dụ trong app caro
 
-| Dữ liệu cần lưu | Dùng gì? | Vì sao? |
-|---|---|---|
-| Ảnh avatar của người chơi | Storage | Đây là file ảnh |
-| Đường dẫn avatar | Database | Đây là text ngắn gắn với user |
-| Tên hiển thị của người chơi | Database | Dữ liệu có cấu trúc |
-| Một file luật chơi PDF | Storage | Đây là file upload |
-| Ai thắng một ván caro | Database | Dữ liệu dạng dòng/cột |
-| Từng nước đi trong ván caro | Database | Cần sắp xếp và query lại để replay |
+| Dữ liệu cần lưu                | Dùng gì? | Vì sao?                                  |
+| ---------------------------------- | ---------- | ----------------------------------------- |
+| Ảnh avatar của người chơi     | Storage    | Đây là file ảnh                       |
+| Đường dẫn avatar               | Database   | Đây là text ngắn gắn với user       |
+| Tên hiển thị của người chơi | Database   | Dữ liệu có cấu trúc                  |
+| Một file luật chơi PDF          | Storage    | Đây là file upload                     |
+| Ai thắng một ván caro           | Database   | Dữ liệu dạng dòng/cột                |
+| Từng nước đi trong ván caro   | Database   | Cần sắp xếp và query lại để replay |
 
 Ghi nhớ nhanh:
 
@@ -58,11 +59,11 @@ Database lưu thông tin có cấu trúc và đường dẫn tới file.
 
 Trong Supabase, Storage thường có 3 khái niệm quan trọng:
 
-| Khái niệm | Giải thích đơn giản | Ví dụ |
-|---|---|---|
-| Bucket | Một khu vực/thư mục lớn để chứa file | `avatars`, `uploads` |
-| Object path | Đường dẫn của file trong bucket | `user_123/avatar.png` |
-| Public URL hoặc signed URL | Link để app tải/hiển thị file | Link ảnh avatar |
+| Khái niệm                 | Giải thích đơn giản                     | Ví dụ                  |
+| --------------------------- | -------------------------------------------- | ------------------------ |
+| Bucket                      | Một khu vực/thư mục lớn để chứa file | `avatars`, `uploads` |
+| Object path                 | Đường dẫn của file trong bucket         | `user_123/avatar.png`  |
+| Public URL hoặc signed URL | Link để app tải/hiển thị file           | Link ảnh avatar         |
 
 ```mermaid
 flowchart LR
@@ -107,12 +108,12 @@ flowchart LR
 
 Flow này chỉ cần nhớ 4 thành phần chính:
 
-| Thành phần | Vai trò trong upload avatar |
-|---|---|
-| User | Bấm `Change Avatar`, chọn ảnh, mở lại profile |
+| Thành phần          | Vai trò trong upload avatar                                    |
+| --------------------- | --------------------------------------------------------------- |
+| User                  | Bấm `Change Avatar`, chọn ảnh, mở lại profile            |
 | Browser / Flutter App | Mở file picker, upload file, đọc profile và hiển thị ảnh |
-| Supabase API / SQL | Lưu và đọc `avatar_path` trong bảng `profiles` |
-| Supabase Storage | Lưu file ảnh thật và trả ảnh khi app cần hiển thị |
+| Supabase API / SQL    | Lưu và đọc `avatar_path` trong bảng `profiles`          |
+| Supabase Storage      | Lưu file ảnh thật và trả ảnh khi app cần hiển thị      |
 
 Điểm quan trọng: database không cần lưu toàn bộ file ảnh. Database chỉ cần lưu đường dẫn:
 
@@ -129,11 +130,11 @@ profiles
 ### Vì sao không lưu trực tiếp ảnh vào database?
 
 | Lưu ảnh trực tiếp trong database | Lưu ảnh trong Storage, path trong database |
-|---|---|
-| Database nặng hơn | Database gọn hơn |
-| Query chậm và khó quản lý | Query nhanh hơn |
-| Khó dùng CDN/cache | Dễ lấy URL để hiển thị |
-| Không phù hợp cho file lớn | Đúng mục đích của Storage |
+| ------------------------------------ | -------------------------------------------- |
+| Database nặng hơn                  | Database gọn hơn                           |
+| Query chậm và khó quản lý       | Query nhanh hơn                             |
+| Khó dùng CDN/cache                 | Dễ lấy URL để hiển thị                 |
+| Không phù hợp cho file lớn       | Đúng mục đích của Storage              |
 
 ### Ví dụ Dart minh họa upload avatar
 
@@ -167,14 +168,14 @@ Avatar là một ví dụ đặc biệt vì mỗi user thường chỉ có một
 
 Ví dụ bảng `user_files`:
 
-| Column | Ý nghĩa |
-|---|---|
-| `id` | Mã file |
-| `user_id` | File thuộc user nào |
-| `file_name` | Tên file gốc |
-| `file_path` | Đường dẫn trong Storage |
-| `file_type` | Loại file |
-| `created_at` | Thời điểm upload |
+| Column         | Ý nghĩa                   |
+| -------------- | --------------------------- |
+| `id`         | Mã file                    |
+| `user_id`    | File thuộc user nào       |
+| `file_name`  | Tên file gốc              |
+| `file_path`  | Đường dẫn trong Storage |
+| `file_type`  | Loại file                  |
+| `created_at` | Thời điểm upload         |
 
 ```text
 Storage:
@@ -223,14 +224,14 @@ Database
 
 ### Các khái niệm cần nhớ
 
-| Khái niệm | Giải thích | Ví dụ |
-|---|---|---|
-| Table | Bảng dữ liệu | `game_moves` |
-| Row | Một dòng dữ liệu | Một nước đi trong ván caro |
-| Column | Một loại thông tin | `row`, `col`, `player` |
-| Primary key | ID duy nhất của mỗi dòng | `id` |
-| Foreign key | Liên kết sang bảng khác | `game_moves.game_id` trỏ tới `game_sessions.id` |
-| Query | Câu hỏi gửi đến database | Lấy tất cả nước đi của ván này |
+| Khái niệm | Giải thích                  | Ví dụ                                               |
+| ----------- | ----------------------------- | ----------------------------------------------------- |
+| Table       | Bảng dữ liệu               | `game_moves`                                        |
+| Row         | Một dòng dữ liệu          | Một nước đi trong ván caro                       |
+| Column      | Một loại thông tin         | `row`, `col`, `player`                          |
+| Primary key | ID duy nhất của mỗi dòng  | `id`                                                |
+| Foreign key | Liên kết sang bảng khác   | `game_moves.game_id` trỏ tới `game_sessions.id` |
+| Query       | Câu hỏi gửi đến database | Lấy tất cả nước đi của ván này               |
 
 ```mermaid
 flowchart TD
@@ -281,29 +282,29 @@ Vẽ lại bàn cờ từ lượt 1 đến lượt 5 theo đúng thứ tự.
 
 Bảng này lưu thông tin tổng quan của một ván đấu.
 
-| Column | Kiểu dữ liệu gợi ý | Ý nghĩa |
-|---|---|---|
-| `id` | UUID | Mã ván đấu |
-| `player_x_id` | UUID | Người chơi X |
-| `player_o_id` | UUID | Người chơi O |
-| `winner` | text | `X`, `O`, `draw` hoặc `null` |
-| `status` | text | `playing`, `finished` |
-| `created_at` | timestamp | Thời điểm bắt đầu |
-| `finished_at` | timestamp | Thời điểm kết thúc |
+| Column          | Kiểu dữ liệu gợi ý | Ý nghĩa                             |
+| --------------- | ----------------------- | ------------------------------------- |
+| `id`          | UUID                    | Mã ván đấu                        |
+| `player_x_id` | UUID                    | Người chơi X                       |
+| `player_o_id` | UUID                    | Người chơi O                       |
+| `winner`      | text                    | `X`, `O`, `draw` hoặc `null` |
+| `status`      | text                    | `playing`, `finished`             |
+| `created_at`  | timestamp               | Thời điểm bắt đầu               |
+| `finished_at` | timestamp               | Thời điểm kết thúc               |
 
 ### Thiết kế bảng `game_moves`
 
 Bảng này lưu từng nước đi.
 
-| Column | Kiểu dữ liệu gợi ý | Ý nghĩa |
-|---|---|---|
-| `id` | UUID | Mã nước đi |
-| `game_id` | UUID | Thuộc ván nào |
-| `move_number` | int | Số thứ tự nước đi |
-| `player` | text | `X` hoặc `O` |
-| `row` | int | Hàng được đánh |
-| `col` | int | Cột được đánh |
-| `created_at` | timestamp | Thời điểm đánh |
+| Column          | Kiểu dữ liệu gợi ý | Ý nghĩa               |
+| --------------- | ----------------------- | ----------------------- |
+| `id`          | UUID                    | Mã nước đi          |
+| `game_id`     | UUID                    | Thuộc ván nào        |
+| `move_number` | int                     | Số thứ tự nước đi |
+| `player`      | text                    | `X` hoặc `O`       |
+| `row`         | int                     | Hàng được đánh    |
+| `col`         | int                     | Cột được đánh     |
+| `created_at`  | timestamp               | Thời điểm đánh     |
 
 ```mermaid
 erDiagram
@@ -334,10 +335,10 @@ erDiagram
 
 Có hai cách phổ biến để lưu ván caro:
 
-| Cách lưu | Ưu điểm | Nhược điểm |
-|---|---|---|
-| Lưu trạng thái bàn cờ cuối cùng | Dễ hiển thị kết quả cuối | Không replay được từng bước |
-| Lưu từng nước đi | Replay được, debug được, thống kê được | Cần thêm bảng và query |
+| Cách lưu                             | Ưu điểm                                        | Nhược điểm                     |
+| -------------------------------------- | ------------------------------------------------- | ---------------------------------- |
+| Lưu trạng thái bàn cờ cuối cùng | Dễ hiển thị kết quả cuối                    | Không replay được từng bước |
+| Lưu từng nước đi                  | Replay được, debug được, thống kê được | Cần thêm bảng và query         |
 
 Vì mục tiêu của chúng ta là replay, lưu từng nước đi là lựa chọn phù hợp hơn.
 
@@ -374,13 +375,13 @@ Trong flow replay cơ bản, Supabase Storage không phải thành phần chính
 
 Các bước cần hiểu:
 
-| Bước | Điều xảy ra |
-|---|---|
-| User click một ô | Browser/Flutter kiểm tra nước đi và cập nhật UI |
-| App lưu move | Supabase API/SQL insert một dòng vào `game_moves` |
-| Ván kết thúc | Supabase API/SQL cập nhật `winner` và `status` trong `game_sessions` |
-| User mở replay | App query lại toàn bộ moves theo `game_id` |
-| App phát replay | App sắp xếp theo `move_number` và vẽ lại bàn cờ từng bước |
+| Bước             | Điều xảy ra                                                               |
+| ------------------ | ---------------------------------------------------------------------------- |
+| User click một ô | Browser/Flutter kiểm tra nước đi và cập nhật UI                       |
+| App lưu move      | Supabase API/SQL insert một dòng vào `game_moves`                       |
+| Ván kết thúc    | Supabase API/SQL cập nhật `winner` và `status` trong `game_sessions`    |
+| User mở replay    | App query lại toàn bộ moves theo `game_id`                              |
+| App phát replay   | App sắp xếp theo `move_number` và vẽ lại bàn cờ từng bước         |
 
 ### Ví dụ dữ liệu replay
 
@@ -499,13 +500,13 @@ Replay ván đấu
 
 ### Bảng quyết định nhanh
 
-| Câu hỏi | Nếu câu trả lời là có | Nên dùng |
-|---|---|---|
-| Đây có phải file/ảnh/video/PDF không? | Có | Storage |
-| Có cần lọc, sort, tìm kiếm theo cột không? | Có | Database |
-| Có cần lưu quan hệ giữa user và dữ liệu không? | Có | Database |
-| Có cần lấy link để hiển thị file không? | Có | Storage + Database |
-| Có cần replay theo thứ tự thời gian không? | Có | Database |
+| Câu hỏi                                               | Nếu câu trả lời là có | Nên dùng         |
+| ------------------------------------------------------- | --------------------------- | ------------------ |
+| Đây có phải file/ảnh/video/PDF không?             | Có                         | Storage            |
+| Có cần lọc, sort, tìm kiếm theo cột không?       | Có                         | Database           |
+| Có cần lưu quan hệ giữa user và dữ liệu không? | Có                         | Database           |
+| Có cần lấy link để hiển thị file không?         | Có                         | Storage + Database |
+| Có cần replay theo thứ tự thời gian không?        | Có                         | Database           |
 
 ---
 
@@ -660,13 +661,13 @@ Caro replay       -> Query moves theo thứ tự và vẽ lại bàn cờ
 
 ### Bảng tổng kết
 
-| Thành phần | Dùng để lưu | Ví dụ trong bài |
-|---|---|---|
-| Supabase Storage | File/ảnh/media | Avatar, file upload |
-| Supabase Database | Dữ liệu dạng bảng | Profile, game session, game moves |
-| `profiles.avatar_path` | Đường dẫn tới file | `user123/avatar.png` |
-| `game_sessions` | Thông tin một ván | Người chơi, winner, status |
-| `game_moves` | Từng nước đi | X/O, row, col, move_number |
+| Thành phần             | Dùng để lưu         | Ví dụ trong bài                |
+| ------------------------ | ----------------------- | --------------------------------- |
+| Supabase Storage         | File/ảnh/media         | Avatar, file upload               |
+| Supabase Database        | Dữ liệu dạng bảng   | Profile, game session, game moves |
+| `profiles.avatar_path` | Đường dẫn tới file | `user123/avatar.png`            |
+| `game_sessions`        | Thông tin một ván    | Người chơi, winner, status     |
+| `game_moves`           | Từng nước đi        | X/O, row, col, move_number        |
 
 Điểm quan trọng nhất:
 
