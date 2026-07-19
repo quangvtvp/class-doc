@@ -153,6 +153,11 @@ const sidebars: SidebarsConfig = {
           id: 'agentic software development/Bai-07-Database-Va-Storage-Luu-Avatar-File-Va-Replay-Game-Caro',
           label: 'Buổi 7: Database và Storage',
         },
+        {
+          type: 'doc',
+          id: 'agentic software development/Bai-20-GitHub-CLI-Va-Phoi-Hop-Tren-Cung-Repo',
+          label: 'Buổi 20: GitHub CLI và phối hợp trên repo',
+        },
       ],
     },
   ],
