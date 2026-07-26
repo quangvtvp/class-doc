@@ -38,13 +38,13 @@ Buổi 5: Prompt engineering fundamentals cho việc xây dựng ứng dụng.
 
 Buổi 6: Context engineering và quy trình review output của AI.
 
-## Hồ sơ người dùng và lưu trữ dữ liệu
+## Dữ liệu nền tảng và lần tích hợp AI đầu tiên
 
-Cụm nội dung này đưa học sinh đến gần hơn với trải nghiệm của một sản phẩm thật thông qua dữ liệu người dùng. Các em sẽ được làm quen với khái niệm storage ở mức high-level, hiểu sự khác nhau giữa lưu file và lưu dữ liệu có cấu trúc, rồi triển khai các tính năng đầu tiên như avatar và hồ sơ cá nhân.
+Cụm nội dung này giúp học sinh hiểu cách ứng dụng lưu file, dữ liệu có cấu trúc và từng nước đi của game. Sau khi đã có nền tảng dữ liệu, các em thực hiện lần tích hợp AI trực tiếp đầu tiên qua một starter game caro đơn giản: chuẩn hóa trạng thái bàn cờ, viết runtime prompt, gọi API và kiểm tra structured output trước khi hiển thị.
 
 Buổi 7: Database và Storage - Lưu avatar, file và replay game caro.
 
-Buổi 8: Hoàn thiện profile và lưu dữ liệu người dùng.
+Buổi 8: Tích hợp AI vào App - Xây dựng AI Coach đánh giá nước đi trong game caro.
 
 ## Dữ liệu cốt lõi của ứng dụng
 
@@ -68,13 +68,13 @@ Buổi 14: Xây dựng detail page và hoàn thiện xử lý media.
 
 Buổi 15: Bổ sung logic nghiệp vụ mở rộng theo từng loại sản phẩm.
 
-## Tính năng AI và cộng tác phát triển
+## Tính năng AI theo sản phẩm và cộng tác phát triển
 
-Khi học sinh đã có nền tảng về auth, data và storage, AI bắt đầu được đưa trực tiếp vào trong sản phẩm chứ không chỉ đứng ở vai trò hỗ trợ làm việc. Song song với đó, học sinh cũng được làm quen với cách tổ chức công việc bằng GitHub và AI để chuẩn bị cho giai đoạn phát triển theo nhóm hoặc dự án cuối khóa.
+Sau lần tích hợp AI cơ bản ở buổi 8, học sinh quay lại chính project của nhóm để xác định AI feature phù hợp với domain, chuẩn hóa dữ liệu đầu vào, thiết kế output có thể kiểm tra và đánh giá giá trị thực tế của tính năng. Song song với đó, học sinh cũng được làm quen với cách tổ chức công việc bằng GitHub và AI để chuẩn bị cho giai đoạn phát triển theo nhóm hoặc dự án cuối khóa.
 
-Buổi 16: Xác định AI feature phù hợp với sản phẩm đang phát triển.
+Buổi 16: Xác định và thiết kế AI feature phù hợp với sản phẩm đang phát triển.
 
-Buổi 17: Triển khai tính năng AI vào ứng dụng.
+Buổi 17: Triển khai và đánh giá tính năng AI trong project của nhóm.
 
 Buổi 18: Sử dụng GitHub cùng AI để tổ chức công việc phát triển.
 

@@ -155,6 +155,11 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
+          id: 'agentic software development/Bai-08-Tich-Hop-AI-Vao-App',
+          label: 'Buổi 8: Tích hợp AI vào App',
+        },
+        {
+          type: 'doc',
           id: 'agentic software development/Bai-20-GitHub-CLI-Va-Phoi-Hop-Tren-Cung-Repo',
           label: 'Buổi 20: GitHub CLI và phối hợp trên repo',
         },
