@@ -163,6 +163,11 @@ const sidebars: SidebarsConfig = {
           id: 'agentic software development/Bai-20-GitHub-CLI-Va-Phoi-Hop-Tren-Cung-Repo',
           label: 'Buổi 20: GitHub CLI và phối hợp trên repo',
         },
+        {
+          type: 'doc',
+          id: 'agentic software development/de-thi-thuc-hanh-agentic-software-development',
+          label: 'Đề thi thực hành',
+        },
       ],
     },
   ],

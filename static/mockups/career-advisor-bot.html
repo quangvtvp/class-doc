@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mockup — Career Advisor Bot</title>
+<style>
+  :root {
+    --bg: #F4F7F5;
+    --frame: #FFFFFF;
+    --border: #DCE5E0;
+    --text: #1C2522;
+    --text-dim: #5C6B64;
+    --accent: #147D64;
+    --accent-soft: #E2F0EB;
+    --user-bubble: #147D64;
+    --user-text: #FFFFFF;
+    --bot-bubble: #EDF2EF;
+    --shadow: 0 12px 40px rgba(28, 37, 34, 0.10);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0F1513;
+      --frame: #17201C;
+      --border: #2A3630;
+      --text: #E4ECE8;
+      --text-dim: #93A39B;
+      --accent: #2FA184;
+      --accent-soft: #1D2E28;
+      --user-bubble: #1E8A6E;
+      --user-text: #F2FBF7;
+      --bot-bubble: #222D28;
+      --shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+    }
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 32px 16px;
+  }
+
+  .caption {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+    text-align: center;
+  }
+
+  /* ===== Khung app ===== */
+  .phone {
+    width: min(420px, 100%);
+    height: 680px;
+    background: var(--frame);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ===== Màn hình Chat ===== */
+  .chat-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .chat-header .avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--accent-soft); color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .chat-header .name { font-weight: 600; font-size: 15px; }
+  .chat-header .status { font-size: 12px; color: var(--accent); }
+
+  .messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 18px 16px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+
+  .msg {
+    max-width: 78%;
+    padding: 10px 14px;
+    border-radius: 16px;
+    font-size: 14.5px;
+    line-height: 1.5;
+    white-space: pre-line;
+  }
+  .msg.bot { align-self: flex-start; background: var(--bot-bubble); border-bottom-left-radius: 4px; }
+  .msg.user { align-self: flex-end; background: var(--user-bubble); color: var(--user-text); border-bottom-right-radius: 4px; }
+
+  .typing { align-self: flex-start; display: flex; gap: 5px; padding: 14px 16px; background: var(--bot-bubble); border-radius: 16px; border-bottom-left-radius: 4px; }
+  .typing span {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--text-dim);
+    animation: blink 1.2s infinite;
+  }
+  .typing span:nth-child(2) { animation-delay: 0.2s; }
+  .typing span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes blink { 0%, 60%, 100% { opacity: 0.25; } 30% { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .typing span { animation: none; } }
+
+  .composer {
+    display: flex; gap: 8px;
+    padding: 12px 14px;
+    border-top: 1px solid var(--border);
+  }
+  .composer input {
+    flex: 1; font: inherit;
+    padding: 11px 14px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--bg);
+    color: var(--text);
+  }
+  .composer input:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: transparent; }
+  .composer button {
+    font: inherit; font-weight: 600;
+    background: var(--accent); color: #fff;
+    border: none; border-radius: 999px;
+    padding: 0 20px; cursor: pointer;
+  }
+  .composer button:disabled { opacity: 0.45; cursor: not-allowed; }
+  .composer button:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+</style>
+</head>
+<body>
+
+<p class="caption">Mockup minh họa — Đề thi thực hành · Career Advisor Bot</p>
+
+<div class="phone">
+  <header class="chat-header">
+    <div class="avatar">🎓</div>
+    <div>
+      <div class="name">Tư vấn hướng nghiệp</div>
+      <div class="status">● Trực tuyến</div>
+    </div>
+  </header>
+
+  <div class="messages" id="messages"></div>
+
+  <div class="composer">
+    <input type="text" id="chat-input" placeholder="Nhập tin nhắn..." autocomplete="off">
+    <button id="btn-send">Gửi</button>
+  </div>
+</div>
+
+<p class="caption">Bot trong mockup trả lời theo kịch bản có sẵn — bản thật gọi Gemini API</p>
+
+<script>
+  // Kịch bản trả lời giả lập, minh họa flow tư vấn: chào → hỏi ngược → gợi ý ngành
+  const SCRIPT = [
+    "Chào bạn! Mình là trợ lý tư vấn hướng nghiệp 🎓\nBạn thích những môn học nào nhất, và điểm của bạn mạnh ở môn nào?",
+    "Hay quá! Cho mình hỏi thêm nhé: ngoài giờ học bạn thích làm gì — chơi game, vẽ, viết lách, hay tìm hiểu máy móc? Bạn thích làm việc một mình hay theo nhóm?",
+    "Cảm ơn bạn đã chia sẻ! Dựa trên những gì bạn kể, mình gợi ý 2 hướng ngành:\n\n1. Công nghệ thông tin — hợp với bạn thích logic và giải quyết vấn đề. Khối A00/A01. Tham khảo: ĐH Bách Khoa, ĐH CNTT.\n\n2. Thiết kế đồ họa — nếu bạn nghiêng về sáng tạo. Khối H/V. Tham khảo: ĐH Kiến Trúc, ĐH FPT.\n\nBạn muốn tìm hiểu sâu ngành nào?",
+    "Mình chỉ tư vấn về hướng nghiệp và chọn ngành thôi nhé 😊 Quay lại chủ đề chính: bạn còn băn khoăn gì về ngành học hoặc khối thi không?"
+  ];
+  let step = 0;
+
+  const messages = document.getElementById("messages");
+  const input = document.getElementById("chat-input");
+  const btnSend = document.getElementById("btn-send");
+
+  function addMessage(text, who) {
+    const div = document.createElement("div");
+    div.className = "msg " + who;
+    div.textContent = text;
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight; // auto-scroll xuống cuối
+  }
+
+  function botReply() {
+    // Loading indicator + khóa nút gửi trong lúc "chờ AI"
+    btnSend.disabled = true;
+    const typing = document.createElement("div");
+    typing.className = "typing";
+    typing.innerHTML = "<span></span><span></span><span></span>";
+    messages.appendChild(typing);
+    messages.scrollTop = messages.scrollHeight;
+
+    setTimeout(() => {
+      typing.remove();
+      addMessage(SCRIPT[Math.min(step, SCRIPT.length - 1)], "bot");
+      step++;
+      btnSend.disabled = false;
+      input.focus();
+    }, 1200);
+  }
+
+  function send() {
+    const text = input.value.trim();
+    if (!text || btnSend.disabled) return;
+    addMessage(text, "user");
+    input.value = "";
+    botReply();
+  }
+
+  btnSend.addEventListener("click", send);
+  input.addEventListener("keydown", (e) => { if (e.key === "Enter") send(); });
+
+  botReply(); // lời chào mở đầu khi mở app
+</script>
+
+</body>
+</html>
