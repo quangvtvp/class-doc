@@ -566,7 +566,7 @@
     <ol class="flow">
       <li><strong>Vai trò:</strong> yêu cầu AI đóng vai kỹ sư dữ liệu.</li>
       <li><strong>Mô tả tính năng kèm giới hạn phạm vi:</strong> nêu rõ người dùng làm được gì với tính năng, bằng ngôn ngữ tự nhiên, và nói rõ những gì không cần làm. Không cần liệt kê các cột hay chi tiết kỹ thuật — suy ra những chi tiết đó chính là việc của AI. Phần giới hạn phạm vi là quan trọng nhất: phạm vi càng rộng, thiết kế càng phức tạp. Ví dụ, "thi trắc nghiệm" nói chung bao gồm nhiều thể loại (một lựa chọn, nhiều lựa chọn, điền từ, kéo thả...) cùng nhiều thông tin phụ; nếu không giới hạn, AI sẽ đề xuất một thiết kế đồ sộ vượt xa nhu cầu thực tế của dự án.</li>
-      <li><strong>Yêu cầu định dạng kết quả:</strong> kết quả phải trực quan — có sơ đồ quan hệ, bảng dữ liệu mẫu và phần giải thích — và xuất ra hai định dạng: <strong>HTML</strong> (để trình chiếu, thuyết trình trước lớp) và <strong>Markdown</strong> (để làm tài liệu ngữ cảnh khi giao tiếp với AI agent ở các bước sau).</li>
+      <li><strong>Yêu cầu định dạng kết quả:</strong> kết quả phải trực quan — có sơ đồ quan hệ, bảng dữ liệu mẫu và phần giải thích — và xuất ra hai định dạng: <strong>HTML</strong> (để trình chiếu, thuyết trình trước lớp) và <strong>Markdown</strong> (để làm tài liệu ngữ cảnh khi giao tiếp với AI agent ở các bước sau). Đồng thời nói rõ sản phẩm chỉ là <strong>tài liệu thiết kế</strong> — không phải mã SQL hay một Cơ sở dữ liệu thật — nếu không, AI sẽ có xu hướng chọn hệ quản trị (MySQL, PostgreSQL...) và viết mã cài đặt, phức tạp hóa nhiệm vụ.</li>
     </ol>
     <p>Dưới đây là hai ví dụ hoàn chỉnh theo cấu trúc trên. Với mỗi ví dụ, hãy quan sát <strong>giao diện tính năng trước</strong>, sau đó theo dõi dữ liệu tương ứng xuất hiện trong các bảng.</p>
 
@@ -616,7 +616,10 @@ và xem từng nước đi hiện ra theo đúng thứ tự.
 
 Chỉ cần đúng tính năng trên; không cần đi lại nước cờ (undo) hay xem trực tiếp.
 
-Hãy thiết kế cơ sở dữ liệu cho tính năng này và trình bày kết quả thành hai file:
+Đây là giai đoạn thiết kế ở mức tài liệu: chỉ cần mô tả các bảng và vẽ sơ đồ,
+không viết mã SQL và không cần quan tâm hệ quản trị cụ thể (MySQL, PostgreSQL...).
+
+Hãy thiết kế mô hình dữ liệu cho tính năng này và trình bày kết quả thành hai file:
 1. Một file HTML để trình chiếu: có sơ đồ các bảng và mối liên kết giữa chúng,
    bảng dữ liệu mẫu, và giải thích ngắn gọn lý do thiết kế.
 2. Một file Markdown (database-design.md) chứa cùng nội dung, trình bày bằng
@@ -738,7 +741,10 @@ từ ngân hàng để tạo thành đề thi, học sinh làm bài và hệ th�
 Giới hạn: chỉ có dạng câu hỏi chọn một đáp án đúng (single choice) với 4 phương án.
 Không cần các dạng câu hỏi khác hay giới hạn thời gian làm bài.
 
-Hãy thiết kế cơ sở dữ liệu cho tính năng này và trình bày kết quả thành hai file:
+Đây là giai đoạn thiết kế ở mức tài liệu: chỉ cần mô tả các bảng và vẽ sơ đồ,
+không viết mã SQL và không cần quan tâm hệ quản trị cụ thể (MySQL, PostgreSQL...).
+
+Hãy thiết kế mô hình dữ liệu cho tính năng này và trình bày kết quả thành hai file:
 1. Một file HTML để trình chiếu: có sơ đồ các bảng và mối liên kết giữa chúng,
    bảng dữ liệu mẫu, và giải thích ngắn gọn lý do thiết kế.
 2. Một file Markdown (database-design.md) chứa cùng nội dung, trình bày bằng
