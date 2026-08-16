@@ -253,6 +253,8 @@ erDiagram
 
 Điểm mấu chốt của thiết kế: một ván cờ gồm nhiều nước đi (quan hệ một – nhiều), nên nước đi được tách thành bảng riêng và lưu kèm mã ván cờ. Tính năng replay khi đó chỉ là đọc mọi nước đi có cùng mã ván cờ và sắp xếp theo lượt tăng dần.
 
+👉 [Mở mô phỏng tương tác: Caro Match Replay Simulator](pathname:///lessons-html/caro-database-simulator.html) — quan sát dữ liệu nguyên bản của các bảng, replay ván cờ đồng bộ với bảng dữ liệu, và tự chơi để xem từng bản ghi được ghi vào bảng theo thời gian thực.
+
 *Ví dụ prompt 2: Thi trắc nghiệm một lựa chọn (single choice)*
 
 ```text

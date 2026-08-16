@@ -169,6 +169,11 @@ const sidebars: SidebarsConfig = {
           href: 'pathname:///lessons-html/Bai-15-Tu-Duy-Co-So-Du-Lieu.html',
         },
         {
+          type: 'link',
+          label: 'Buổi 15 · Mô phỏng CSDL Caro',
+          href: 'pathname:///lessons-html/caro-database-simulator.html',
+        },
+        {
           type: 'doc',
           id: 'agentic software development/Bai-20-GitHub-CLI-Va-Phoi-Hop-Tren-Cung-Repo',
           label: 'Buổi 20: GitHub CLI và phối hợp trên repo',
