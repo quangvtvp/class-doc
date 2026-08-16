@@ -1,0 +1,2097 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mô Phỏng Replay & Đấu Trực Tiếp Cờ Caro - Mô Hình Dữ Liệu CSDL</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --bg-surface: #0f172a;
+      --bg-card: rgba(30, 41, 59, 0.65);
+      --bg-card-border: rgba(255, 255, 255, 0.08);
+      
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      
+      --primary: #6366f1;
+      --primary-light: #818cf8;
+      --primary-glow: rgba(99, 102, 241, 0.35);
+      
+      --player-x: #38bdf8;
+      --player-x-bg: rgba(56, 189, 248, 0.15);
+      --player-o: #f43f5e;
+      --player-o-bg: rgba(244, 63, 94, 0.15);
+      --winner-gold: #f59e0b;
+      --winner-gold-bg: rgba(245, 158, 11, 0.15);
+      --success: #10b981;
+      --success-glow: rgba(16, 185, 129, 0.3);
+      --accent-pk: #ec4899;
+      --accent-fk: #8b5cf6;
+      
+      --board-bg: #dfb17b;
+      --board-line: rgba(120, 80, 38, 0.65);
+      --board-star: #785026;
+      
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      line-height: 1.6;
+      min-height: 100vh;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 90% 70%, rgba(56, 189, 248, 0.06) 0%, transparent 40%);
+      background-attachment: fixed;
+    }
+
+    /* Header Bar */
+    .top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(9, 13, 22, 0.9);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--bg-card-border);
+      padding: 0.85rem 2rem;
+    }
+
+    .top-bar-inner {
+      max-width: 1480px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--primary), var(--player-x));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.2rem;
+      color: white;
+      box-shadow: 0 0 16px var(--primary-glow);
+    }
+
+    .brand-text h1 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.01em;
+    }
+
+    .brand-text p {
+      font-size: 0.775rem;
+      color: var(--text-muted);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-btn {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.825rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 20px;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+    }
+
+    .nav-btn:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .nav-btn.active {
+      color: var(--player-x);
+      border-color: rgba(56, 189, 248, 0.3);
+      background: rgba(56, 189, 248, 0.08);
+    }
+
+    .nav-btn.live-badge-nav {
+      color: var(--success);
+      border-color: rgba(16, 185, 129, 0.3);
+      background: rgba(16, 185, 129, 0.08);
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 2rem 2rem 5rem;
+    }
+
+    /* Section Header Common */
+    .section-title-wrap {
+      margin-bottom: 1.75rem;
+    }
+
+    .section-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: rgba(99, 102, 241, 0.12);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      color: var(--primary-light);
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
+    }
+
+    .section-badge.live-badge {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: rgba(16, 185, 129, 0.35);
+      color: var(--success);
+    }
+
+    .section-title {
+      font-size: 1.85rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #ffffff;
+    }
+
+    .section-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-top: 6px;
+      max-width: 900px;
+    }
+
+    /* Badges for PK & FK */
+    .badge-pk {
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 2px 5px;
+      border-radius: 4px;
+      background: rgba(236, 72, 153, 0.2);
+      color: var(--accent-pk);
+      border: 1px solid rgba(236, 72, 153, 0.4);
+      margin-left: 4px;
+      vertical-align: middle;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .badge-fk {
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 2px 5px;
+      border-radius: 4px;
+      background: rgba(139, 92, 246, 0.2);
+      color: var(--accent-fk);
+      border: 1px solid rgba(139, 92, 246, 0.4);
+      margin-left: 4px;
+      vertical-align: middle;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* SECTION 1: GIỚI THIỆU DỮ LIỆU MOCK */
+    .mock-overview-section {
+      margin-bottom: 3.5rem;
+      padding-bottom: 3rem;
+      border-bottom: 1px solid var(--bg-card-border);
+    }
+
+    .mock-cards-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 1.5rem;
+      margin-top: 1.25rem;
+      margin-bottom: 1.75rem;
+    }
+
+    @media (max-width: 950px) {
+      .mock-cards-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .glass-card {
+      background: var(--bg-card);
+      border: 1px solid var(--bg-card-border);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-heading {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Player Profile Cards */
+    .players-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .player-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--bg-card-border);
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+    }
+
+    .player-row.is-x { border-left: 4px solid var(--player-x); }
+    .player-row.is-o { border-left: 4px solid var(--player-o); }
+
+    .player-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.05rem;
+    }
+
+    .player-avatar.x {
+      background: var(--player-x-bg);
+      color: var(--player-x);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+    }
+
+    .player-avatar.o {
+      background: var(--player-o-bg);
+      color: var(--player-o);
+      border: 1px solid rgba(244, 63, 94, 0.4);
+    }
+
+    .player-info {
+      margin-left: 12px;
+      flex-grow: 1;
+    }
+
+    .player-name {
+      font-weight: 700;
+      font-size: 0.925rem;
+      color: #fff;
+    }
+
+    .player-meta {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .badge-symbol {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 5px;
+      font-size: 0.8rem;
+    }
+
+    .badge-symbol.x { background: var(--player-x-bg); color: var(--player-x); }
+    .badge-symbol.o { background: var(--player-o-bg); color: var(--player-o); }
+
+    /* Match Metadata Key-Values */
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    @media (max-width: 600px) {
+      .meta-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .meta-item {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--bg-card-border);
+      padding: 9px 12px;
+      border-radius: var(--radius-sm);
+    }
+
+    .meta-label {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    .meta-val {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: #fff;
+      margin-top: 2px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .meta-val.gold { color: var(--winner-gold); }
+    .meta-val.green { color: var(--success); }
+
+    /* Raw Table Display Styling */
+    .raw-table-wrapper {
+      margin-top: 1.5rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--bg-card-border);
+      background: var(--bg-card);
+      overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .raw-table-header {
+      padding: 14px 20px;
+      background: rgba(15, 23, 42, 0.9);
+      border-bottom: 1px solid var(--bg-card-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .raw-table-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .raw-table-tag {
+      font-size: 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: rgba(99, 102, 241, 0.15);
+      color: var(--primary-light);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+    }
+
+    .table-scroll {
+      overflow-x: auto;
+      max-height: 420px;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      text-align: left;
+    }
+
+    .data-table th {
+      background: rgba(30, 41, 59, 0.95);
+      padding: 11px 14px;
+      font-weight: 700;
+      color: #cbd5e1;
+      border-bottom: 1px solid var(--bg-card-border);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+
+    .data-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .data-table tr:hover td {
+      background: rgba(255, 255, 255, 0.03);
+      color: #fff;
+    }
+
+    .mono-cell {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.825rem;
+    }
+
+    /* SECTION 2 & 3: SPLIT SCREEN COMMON */
+    .split-replay-section {
+      margin-bottom: 3.5rem;
+      padding-bottom: 3rem;
+      border-bottom: 1px solid var(--bg-card-border);
+      position: relative;
+    }
+
+    .split-live-section {
+      position: relative;
+    }
+
+    .split-grid {
+      display: grid;
+      grid-template-columns: 485px 1fr;
+      gap: 1.75rem;
+      align-items: start;
+    }
+
+    @media (max-width: 1180px) {
+      .split-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* LEFT PANE: CARO BOARD & CONTROLS (Sticky) */
+    .left-pane-sticky {
+      position: sticky;
+      top: 4.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: var(--bg-card);
+      border: 1px solid var(--bg-card-border);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.4);
+    }
+
+    /* BOARD AXIS WRAPPER (ROW & COL INDICES 0..14) */
+    .board-axis-wrapper {
+      display: grid;
+      grid-template-columns: 26px 410px;
+      grid-template-rows: 24px 410px;
+      gap: 3px;
+      align-items: center;
+      justify-items: center;
+      user-select: none;
+    }
+
+    @media (max-width: 490px) {
+      .board-axis-wrapper {
+        grid-template-columns: 22px 315px;
+        grid-template-rows: 22px 315px;
+      }
+    }
+
+    .axis-corner {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(15, 23, 42, 0.85);
+      border-radius: 4px;
+      width: 100%;
+      height: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .axis-col-headers {
+      display: grid;
+      grid-template-columns: repeat(15, 1fr);
+      width: 100%;
+      height: 100%;
+      align-items: center;
+      background: rgba(15, 23, 42, 0.4);
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .axis-col-item {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.725rem;
+      font-weight: 700;
+      color: var(--text-dim);
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    .axis-col-item.axis-active {
+      color: var(--player-x);
+      font-weight: 900;
+      font-size: 0.8rem;
+      text-shadow: 0 0 8px var(--player-x);
+    }
+
+    .axis-row-headers {
+      display: grid;
+      grid-template-rows: repeat(15, 1fr);
+      width: 100%;
+      height: 100%;
+      align-items: center;
+      background: rgba(15, 23, 42, 0.4);
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .axis-row-item {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.725rem;
+      font-weight: 700;
+      color: var(--text-dim);
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    .axis-row-item.axis-active {
+      color: var(--player-o);
+      font-weight: 900;
+      font-size: 0.8rem;
+      text-shadow: 0 0 8px var(--player-o);
+    }
+
+    /* Caro Board 15x15 */
+    .board-frame {
+      position: relative;
+      background: var(--board-bg);
+      border: 3px solid #855325;
+      border-radius: 6px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.6), inset 0 0 15px rgba(0,0,0,0.25);
+      user-select: none;
+      width: 410px;
+      height: 410px;
+    }
+
+    @media (max-width: 490px) {
+      .board-frame {
+        width: 315px;
+        height: 315px;
+      }
+    }
+
+    .board-grid-15 {
+      display: grid;
+      grid-template-columns: repeat(15, 1fr);
+      grid-template-rows: repeat(15, 1fr);
+      width: 100%;
+      height: 100%;
+    }
+
+    .board-cell {
+      position: relative;
+      border-right: 1px solid var(--board-line);
+      border-bottom: 1px solid var(--board-line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      font-size: 14px;
+      cursor: default;
+    }
+
+    .board-cell.cell-interactive {
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .board-cell.cell-interactive:hover:not(.has-piece) {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .board-cell:nth-child(15n) { border-right: none; }
+    .board-cell:nth-last-child(-n+15) { border-bottom: none; }
+
+    /* Star points on Caro 15x15 (Center 7,7 and corners 3,3; 3,11; 11,3; 11,11) */
+    .board-cell.star-point::after {
+      content: '';
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      background-color: var(--board-star);
+      border-radius: 50%;
+      z-index: 1;
+    }
+
+    /* Board Pieces */
+    .piece {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      animation: dropPiece 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .piece.piece-x {
+      color: #0369a1;
+      text-shadow: 0 1px 1px rgba(255,255,255,0.4);
+    }
+
+    .piece.piece-o {
+      color: #be123c;
+      text-shadow: 0 1px 1px rgba(255,255,255,0.4);
+    }
+
+    .cell-last-move {
+      background: rgba(254, 240, 138, 0.45);
+    }
+
+    .cell-win-line {
+      background: rgba(253, 224, 71, 0.85) !important;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #eab308;
+    }
+
+    .move-seq-badge {
+      position: absolute;
+      top: 1px;
+      right: 1px;
+      font-size: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      color: #451a03;
+      opacity: 0.85;
+      line-height: 1;
+    }
+
+    @keyframes dropPiece {
+      0% { transform: scale(0) rotate(-15deg); opacity: 0; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    /* Playback & Live Control Panels */
+    .controls-panel {
+      width: 100%;
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .btn-group {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .ctrl-btn {
+      background: #1e293b;
+      border: 1px solid var(--bg-card-border);
+      color: white;
+      padding: 8px 13px;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .ctrl-btn:hover:not(:disabled) {
+      background: var(--primary);
+      border-color: var(--primary);
+      box-shadow: 0 4px 14px var(--primary-glow);
+      transform: translateY(-1px);
+    }
+
+    .ctrl-btn:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .ctrl-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .ctrl-btn.btn-play {
+      background: #334155;
+      border-color: rgba(99, 102, 241, 0.4);
+      min-width: 125px;
+      justify-content: center;
+    }
+
+    .ctrl-btn.btn-play.playing {
+      background: var(--primary);
+      border-color: var(--primary-light);
+    }
+
+    .ctrl-btn.btn-success {
+      background: rgba(16, 185, 129, 0.2);
+      border-color: rgba(16, 185, 129, 0.4);
+      color: #34d399;
+    }
+
+    .ctrl-btn.btn-success:hover {
+      background: var(--success);
+      border-color: var(--success);
+      color: #fff;
+    }
+
+    /* Slider Progress */
+    .timeline-slider-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 4px;
+    }
+
+    .timeline-slider {
+      flex-grow: 1;
+      height: 6px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: #334155;
+      border-radius: 3px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .timeline-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--player-x);
+      box-shadow: 0 0 8px var(--player-x);
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+
+    .timeline-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.25);
+    }
+
+    .step-counter-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      min-width: 45px;
+      text-align: right;
+    }
+
+    /* Current Step Info Box */
+    .step-info-card {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--bg-card-border);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .step-info-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .step-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      font-size: 0.8rem;
+      padding: 2px 7px;
+      border-radius: 5px;
+    }
+
+    .step-detail {
+      font-size: 0.825rem;
+      color: var(--text-main);
+    }
+
+    .step-coord {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.775rem;
+      color: var(--player-x);
+      background: rgba(56, 189, 248, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+
+    /* RIGHT PANE: RAW MOVES TABLE & REAL-TIME ROW HIGHLIGHT */
+    .right-pane {
+      background: var(--bg-card);
+      border: 1px solid var(--bg-card-border);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.4);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .table-header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.85rem;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .table-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .table-tip {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+
+    .moves-sync-container {
+      max-height: 560px;
+      overflow-y: auto;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--bg-card-border);
+      background: rgba(11, 15, 25, 0.7);
+    }
+
+    .moves-sync-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.835rem;
+      text-align: left;
+    }
+
+    .moves-sync-table th {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: #1e293b;
+      color: #cbd5e1;
+      padding: 10px 12px;
+      font-size: 0.725rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--bg-card-border);
+      white-space: nowrap;
+    }
+
+    .moves-sync-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: var(--text-muted);
+      transition: all 0.2s ease;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .moves-sync-table tr:hover td {
+      background: rgba(255, 255, 255, 0.03);
+      color: #fff;
+    }
+
+    /* Active Highlighted Row in Split Screen */
+    .moves-sync-table tr.row-active td {
+      background: linear-gradient(90deg, rgba(99, 102, 241, 0.28), rgba(56, 189, 248, 0.15)) !important;
+      color: #ffffff !important;
+      font-weight: 700;
+      border-top: 1px solid rgba(99, 102, 241, 0.5);
+      border-bottom: 1px solid rgba(99, 102, 241, 0.5);
+    }
+
+    .moves-sync-table tr.row-active td:first-child {
+      border-left: 4px solid var(--player-x);
+    }
+
+    /* Past & Future states */
+    .moves-sync-table tr.row-past td {
+      color: #cbd5e1;
+    }
+
+    .moves-sync-table tr.row-future td {
+      opacity: 0.38;
+    }
+
+    /* SECTION 3 SPECIFIC: LIVE TURN CARD & DB INSERTION ANIMATION */
+    .live-turn-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--bg-card-border);
+      width: 100%;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .turn-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .turn-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--player-x);
+      box-shadow: 0 0 10px var(--player-x);
+      animation: pulse 1.2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.9); opacity: 0.7; }
+      50% { transform: scale(1.3); opacity: 1; }
+      100% { transform: scale(0.9); opacity: 0.7; }
+    }
+
+    .sql-log-box {
+      background: #090d16;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.775rem;
+      color: #93c5fd;
+      margin-bottom: 0.85rem;
+      overflow-x: auto;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sql-label {
+      background: rgba(99, 102, 241, 0.2);
+      color: var(--primary-light);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+
+    /* Live Row Flash on Insert */
+    @keyframes rowInsertFlash {
+      0% { background-color: rgba(16, 185, 129, 0.45); transform: scale(1.01); }
+      100% { background-color: transparent; transform: scale(1); }
+    }
+
+    .row-just-inserted td {
+      animation: rowInsertFlash 0.9s ease-out;
+    }
+
+    .empty-db-placeholder {
+      padding: 3rem 1.5rem;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 0.9rem;
+    }
+
+    .winner-announcement-card {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(16, 185, 129, 0.2));
+      border: 1px solid var(--winner-gold);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      color: #fff;
+      font-weight: 700;
+      text-align: center;
+      margin-top: 10px;
+      animation: dropPiece 0.3s ease;
+      display: none;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--bg-card-border);
+      padding: 2rem;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-dim);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Sticky Navigation -->
+  <header class="top-bar">
+    <div class="top-bar-inner">
+      <a href="#section-overview" class="brand-logo">
+        <div class="brand-icon">C</div>
+        <div class="brand-text">
+          <h1>Caro Match Replay Simulator</h1>
+          <p>Mô Phỏng CSDL & Bảng Dữ Liệu Nguyên Bản (Raw Data)</p>
+        </div>
+      </a>
+      <nav class="nav-links">
+        <a href="#section-overview" class="nav-btn active">1. Dữ Liệu Nguyên Bản (Raw CSDL)</a>
+        <a href="#section-replay" class="nav-btn">2. Bàn Cờ & Replay Đồng Bộ</a>
+        <a href="#section-live" class="nav-btn live-badge-nav">⚡ 3. Chơi Trực Tiếp & Ghi CSDL Real-time</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- ========================================== -->
+    <!-- SECTION 1: GIỚI THIỆU DỮ LIỆU NGUYÊN BẢN CSDL -->
+    <!-- ========================================== -->
+    <section id="section-overview" class="mock-overview-section">
+      <div class="section-title-wrap">
+        <div class="section-badge">Section 1</div>
+        <h2 class="section-title">Giới Thiệu Dữ Liệu Nguyên Bản (Raw Database Tables)</h2>
+        <p class="section-desc">
+          Toàn bộ dữ liệu của ván cờ mẫu được lưu trữ dưới dạng 3 bảng quan hệ nguyên bản chuẩn 3NF: <code>PLAYERS</code> (Người chơi), <code>MATCHES</code> (Metadata ván đấu), và <code>MOVES</code> (Toàn bộ 9 dòng dữ liệu nước đi nguyên bản với tọa độ $pos\_x, pos\_y$ từ $0 \rightarrow 14$).
+        </p>
+      </div>
+
+      <!-- Overview Cards: PLAYERS & MATCHES -->
+      <div class="mock-cards-grid">
+        
+        <!-- Bảng PLAYERS -->
+        <div class="glass-card">
+          <div class="card-heading">
+            <span>👥 Bảng <code>PLAYERS</code> (2 Records)</span>
+            <span class="raw-table-tag">PK: player_id</span>
+          </div>
+
+          <div class="players-list">
+            <div class="player-row is-x">
+              <div class="player-avatar x">X</div>
+              <div class="player-info">
+                <div class="player-name">Alice Wonder (Quân X)</div>
+                <div class="player-meta">player_id: "PL-01" | @alice_caro</div>
+              </div>
+              <span class="badge-symbol x">PL-01</span>
+            </div>
+
+            <div class="player-row is-o">
+              <div class="player-avatar o">O</div>
+              <div class="player-info">
+                <div class="player-name">Bob The Builder (Quân O)</div>
+                <div class="player-meta">player_id: "PL-02" | @bob_master</div>
+              </div>
+              <span class="badge-symbol o">PL-02</span>
+            </div>
+          </div>
+
+          <div style="margin-top:0.85rem; font-size:0.8rem; color:var(--text-muted); background:rgba(15,23,42,0.6); padding:8px 12px; border-radius:6px;">
+            📌 <strong>Quy tắc Replay:</strong> Người cầm quân X (<code>player_x_id = PL-01</code>) luôn đi trước tại nước #1.
+          </div>
+        </div>
+
+        <!-- Bảng MATCHES -->
+        <div class="glass-card">
+          <div class="card-heading">
+            <span>🏆 Bảng <code>MATCHES</code> (1 Record)</span>
+            <span class="raw-table-tag">PK: match_id</span>
+          </div>
+
+          <div class="meta-grid">
+            <div class="meta-item">
+              <div class="meta-label">match_id <span class="badge-pk">PK</span></div>
+              <div class="meta-val" style="color:var(--player-x);">M-20260816-01</div>
+            </div>
+            <div class="meta-item">
+              <div class="meta-label">player_x_id <span class="badge-fk">FK</span></div>
+              <div class="meta-val">PL-01 (Alice)</div>
+            </div>
+            <div class="meta-item">
+              <div class="meta-label">player_o_id <span class="badge-fk">FK</span></div>
+              <div class="meta-val">PL-02 (Bob)</div>
+            </div>
+            <div class="meta-item">
+              <div class="meta-label">winner_id <span class="badge-fk">FK</span></div>
+              <div class="meta-val gold">PL-01 (Alice)</div>
+            </div>
+            <div class="meta-item">
+              <div class="meta-label">board_size</div>
+              <div class="meta-val">15 (15x15)</div>
+            </div>
+            <div class="meta-item">
+              <div class="meta-label">result_type</div>
+              <div class="meta-val green">WIN_FIVE</div>
+            </div>
+            <div class="meta-item">
+              <div class="meta-label">total_moves</div>
+              <div class="meta-val">9 Nước Đi</div>
+            </div>
+            <div class="meta-item">
+              <div class="meta-label">started_at</div>
+              <div class="meta-val" style="font-size:0.775rem;">2026-08-16 20:00:00</div>
+            </div>
+            <div class="meta-item">
+              <div class="meta-label">ended_at</div>
+              <div class="meta-val" style="font-size:0.775rem;">2026-08-16 20:05:42</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- DỮ LIỆU NGUYÊN BẢN CỦA TABLE MOVES (Full Raw Table View) -->
+      <div class="raw-table-wrapper">
+        <div class="raw-table-header">
+          <div class="raw-table-title">
+            <span>📑 Dữ Liệu Nguyên Bản Bảng <code>MOVES</code> (9 Records - Raw Schema)</span>
+            <span class="raw-table-tag">Tất cả 8 cột CSDL</span>
+          </div>
+          <span style="font-size:0.8rem; color:var(--text-muted); font-family:'JetBrains Mono';">
+            INDEX(match_id, move_number ASC)
+          </span>
+        </div>
+
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>move_id <span class="badge-pk">PK</span></th>
+                <th>match_id <span class="badge-fk">FK</span></th>
+                <th style="color:#f59e0b;">move_number</th>
+                <th>player_id <span class="badge-fk">FK</span></th>
+                <th>symbol</th>
+                <th>pos_x (Cột)</th>
+                <th>pos_y (Hàng)</th>
+                <th>placed_at</th>
+                <th>Ý Nghĩa Chiến Thuật</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="mono-cell" style="color:#ec4899; font-weight:700;">1001</td>
+                <td class="mono-cell">M-20260816-01</td>
+                <td class="mono-cell" style="font-weight:700; color:#f59e0b;">1</td>
+                <td class="mono-cell">PL-01</td>
+                <td><span class="badge-symbol x">X</span></td>
+                <td class="mono-cell">7</td>
+                <td class="mono-cell">7</td>
+                <td class="mono-cell">2026-08-16 20:00:15</td>
+                <td>Alice khai cuộc tại tâm bàn cờ</td>
+              </tr>
+              <tr>
+                <td class="mono-cell" style="color:#ec4899; font-weight:700;">1002</td>
+                <td class="mono-cell">M-20260816-01</td>
+                <td class="mono-cell" style="font-weight:700; color:#f59e0b;">2</td>
+                <td class="mono-cell">PL-02</td>
+                <td><span class="badge-symbol o">O</span></td>
+                <td class="mono-cell">7</td>
+                <td class="mono-cell">8</td>
+                <td class="mono-cell">2026-08-16 20:00:45</td>
+                <td>Bob áp sát phòng thủ phía dưới</td>
+              </tr>
+              <tr>
+                <td class="mono-cell" style="color:#ec4899; font-weight:700;">1003</td>
+                <td class="mono-cell">M-20260816-01</td>
+                <td class="mono-cell" style="font-weight:700; color:#f59e0b;">3</td>
+                <td class="mono-cell">PL-01</td>
+                <td><span class="badge-symbol x">X</span></td>
+                <td class="mono-cell">8</td>
+                <td class="mono-cell">6</td>
+                <td class="mono-cell">2026-08-16 20:01:20</td>
+                <td>Alice mở đường chéo góc phải</td>
+              </tr>
+              <tr>
+                <td class="mono-cell" style="color:#ec4899; font-weight:700;">1004</td>
+                <td class="mono-cell">M-20260816-01</td>
+                <td class="mono-cell" style="font-weight:700; color:#f59e0b;">4</td>
+                <td class="mono-cell">PL-02</td>
+                <td><span class="badge-symbol o">O</span></td>
+                <td class="mono-cell">6</td>
+                <td class="mono-cell">8</td>
+                <td class="mono-cell">2026-08-16 20:02:05</td>
+                <td>Bob mở hướng phản công ngang</td>
+              </tr>
+              <tr>
+                <td class="mono-cell" style="color:#ec4899; font-weight:700;">1005</td>
+                <td class="mono-cell">M-20260816-01</td>
+                <td class="mono-cell" style="font-weight:700; color:#f59e0b;">5</td>
+                <td class="mono-cell">PL-01</td>
+                <td><span class="badge-symbol x">X</span></td>
+                <td class="mono-cell">9</td>
+                <td class="mono-cell">5</td>
+                <td class="mono-cell">2026-08-16 20:02:40</td>
+                <td>Alice nối chuỗi 3 quân chéo liên tiếp</td>
+              </tr>
+              <tr>
+                <td class="mono-cell" style="color:#ec4899; font-weight:700;">1006</td>
+                <td class="mono-cell">M-20260816-01</td>
+                <td class="mono-cell" style="font-weight:700; color:#f59e0b;">6</td>
+                <td class="mono-cell">PL-02</td>
+                <td><span class="badge-symbol o">O</span></td>
+                <td class="mono-cell">5</td>
+                <td class="mono-cell">8</td>
+                <td class="mono-cell">2026-08-16 20:03:30</td>
+                <td>Bob phát triển chuỗi 3 quân ngang</td>
+              </tr>
+              <tr>
+                <td class="mono-cell" style="color:#ec4899; font-weight:700;">1007</td>
+                <td class="mono-cell">M-20260816-01</td>
+                <td class="mono-cell" style="font-weight:700; color:#f59e0b;">7</td>
+                <td class="mono-cell">PL-01</td>
+                <td><span class="badge-symbol x">X</span></td>
+                <td class="mono-cell">10</td>
+                <td class="mono-cell">4</td>
+                <td class="mono-cell">2026-08-16 20:04:10</td>
+                <td>Alice tạo chuỗi 4 quân mở 2 đầu thế thắng!</td>
+              </tr>
+              <tr>
+                <td class="mono-cell" style="color:#ec4899; font-weight:700;">1008</td>
+                <td class="mono-cell">M-20260816-01</td>
+                <td class="mono-cell" style="font-weight:700; color:#f59e0b;">8</td>
+                <td class="mono-cell">PL-02</td>
+                <td><span class="badge-symbol o">O</span></td>
+                <td class="mono-cell">8</td>
+                <td class="mono-cell">8</td>
+                <td class="mono-cell">2026-08-16 20:04:55</td>
+                <td>Bob nối 4 quân ngang nhưng đã chậm 1 nhịp</td>
+              </tr>
+              <tr style="background: rgba(16, 185, 129, 0.1);">
+                <td class="mono-cell" style="color:#ec4899; font-weight:700;">1009</td>
+                <td class="mono-cell">M-20260816-01</td>
+                <td class="mono-cell" style="font-weight:700; color:#10b981;">9</td>
+                <td class="mono-cell">PL-01</td>
+                <td><span class="badge-symbol x">X</span></td>
+                <td class="mono-cell">11</td>
+                <td class="mono-cell">3</td>
+                <td class="mono-cell">2026-08-16 20:05:42</td>
+                <td style="color:#10b981; font-weight:700;">Alice hoàn thành chuỗi 5 quân liên tiếp → THẮNG!</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ========================================== -->
+    <!-- SECTION 2: BÀN CỜ & REPLAY TƯƠNG TÁC (CHIA 2 CỘT) -->
+    <!-- ========================================== -->
+    <section id="section-replay" class="split-replay-section">
+      <div class="section-title-wrap">
+        <div class="section-badge">Section 2</div>
+        <h2 class="section-title">Bàn Cờ Replay & Đồng Bộ Bảng Dữ Liệu Gốc</h2>
+        <p class="section-desc">
+          Bàn cờ Caro tích hợp <strong>hàng chỉ số Cột (pos_x: 0..14) và Hàng (pos_y: 0..14)</strong> giúp xác định vị trí trực quan, đồng thời tự động phát sáng tọa độ nước đi đang kích hoạt.
+        </p>
+      </div>
+
+      <div class="split-grid">
+        
+        <!-- CỘT TRÁI: BÀN CỜ CARO KÈM CHỈ SỐ ROW & COL (Sticky) -->
+        <div class="left-pane-sticky">
+          
+          <!-- Bàn Cờ 15x15 kèm Row/Col Index Grid -->
+          <div class="board-axis-wrapper">
+            <!-- Góc giao nhau Y / X -->
+            <div class="axis-corner" title="pos_y (Hàng) \ pos_x (Cột)">y \ x</div>
+
+            <!-- Header Cột: pos_x (0 đến 14) -->
+            <div class="axis-col-headers" id="axisColHeaders">
+              <!-- 15 col indices dynamically injected -->
+            </div>
+
+            <!-- Header Hàng: pos_y (0 đến 14) -->
+            <div class="axis-row-headers" id="axisRowHeaders">
+              <!-- 15 row indices dynamically injected -->
+            </div>
+
+            <!-- Bàn Cờ 15x15 -->
+            <div class="board-frame">
+              <div class="board-grid-15" id="caroBoard">
+                <!-- 225 Cells generated dynamically via JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Bộ điều khiển Replay -->
+          <div class="controls-panel">
+            
+            <!-- Hộp trạng thái bước hiện tại -->
+            <div class="step-info-card" id="stepInfoCard">
+              <div class="step-info-left">
+                <span class="step-badge" id="stepBadge" style="background:#334155; color:#94a3b8;">Bắt đầu</span>
+                <span class="step-detail" id="stepDetail">Bàn cờ rỗng, sẵn sàng xem lại</span>
+              </div>
+              <span class="step-coord" id="stepCoord">pos: (--, --)</span>
+            </div>
+
+            <!-- Nút bấm điều khiển -->
+            <div class="btn-group">
+              <button class="ctrl-btn" id="btnFirst" title="Về nước đầu tiên">⏮ Đầu</button>
+              <button class="ctrl-btn" id="btnPrev" title="Lùi 1 nước cờ">◀ Lùi (Back)</button>
+              <button class="ctrl-btn btn-play" id="btnAutoPlay">▶ Tự động phát</button>
+              <button class="ctrl-btn" id="btnNext" title="Tiến 1 nước cờ">Tiến (Next) ▶</button>
+              <button class="ctrl-btn" id="btnLast" title="Đến nước cuối cùng">Cuối ⏭</button>
+            </div>
+
+            <!-- Thanh trượt tua nhanh Timeline -->
+            <div class="timeline-slider-wrap">
+              <input type="range" class="timeline-slider" id="timelineSlider" min="0" max="9" value="0" step="1">
+              <span class="step-counter-text" id="stepCounterText">0 / 9</span>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- CỘT PHẢI: BẢNG DỮ LIỆU NGUYÊN BẢN MOVES & HIGHLIGHT ĐỒNG BỘ -->
+        <div class="right-pane">
+          <div class="table-header-bar">
+            <div>
+              <h3 class="table-title">📑 Bảng Dữ Liệu Nguyên Bản: <code>MOVES</code></h3>
+              <p class="table-tip">💡 Click vào bất kỳ dòng nào để nhảy ngay (Jump) đến nước cờ đó</p>
+            </div>
+            <span style="font-family:'JetBrains Mono'; font-size:0.775rem; color:var(--player-x); background:rgba(56,189,248,0.1); padding:4px 8px; border-radius:5px;">
+              ORDER BY move_number ASC
+            </span>
+          </div>
+
+          <div class="moves-sync-container" id="tableContainer">
+            <table class="moves-sync-table">
+              <thead>
+                <tr>
+                  <th>move_id <span class="badge-pk">PK</span></th>
+                  <th style="color:#f59e0b;">move_number</th>
+                  <th>player_id <span class="badge-fk">FK</span></th>
+                  <th>symbol</th>
+                  <th style="color:var(--player-x);">pos_x (Cột)</th>
+                  <th style="color:var(--player-o);">pos_y (Hàng)</th>
+                  <th>placed_at</th>
+                  <th>Ghi Chú Nước Đi</th>
+                </tr>
+              </thead>
+              <tbody id="movesTbody">
+                <!-- Rows injected via JS with full raw columns -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Thông tin giải thích cơ chế Replay -->
+          <div style="margin-top: 1rem; padding: 10px 14px; background: rgba(15, 23, 42, 0.7); border: 1px solid var(--bg-card-border); border-radius: var(--radius-sm); font-size: 0.8rem; color: var(--text-muted);">
+            <strong style="color:#fff;">Chỉ số hàng & cột tương ứng:</strong> Tọa độ <code>pos_x</code> đại diện cho chỉ số cột ($0 \rightarrow 14$) và <code>pos_y</code> đại diện cho chỉ số hàng ($0 \rightarrow 14$). Khi bạn duyệt từng nước, chỉ số trục tương ứng trên bàn cờ sẽ phát sáng theo màu của quân cờ.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ========================================== -->
+    <!-- SECTION 3: MÔ PHỎNG 2 NGƯỜI CHƠI & GHI CSDL REAL-TIME -->
+    <!-- ========================================== -->
+    <section id="section-live" class="split-live-section">
+      <div class="section-title-wrap">
+        <div class="section-badge live-badge">⚡ Section 3</div>
+        <h2 class="section-title">Mô Phỏng 2 Người Chơi: Ghi Bản Ghi Vào CSDL Real-time</h2>
+        <p class="section-desc">
+          Click trực tiếp vào ô cờ để đánh nước cờ luân phiên (Alice quân X và Bob quân O). Mỗi cú click sẽ mô phỏng thực thi lệnh <code>INSERT INTO MOVES</code> và <strong>ghi ngay 1 record mới vào bảng <code>MOVES</code> ở cột bên phải theo thời gian thực</strong>!
+        </p>
+      </div>
+
+      <div class="split-grid">
+        
+        <!-- CỘT TRÁI: BÀN CỜ ĐẤU TRỰC TIẾP (Interactive Playable Board) -->
+        <div class="left-pane-sticky">
+          
+          <!-- Thẻ báo lượt chơi hiện tại -->
+          <div class="live-turn-badge">
+            <div class="turn-indicator">
+              <span class="turn-dot" id="liveTurnDot"></span>
+              <span id="liveTurnText" style="color:var(--player-x);">Lượt của: Alice Wonder (Quân X)</span>
+            </div>
+            <span id="liveMatchIdBadge" style="font-family:'JetBrains Mono'; font-size:0.75rem; color:var(--text-dim);">
+              match_id: M-LIVE-001
+            </span>
+          </div>
+
+          <!-- Bàn Cờ 15x15 tương tác -->
+          <div class="board-axis-wrapper">
+            <!-- Góc giao nhau Y / X -->
+            <div class="axis-corner" title="pos_y (Hàng) \ pos_x (Cột)">y \ x</div>
+
+            <!-- Header Cột: pos_x (0 đến 14) -->
+            <div class="axis-col-headers" id="liveAxisColHeaders">
+              <!-- Injected by JS -->
+            </div>
+
+            <!-- Header Hàng: pos_y (0 đến 14) -->
+            <div class="axis-row-headers" id="liveAxisRowHeaders">
+              <!-- Injected by JS -->
+            </div>
+
+            <!-- Bàn Cờ 15x15 có thể click -->
+            <div class="board-frame">
+              <div class="board-grid-15" id="liveCaroBoard">
+                <!-- 225 Interactive cells generated dynamically via JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Thẻ thông báo chiến thắng khi có 5 quân liên tiếp -->
+          <div class="winner-announcement-card" id="winnerCard">
+            🎉 <span id="winnerText">Chúc mừng Alice Wonder đã chiến thắng (5 quân liên tiếp)!</span>
+          </div>
+
+          <!-- Bộ điều khiển ván chơi -->
+          <div class="controls-panel">
+            <div class="btn-group">
+              <button class="ctrl-btn btn-success" id="btnNewLiveMatch">🔄 Tạo Ván Mới (Reset CSDL)</button>
+              <button class="ctrl-btn" id="btnUndoLive" title="Rút lại nước cờ vừa đi">↶ Đi Lại (Undo)</button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- CỘT PHẢI: BẢNG DỮ LIỆU MOVES REAL-TIME INSERTION -->
+        <div class="right-pane">
+          <div class="table-header-bar">
+            <div>
+              <h3 class="table-title">⚡ Bảng CSDL Thực Tế: <code>MOVES</code> (Live Inserts)</h3>
+              <p class="table-tip">Dữ liệu được cập nhật tự động ngay khi người chơi hạ quân</p>
+            </div>
+            <span id="liveRecordCount" style="font-family:'JetBrains Mono'; font-size:0.775rem; color:var(--success); background:rgba(16,185,129,0.1); padding:4px 10px; border-radius:5px; font-weight:700;">
+              Tổng: 0 records
+            </span>
+          </div>
+
+          <!-- Hộp mô phỏng câu lệnh SQL INSERT -->
+          <div class="sql-log-box" id="sqlLogBox">
+            <span class="sql-label">SQL LOG</span>
+            <span id="sqlLogContent">-- Chưa có nước đi nào. Hãy click vào 1 ô trên bàn cờ để ghi record đầu tiên!</span>
+          </div>
+
+          <!-- Bảng hiển thị các dòng MOVES vừa được chèn -->
+          <div class="moves-sync-container" id="liveTableContainer" style="max-height: 480px;">
+            <table class="moves-sync-table">
+              <thead>
+                <tr>
+                  <th>move_id <span class="badge-pk">PK</span></th>
+                  <th style="color:#f59e0b;">move_number</th>
+                  <th>player_id <span class="badge-fk">FK</span></th>
+                  <th>symbol</th>
+                  <th style="color:var(--player-x);">pos_x (Cột)</th>
+                  <th style="color:var(--player-o);">pos_y (Hàng)</th>
+                  <th>placed_at (Timestamp)</th>
+                </tr>
+              </thead>
+              <tbody id="liveMovesTbody">
+                <!-- Live inserted rows injected here -->
+              </tbody>
+            </table>
+            <div class="empty-db-placeholder" id="emptyDbPlaceholder">
+              🎮 Bàn cờ đang trống. Hãy nhấp chuột vào một ô bất kỳ ở bàn cờ bên trái để bắt đầu trận đấu!
+            </div>
+          </div>
+
+          <!-- Thẻ giải thích quá trình ghi CSDL -->
+          <div style="margin-top: 1rem; padding: 10px 14px; background: rgba(15, 23, 42, 0.7); border: 1px solid var(--bg-card-border); border-radius: var(--radius-sm); font-size: 0.8rem; color: var(--text-muted);">
+            <strong style="color:#fff;">Cơ chế lưu trữ CSDL (Transactional Flow):</strong><br>
+            1. Người chơi click vào ô $(x, y)$ $\rightarrow$ Frontend kiểm tra ràng buộc <code>UNIQUE(match_id, pos_x, pos_y)</code>.<br>
+            2. Hệ thống sinh mã <code>move_id</code>, xác định <code>move_number = count + 1</code> và gán <code>placed_at = NOW()</code>.<br>
+            3. Thực thi <code>INSERT INTO MOVES</code> và tự động kiểm tra điều kiện thắng 5 quân liên tiếp.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>Thiết Kế Mô Hình Dữ Liệu Replay Cờ Caro | Độc lập hệ quản trị CSDL & Tối ưu truy xuất $O(K)$</p>
+  </footer>
+
+  <!-- ========================================== -->
+  <!-- SCRIPT LOGIC MÔ PHỎNG & ĐỒNG BỘ -->
+  <!-- ========================================== -->
+  <script>
+    /* ========================================================= */
+    /* 1. SECTION 2: REPLAY LOGIC CỦA VÁN CỜ MẪU (MOCK DATA)   */
+    /* ========================================================= */
+    const mockMoves = [
+      { move_id: 1001, match_id: 'M-20260816-01', move_number: 1, player_id: 'PL-01', player_name: 'Alice', symbol: 'X', pos_x: 7, pos_y: 7, placed_at: '2026-08-16 20:00:15', desc: 'Alice khai cuộc tại tâm bàn cờ' },
+      { move_id: 1002, match_id: 'M-20260816-01', move_number: 2, player_id: 'PL-02', player_name: 'Bob', symbol: 'O', pos_x: 7, pos_y: 8, placed_at: '2026-08-16 20:00:45', desc: 'Bob áp sát phòng thủ phía dưới' },
+      { move_id: 1003, match_id: 'M-20260816-01', move_number: 3, player_id: 'PL-01', player_name: 'Alice', symbol: 'X', pos_x: 8, pos_y: 6, placed_at: '2026-08-16 20:01:20', desc: 'Alice mở đường chéo góc phải' },
+      { move_id: 1004, match_id: 'M-20260816-01', move_number: 4, player_id: 'PL-02', player_name: 'Bob', symbol: 'O', pos_x: 6, pos_y: 8, placed_at: '2026-08-16 20:02:05', desc: 'Bob mở hướng phản công ngang' },
+      { move_id: 1005, match_id: 'M-20260816-01', move_number: 5, player_id: 'PL-01', player_name: 'Alice', symbol: 'X', pos_x: 9, pos_y: 5, placed_at: '2026-08-16 20:02:40', desc: 'Alice nối chuỗi 3 quân chéo' },
+      { move_id: 1006, match_id: 'M-20260816-01', move_number: 6, player_id: 'PL-02', player_name: 'Bob', symbol: 'O', pos_x: 5, pos_y: 8, placed_at: '2026-08-16 20:03:30', desc: 'Bob phát triển chuỗi 3 quân ngang' },
+      { move_id: 1007, match_id: 'M-20260816-01', move_number: 7, player_id: 'PL-01', player_name: 'Alice', symbol: 'X', pos_x: 10, pos_y: 4, placed_at: '2026-08-16 20:04:10', desc: 'Alice tạo chuỗi 4 quân mở 2 đầu thế thắng!' },
+      { move_id: 1008, match_id: 'M-20260816-01', move_number: 8, player_id: 'PL-02', player_name: 'Bob', symbol: 'O', pos_x: 8, pos_y: 8, placed_at: '2026-08-16 20:04:55', desc: 'Bob nối 4 quân nhưng đã chậm 1 nhịp' },
+      { move_id: 1009, match_id: 'M-20260816-01', move_number: 9, player_id: 'PL-01', player_name: 'Alice', symbol: 'X', pos_x: 11, pos_y: 3, placed_at: '2026-08-16 20:05:42', desc: 'Alice hoàn thành 5 quân liên tiếp → THẮNG!' }
+    ];
+
+    const winningLine = ['7,7', '8,6', '9,5', '10,4', '11,3'];
+    const starPoints = ['3,3', '3,11', '7,7', '11,3', '11,11'];
+
+    let currentStep = 0;
+    const totalSteps = mockMoves.length;
+    let autoPlayTimer = null;
+
+    const caroBoard = document.getElementById('caroBoard');
+    const axisColHeaders = document.getElementById('axisColHeaders');
+    const axisRowHeaders = document.getElementById('axisRowHeaders');
+    const movesTbody = document.getElementById('movesTbody');
+    const btnFirst = document.getElementById('btnFirst');
+    const btnPrev = document.getElementById('btnPrev');
+    const btnNext = document.getElementById('btnNext');
+    const btnLast = document.getElementById('btnLast');
+    const btnAutoPlay = document.getElementById('btnAutoPlay');
+    const timelineSlider = document.getElementById('timelineSlider');
+    const stepCounterText = document.getElementById('stepCounterText');
+    const stepBadge = document.getElementById('stepBadge');
+    const stepDetail = document.getElementById('stepDetail');
+    const stepCoord = document.getElementById('stepCoord');
+
+    function initBoard() {
+      axisColHeaders.innerHTML = '';
+      for (let x = 0; x < 15; x++) {
+        const colEl = document.createElement('div');
+        colEl.className = 'axis-col-item';
+        colEl.id = `col-idx-${x}`;
+        colEl.textContent = x;
+        axisColHeaders.appendChild(colEl);
+      }
+
+      axisRowHeaders.innerHTML = '';
+      for (let y = 0; y < 15; y++) {
+        const rowEl = document.createElement('div');
+        rowEl.className = 'axis-row-item';
+        rowEl.id = `row-idx-${y}`;
+        rowEl.textContent = y;
+        axisRowHeaders.appendChild(rowEl);
+      }
+
+      caroBoard.innerHTML = '';
+      for (let y = 0; y < 15; y++) {
+        for (let x = 0; x < 15; x++) {
+          const cell = document.createElement('div');
+          cell.className = 'board-cell';
+          cell.id = `cell-${x}-${y}`;
+          if (starPoints.includes(`${x},${y}`)) {
+            cell.classList.add('star-point');
+          }
+          caroBoard.appendChild(cell);
+        }
+      }
+    }
+
+    function initTable() {
+      movesTbody.innerHTML = '';
+      mockMoves.forEach((move) => {
+        const tr = document.createElement('tr');
+        tr.id = `row-move-${move.move_number}`;
+        tr.dataset.moveNumber = move.move_number;
+        const isWin = (move.move_number === 9);
+
+        tr.innerHTML = `
+          <td class="mono-cell" style="color:var(--accent-pk); font-weight:700;">${move.move_id}</td>
+          <td class="mono-cell" style="font-weight:700; color:#f59e0b;">#${move.move_number}</td>
+          <td class="mono-cell" style="color:${move.symbol === 'X' ? 'var(--player-x)' : 'var(--player-o)'}">
+            ${move.player_id}
+          </td>
+          <td>
+            <span class="badge-symbol ${move.symbol === 'X' ? 'x' : 'o'}">${move.symbol}</span>
+          </td>
+          <td class="mono-cell" style="color:var(--player-x); font-weight:700;">${move.pos_x}</td>
+          <td class="mono-cell" style="color:var(--player-o); font-weight:700;">${move.pos_y}</td>
+          <td class="mono-cell" style="font-size:0.775rem;">${move.placed_at.split(' ')[1]}</td>
+          <td style="font-size:0.8rem; color:${isWin ? '#10b981; font-weight:700;' : 'var(--text-muted)'};">
+            ${move.desc}
+          </td>
+        `;
+
+        tr.addEventListener('click', () => {
+          stopAutoPlay();
+          goToStep(move.move_number);
+        });
+
+        movesTbody.appendChild(tr);
+      });
+    }
+
+    function render() {
+      for (let y = 0; y < 15; y++) {
+        for (let x = 0; x < 15; x++) {
+          const cell = document.getElementById(`cell-${x}-${y}`);
+          if (cell) {
+            cell.innerHTML = '';
+            cell.classList.remove('cell-last-move', 'cell-win-line');
+          }
+        }
+      }
+
+      for (let x = 0; x < 15; x++) {
+        const colEl = document.getElementById(`col-idx-${x}`);
+        if (colEl) colEl.classList.remove('axis-active');
+      }
+      for (let y = 0; y < 15; y++) {
+        const rowEl = document.getElementById(`row-idx-${y}`);
+        if (rowEl) rowEl.classList.remove('axis-active');
+      }
+
+      for (let i = 0; i < currentStep; i++) {
+        const m = mockMoves[i];
+        const cell = document.getElementById(`cell-${m.pos_x}-${m.pos_y}`);
+        if (cell) {
+          const piece = document.createElement('div');
+          piece.className = `piece ${m.symbol === 'X' ? 'piece-x' : 'piece-o'}`;
+          piece.textContent = m.symbol;
+
+          const seq = document.createElement('span');
+          seq.className = 'move-seq-badge';
+          seq.textContent = m.move_number;
+          piece.appendChild(seq);
+
+          cell.appendChild(piece);
+
+          if (i === currentStep - 1) {
+            cell.classList.add('cell-last-move');
+            const colEl = document.getElementById(`col-idx-${m.pos_x}`);
+            const rowEl = document.getElementById(`row-idx-${m.pos_y}`);
+            if (colEl) colEl.classList.add('axis-active');
+            if (rowEl) rowEl.classList.add('axis-active');
+          }
+        }
+      }
+
+      if (currentStep === totalSteps) {
+        winningLine.forEach(coord => {
+          const [wx, wy] = coord.split(',');
+          const cell = document.getElementById(`cell-${wx}-${wy}`);
+          if (cell) cell.classList.add('cell-win-line');
+        });
+      }
+
+      mockMoves.forEach((move) => {
+        const row = document.getElementById(`row-move-${move.move_number}`);
+        if (row) {
+          row.classList.remove('row-active', 'row-past', 'row-future');
+          if (move.move_number === currentStep) {
+            row.classList.add('row-active');
+            row.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          } else if (move.move_number < currentStep) {
+            row.classList.add('row-past');
+          } else {
+            row.classList.add('row-future');
+          }
+        }
+      });
+
+      timelineSlider.value = currentStep;
+      stepCounterText.textContent = `${currentStep} / ${totalSteps}`;
+
+      btnFirst.disabled = (currentStep === 0);
+      btnPrev.disabled = (currentStep === 0);
+      btnNext.disabled = (currentStep === totalSteps);
+      btnLast.disabled = (currentStep === totalSteps);
+
+      if (currentStep === 0) {
+        stepBadge.textContent = 'Bắt đầu';
+        stepBadge.style.background = '#334155';
+        stepBadge.style.color = '#94a3b8';
+        stepDetail.textContent = 'Bàn cờ rỗng, sẵn sàng xem lại';
+        stepCoord.textContent = 'pos: (--, --)';
+      } else {
+        const lastMove = mockMoves[currentStep - 1];
+        stepBadge.textContent = `Nước #${lastMove.move_number} (${lastMove.symbol})`;
+        stepBadge.style.background = lastMove.symbol === 'X' ? 'var(--player-x-bg)' : 'var(--player-o-bg)';
+        stepBadge.style.color = lastMove.symbol === 'X' ? 'var(--player-x)' : 'var(--player-o)';
+        stepDetail.textContent = lastMove.desc;
+        stepCoord.textContent = `pos_x: ${lastMove.pos_x}, pos_y: ${lastMove.pos_y}`;
+      }
+    }
+
+    function goToStep(step) {
+      currentStep = Math.max(0, Math.min(totalSteps, step));
+      render();
+    }
+    function nextMove() {
+      if (currentStep < totalSteps) { currentStep++; render(); } else { stopAutoPlay(); }
+    }
+    function prevMove() {
+      if (currentStep > 0) { currentStep--; render(); }
+    }
+    function stopAutoPlay() {
+      if (autoPlayTimer) {
+        clearInterval(autoPlayTimer);
+        autoPlayTimer = null;
+        btnAutoPlay.innerHTML = '▶ Tự động phát';
+        btnAutoPlay.classList.remove('playing');
+      }
+    }
+    function toggleAutoPlay() {
+      if (autoPlayTimer) {
+        stopAutoPlay();
+      } else {
+        if (currentStep >= totalSteps) { currentStep = 0; render(); }
+        btnAutoPlay.innerHTML = '⏸ Tạm dừng';
+        btnAutoPlay.classList.add('playing');
+        autoPlayTimer = setInterval(() => {
+          if (currentStep < totalSteps) { nextMove(); } else { stopAutoPlay(); }
+        }, 1000);
+      }
+    }
+
+    btnNext.addEventListener('click', () => { stopAutoPlay(); nextMove(); });
+    btnPrev.addEventListener('click', () => { stopAutoPlay(); prevMove(); });
+    btnFirst.addEventListener('click', () => { stopAutoPlay(); goToStep(0); });
+    btnLast.addEventListener('click', () => { stopAutoPlay(); goToStep(totalSteps); });
+    btnAutoPlay.addEventListener('click', toggleAutoPlay);
+    timelineSlider.addEventListener('input', (e) => {
+      stopAutoPlay();
+      goToStep(parseInt(e.target.value, 10));
+    });
+
+
+    /* ========================================================= */
+    /* 2. SECTION 3: MÔ PHỎNG 2 NGƯỜI CHƠI & GHI CSDL REAL-TIME   */
+    /* ========================================================= */
+    let liveMatchIndex = 1;
+    let liveMoves = [];
+    let liveBoardMatrix = Array(15).fill(null).map(() => Array(15).fill(null));
+    let currentLiveTurn = 'X'; // 'X' (Alice) or 'O' (Bob)
+    let isLiveGameFinished = false;
+
+    const liveCaroBoard = document.getElementById('liveCaroBoard');
+    const liveAxisColHeaders = document.getElementById('liveAxisColHeaders');
+    const liveAxisRowHeaders = document.getElementById('liveAxisRowHeaders');
+    const liveMovesTbody = document.getElementById('liveMovesTbody');
+    const emptyDbPlaceholder = document.getElementById('emptyDbPlaceholder');
+    const liveTurnDot = document.getElementById('liveTurnDot');
+    const liveTurnText = document.getElementById('liveTurnText');
+    const liveMatchIdBadge = document.getElementById('liveMatchIdBadge');
+    const liveRecordCount = document.getElementById('liveRecordCount');
+    const sqlLogContent = document.getElementById('sqlLogContent');
+    const winnerCard = document.getElementById('winnerCard');
+    const winnerText = document.getElementById('winnerText');
+    const btnNewLiveMatch = document.getElementById('btnNewLiveMatch');
+    const btnUndoLive = document.getElementById('btnUndoLive');
+    const liveTableContainer = document.getElementById('liveTableContainer');
+
+    function initLiveBoard() {
+      // 1. Headers
+      liveAxisColHeaders.innerHTML = '';
+      for (let x = 0; x < 15; x++) {
+        const colEl = document.createElement('div');
+        colEl.className = 'axis-col-item';
+        colEl.id = `live-col-${x}`;
+        colEl.textContent = x;
+        liveAxisColHeaders.appendChild(colEl);
+      }
+
+      liveAxisRowHeaders.innerHTML = '';
+      for (let y = 0; y < 15; y++) {
+        const rowEl = document.createElement('div');
+        rowEl.className = 'axis-row-item';
+        rowEl.id = `live-row-${y}`;
+        rowEl.textContent = y;
+        liveAxisRowHeaders.appendChild(rowEl);
+      }
+
+      // 2. Interactive Cells
+      liveCaroBoard.innerHTML = '';
+      for (let y = 0; y < 15; y++) {
+        for (let x = 0; x < 15; x++) {
+          const cell = document.createElement('div');
+          cell.className = 'board-cell cell-interactive';
+          cell.id = `live-cell-${x}-${y}`;
+          cell.dataset.x = x;
+          cell.dataset.y = y;
+
+          if (starPoints.includes(`${x},${y}`)) {
+            cell.classList.add('star-point');
+          }
+
+          // Click để đánh cờ & ghi CSDL
+          cell.addEventListener('click', () => handleLiveCellClick(x, y));
+
+          liveCaroBoard.appendChild(cell);
+        }
+      }
+    }
+
+    // Xử lý sự kiện click ô cờ
+    function handleLiveCellClick(x, y) {
+      if (isLiveGameFinished) return;
+      if (liveBoardMatrix[y][x] !== null) return; // Đã có quân, vi phạm UNIQUE(match_id, pos_x, pos_y)
+
+      const moveNum = liveMoves.length + 1;
+      const moveId = 2000 + moveNum;
+      const matchId = `M-LIVE-00${liveMatchIndex}`;
+      const playerId = (currentLiveTurn === 'X') ? 'PL-01' : 'PL-02';
+      const playerName = (currentLiveTurn === 'X') ? 'Alice Wonder' : 'Bob The Builder';
+      const now = new Date();
+      const timestamp = now.toISOString().replace('T', ' ').substring(0, 19);
+
+      // 1. Tạo Record mới cho bảng MOVES
+      const newRecord = {
+        move_id: moveId,
+        match_id: matchId,
+        move_number: moveNum,
+        player_id: playerId,
+        player_name: playerName,
+        symbol: currentLiveTurn,
+        pos_x: x,
+        pos_y: y,
+        placed_at: timestamp
+      };
+
+      liveMoves.push(newRecord);
+      liveBoardMatrix[y][x] = currentLiveTurn;
+
+      // 2. Vẽ quân cờ lên bàn cờ
+      const cell = document.getElementById(`live-cell-${x}-${y}`);
+      cell.classList.add('has-piece');
+      
+      // Xóa highlight nước cũ
+      document.querySelectorAll('#liveCaroBoard .cell-last-move').forEach(el => el.classList.remove('cell-last-move'));
+      cell.classList.add('cell-last-move');
+
+      const piece = document.createElement('div');
+      piece.className = `piece ${currentLiveTurn === 'X' ? 'piece-x' : 'piece-o'}`;
+      piece.textContent = currentLiveTurn;
+
+      const seq = document.createElement('span');
+      seq.className = 'move-seq-badge';
+      seq.textContent = moveNum;
+      piece.appendChild(seq);
+
+      cell.appendChild(piece);
+
+      // 3. Highlight trục X & Y tương ứng
+      document.querySelectorAll('#liveAxisColHeaders .axis-active').forEach(el => el.classList.remove('axis-active'));
+      document.querySelectorAll('#liveAxisRowHeaders .axis-active').forEach(el => el.classList.remove('axis-active'));
+      const colEl = document.getElementById(`live-col-${x}`);
+      const rowEl = document.getElementById(`live-row-${y}`);
+      if (colEl) colEl.classList.add('axis-active');
+      if (rowEl) rowEl.classList.add('axis-active');
+
+      // 4. Thêm dòng mới vào Bảng MOVES bên phải kèm Animation Flash
+      insertLiveMoveRow(newRecord);
+
+      // 5. Cập nhật Log câu lệnh SQL
+      sqlLogContent.innerHTML = `INSERT INTO MOVES (move_id, match_id, move_number, player_id, symbol, pos_x, pos_y, placed_at) VALUES (${moveId}, '${matchId}', ${moveNum}, '${playerId}', '${currentLiveTurn}', ${x}, ${y}, '${timestamp}');`;
+
+      // 6. Kiểm tra điều kiện thắng (5 quân liên tiếp)
+      const winResult = checkFiveInARow(x, y, currentLiveTurn);
+      if (winResult) {
+        handleLiveVictory(winResult, playerName, currentLiveTurn);
+        return;
+      }
+
+      // 7. Đổi lượt chơi
+      currentLiveTurn = (currentLiveTurn === 'X') ? 'O' : 'X';
+      updateLiveTurnUI();
+    }
+
+    // Chèn dòng vào bảng CSDL live
+    function insertLiveMoveRow(rec) {
+      if (emptyDbPlaceholder) {
+        emptyDbPlaceholder.style.display = 'none';
+      }
+
+      const tr = document.createElement('tr');
+      tr.id = `live-row-move-${rec.move_number}`;
+      tr.className = 'row-just-inserted';
+
+      tr.innerHTML = `
+        <td class="mono-cell" style="color:var(--accent-pk); font-weight:700;">${rec.move_id}</td>
+        <td class="mono-cell" style="font-weight:700; color:#f59e0b;">#${rec.move_number}</td>
+        <td class="mono-cell" style="color:${rec.symbol === 'X' ? 'var(--player-x)' : 'var(--player-o)'}">
+          ${rec.player_id} (${rec.symbol === 'X' ? 'Alice' : 'Bob'})
+        </td>
+        <td>
+          <span class="badge-symbol ${rec.symbol === 'X' ? 'x' : 'o'}">${rec.symbol}</span>
+        </td>
+        <td class="mono-cell" style="color:var(--player-x); font-weight:700;">${rec.pos_x}</td>
+        <td class="mono-cell" style="color:var(--player-o); font-weight:700;">${rec.pos_y}</td>
+        <td class="mono-cell" style="font-size:0.775rem;">${rec.placed_at}</td>
+      `;
+
+      liveMovesTbody.appendChild(tr);
+      liveRecordCount.textContent = `Tổng: ${liveMoves.length} records`;
+
+      // Tự động cuộn xuống dòng vừa insert
+      tr.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // Cập nhật giao diện lượt người chơi
+    function updateLiveTurnUI() {
+      if (currentLiveTurn === 'X') {
+        liveTurnDot.style.background = 'var(--player-x)';
+        liveTurnDot.style.boxShadow = '0 0 10px var(--player-x)';
+        liveTurnText.style.color = 'var(--player-x)';
+        liveTurnText.textContent = 'Lượt của: Alice Wonder (Quân X)';
+      } else {
+        liveTurnDot.style.background = 'var(--player-o)';
+        liveTurnDot.style.boxShadow = '0 0 10px var(--player-o)';
+        liveTurnText.style.color = 'var(--player-o)';
+        liveTurnText.textContent = 'Lượt của: Bob The Builder (Quân O)';
+      }
+    }
+
+    // Kiểm tra 5 quân cờ liên tiếp
+    function checkFiveInARow(x, y, sym) {
+      const directions = [
+        [ [1, 0], [-1, 0] ],   // Ngang
+        [ [0, 1], [0, -1] ],   // Dọc
+        [ [1, 1], [-1, -1] ],  // Chéo chính \
+        [ [1, -1], [-1, 1] ]   // Chéo phụ /
+      ];
+
+      for (let dir of directions) {
+        let cells = [[x, y]];
+
+        for (let [dx, dy] of dir) {
+          let nx = x + dx;
+          let ny = y + dy;
+          while (nx >= 0 && nx < 15 && ny >= 0 && ny < 15 && liveBoardMatrix[ny][nx] === sym) {
+            cells.push([nx, ny]);
+            nx += dx;
+            ny += dy;
+          }
+        }
+
+        if (cells.length >= 5) {
+          return cells;
+        }
+      }
+      return null;
+    }
+
+    // Xử lý thắng cuộc
+    function handleLiveVictory(cells, winnerName, sym) {
+      isLiveGameFinished = true;
+      cells.forEach(([cx, cy]) => {
+        const c = document.getElementById(`live-cell-${cx}-${cy}`);
+        if (c) c.classList.add('cell-win-line');
+      });
+
+      winnerCard.style.display = 'block';
+      winnerText.innerHTML = `🏆 <strong>${winnerName} (Quân ${sym})</strong> đã hoàn thành chuỗi 5 quân liên tiếp và giành CHIẾN THẮNG!`;
+
+      liveTurnDot.style.background = 'var(--winner-gold)';
+      liveTurnDot.style.boxShadow = '0 0 12px var(--winner-gold)';
+      liveTurnText.style.color = 'var(--winner-gold)';
+      liveTurnText.textContent = `Trận đấu hoàn tất | ${winnerName} Thắng!`;
+
+      sqlLogContent.innerHTML = `-- CẬP NHẬT KẾT QUẢ VÁN ĐẤU VÀO BẢNG MATCHES:
+UPDATE MATCHES SET winner_id = '${sym === 'X' ? 'PL-01' : 'PL-02'}', result_type = 'WIN_FIVE', total_moves = ${liveMoves.length}, ended_at = NOW() WHERE match_id = 'M-LIVE-00${liveMatchIndex}';`;
+    }
+
+    // Tạo ván đấu mới
+    function resetLiveMatch() {
+      liveMatchIndex++;
+      liveMoves = [];
+      liveBoardMatrix = Array(15).fill(null).map(() => Array(15).fill(null));
+      currentLiveTurn = 'X';
+      isLiveGameFinished = false;
+
+      winnerCard.style.display = 'none';
+      liveMovesTbody.innerHTML = '';
+      if (emptyDbPlaceholder) emptyDbPlaceholder.style.display = 'block';
+      liveRecordCount.textContent = 'Tổng: 0 records';
+      liveMatchIdBadge.textContent = `match_id: M-LIVE-00${liveMatchIndex}`;
+      sqlLogContent.textContent = `-- Khởi tạo ván cờ mới: M-LIVE-00${liveMatchIndex}. Hãy click vào 1 ô để bắt đầu!`;
+
+      initLiveBoard();
+      updateLiveTurnUI();
+    }
+
+    // Undo 1 nước cờ trong chế độ live
+    function undoLiveMove() {
+      if (liveMoves.length === 0 || isLiveGameFinished) return;
+
+      const lastMove = liveMoves.pop();
+      liveBoardMatrix[lastMove.pos_y][lastMove.pos_x] = null;
+
+      const cell = document.getElementById(`live-cell-${lastMove.pos_x}-${lastMove.pos_y}`);
+      if (cell) {
+        cell.innerHTML = '';
+        cell.classList.remove('has-piece', 'cell-last-move', 'cell-win-line');
+      }
+
+      const row = document.getElementById(`live-row-move-${lastMove.move_number}`);
+      if (row) row.remove();
+
+      liveRecordCount.textContent = `Tổng: ${liveMoves.length} records`;
+      if (liveMoves.length === 0 && emptyDbPlaceholder) {
+        emptyDbPlaceholder.style.display = 'block';
+      }
+
+      // Highlight lại nước trước đó nếu có
+      if (liveMoves.length > 0) {
+        const prev = liveMoves[liveMoves.length - 1];
+        const prevCell = document.getElementById(`live-cell-${prev.pos_x}-${prev.pos_y}`);
+        if (prevCell) prevCell.classList.add('cell-last-move');
+        currentLiveTurn = (lastMove.symbol === 'X') ? 'X' : 'O';
+      } else {
+        currentLiveTurn = 'X';
+      }
+
+      sqlLogContent.textContent = `DELETE FROM MOVES WHERE move_id = ${lastMove.move_id}; -- Đã thu hồi nước cờ #${lastMove.move_number}`;
+      updateLiveTurnUI();
+    }
+
+    btnNewLiveMatch.addEventListener('click', resetLiveMatch);
+    btnUndoLive.addEventListener('click', undoLiveMove);
+
+    // ==========================================
+    // KHỞI CHẠY KHI TẢI TRANG
+    // ==========================================
+    initBoard();
+    initTable();
+    render();
+
+    initLiveBoard();
+    updateLiveTurnUI();
+  </script>
+</body>
+</html>
