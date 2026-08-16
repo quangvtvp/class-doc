@@ -160,6 +160,16 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
+          id: 'agentic software development/Bai-15-Tu-Mo-Hinh-Du-Lieu-Thuc-Te-Den-Database',
+          label: 'Buổi 15: Tư duy Cơ sở dữ liệu',
+        },
+        {
+          type: 'link',
+          label: 'Buổi 15 · Bản tương tác (HTML)',
+          href: 'pathname:///lessons-html/Bai-15-Tu-Duy-Co-So-Du-Lieu.html',
+        },
+        {
+          type: 'doc',
           id: 'agentic software development/Bai-20-GitHub-CLI-Va-Phoi-Hop-Tren-Cung-Repo',
           label: 'Buổi 20: GitHub CLI và phối hợp trên repo',
         },

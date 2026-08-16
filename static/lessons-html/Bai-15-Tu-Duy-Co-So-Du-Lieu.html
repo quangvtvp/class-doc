@@ -1,0 +1,977 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bài 15 · Tư duy Cơ sở dữ liệu</title>
+
+<style>
+  :root {
+    --bg: #f5f6f9;
+    --surface: #ffffff;
+    --surface2: #eef1f6;
+    --ink: #1f2735;
+    --muted: #5d6b82;
+    --line: #d9dfe9;
+    --accent: #0e6d6a;
+    --accent-ink: #0a5553;
+    --accent-soft: #e1f0ee;
+    --warm: #b45817;
+    --warm-soft: #f9ebdd;
+    --good: #2e7d46;
+    --good-soft: #e3f2e8;
+    --bad: #b3423a;
+    --bad-soft: #f9e7e5;
+    --shadow: 0 1px 2px rgba(20, 30, 50, .06), 0 4px 14px rgba(20, 30, 50, .05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #12161d;
+      --surface: #1a202b;
+      --surface2: #141a23;
+      --ink: #e7ebf2;
+      --muted: #97a3b8;
+      --line: #2b3444;
+      --accent: #56c4be;
+      --accent-ink: #7ed7d2;
+      --accent-soft: #17322f;
+      --warm: #e2925c;
+      --warm-soft: #392817;
+      --good: #6cc188;
+      --good-soft: #1c3324;
+      --bad: #e08078;
+      --bad-soft: #3d211f;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 4px 14px rgba(0, 0, 0, .25);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #12161d;
+    --surface: #1a202b;
+    --surface2: #141a23;
+    --ink: #e7ebf2;
+    --muted: #97a3b8;
+    --line: #2b3444;
+    --accent: #56c4be;
+    --accent-ink: #7ed7d2;
+    --accent-soft: #17322f;
+    --warm: #e2925c;
+    --warm-soft: #392817;
+    --good: #6cc188;
+    --good-soft: #1c3324;
+    --bad: #e08078;
+    --bad-soft: #3d211f;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 4px 14px rgba(0, 0, 0, .25);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16.5px;
+    line-height: 1.65;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 22px 90px; }
+
+  h1, h2, h3 {
+    font-family: Georgia, "Times New Roman", serif;
+    line-height: 1.25;
+    text-wrap: balance;
+  }
+  h1 { font-size: clamp(30px, 5vw, 42px); font-weight: 700; margin: 10px 0 14px; }
+  h2 { font-size: clamp(23px, 3.4vw, 29px); font-weight: 700; margin: 0 0 6px; }
+  h3 { font-size: 19.5px; font-weight: 700; margin: 34px 0 10px; }
+  p { margin: 12px 0; }
+  code, .mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    font-size: .92em;
+  }
+  code { background: var(--surface2); border: 1px solid var(--line); border-radius: 5px; padding: 1px 6px; }
+
+  .eyebrow {
+    font-size: 12.5px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--accent); font-weight: 600; margin-top: 46px;
+  }
+  .lede { color: var(--muted); font-size: 18px; max-width: 62ch; }
+
+  .toc { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 8px; }
+  .toc a {
+    text-decoration: none; color: var(--accent-ink); background: var(--accent-soft);
+    border-radius: 999px; padding: 5px 14px; font-size: 13.5px; font-weight: 600;
+  }
+  .toc a:hover, .toc a:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+  section { margin-top: 64px; }
+  .sec-head { display: flex; align-items: baseline; gap: 16px; border-bottom: 2px solid var(--ink); padding-bottom: 10px; margin-bottom: 20px; }
+  .sec-num {
+    font-family: Georgia, "Times New Roman", serif; font-size: 44px; font-weight: 700;
+    color: var(--accent); line-height: 1;
+  }
+
+  .panel {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+    padding: 20px 22px; margin: 18px 0; box-shadow: var(--shadow);
+  }
+  .panel > h4 { margin: 0 0 10px; font-size: 15px; }
+  .cap { color: var(--muted); font-size: 14px; margin-top: 10px; }
+
+  /* ---------- data tables ---------- */
+  .tscroll { overflow-x: auto; }
+  table.dt { border-collapse: collapse; width: 100%; font-size: 14.5px; font-variant-numeric: tabular-nums; color: var(--ink); font-family: inherit; }
+  table.dt th {
+    text-align: left; font-size: 12px; letter-spacing: .07em; text-transform: uppercase;
+    color: var(--muted); border-bottom: 2px solid var(--line); padding: 8px 12px; white-space: nowrap;
+  }
+  table.dt td { border-bottom: 1px solid var(--line); padding: 8px 12px; white-space: nowrap; }
+  table.dt tr:last-child td { border-bottom: none; }
+  td.k, th.k { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13.5px; }
+  td.dup { background: var(--warm-soft); }
+  td.key { background: var(--accent-soft); font-weight: 600; }
+  tr.hl td { background: var(--accent-soft); }
+  .legend { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px; font-size: 13.5px; color: var(--muted); }
+  .legend .sw { display: inline-block; width: 14px; height: 14px; border-radius: 4px; vertical-align: -2px; margin-right: 6px; border: 1px solid var(--line); }
+  .sw.warm { background: var(--warm-soft); }
+  .sw.acc { background: var(--accent-soft); }
+
+  .badge {
+    display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .05em;
+    border-radius: 4px; padding: 1px 6px; vertical-align: 1px;
+  }
+  .badge.pk { background: var(--accent); color: var(--surface); }
+  .badge.null { background: var(--surface2); color: var(--muted); border: 1px dashed var(--muted); }
+
+  /* ---------- entity cards (ERD) ---------- */
+  .erd { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 14px; margin: 20px 0; }
+  .entity {
+    background: var(--surface); border: 1.5px solid var(--line); border-radius: 10px;
+    overflow: hidden; min-width: 250px; box-shadow: var(--shadow); flex: 0 1 auto;
+  }
+  .entity .et {
+    background: var(--accent-soft); color: var(--accent-ink); font-weight: 700;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 14px;
+    letter-spacing: .04em; padding: 8px 14px; border-bottom: 1.5px solid var(--line);
+  }
+  .entity ul { list-style: none; margin: 0; padding: 6px 0; }
+  .entity li { display: flex; justify-content: space-between; gap: 22px; padding: 4px 14px; font-size: 13.5px; }
+  .entity li .fn { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  .entity li .ft { color: var(--muted); }
+  .rel { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 0 4px; min-width: 130px; }
+  .rel .rl { font-size: 13px; color: var(--muted); font-style: italic; }
+  .rel svg { display: block; }
+
+  /* ---------- concept chips ---------- */
+  .grid { display: grid; gap: 14px; margin: 18px 0; }
+  .grid.c2 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  .grid.c4 { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+  .chip-card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; box-shadow: var(--shadow); }
+  .chip-card .big {
+    font-family: Georgia, "Times New Roman", serif; font-size: 30px; font-weight: 700; color: var(--accent); line-height: 1;
+  }
+  .chip-card h5 { margin: 6px 0 4px; font-size: 15px; }
+  .chip-card p { margin: 4px 0; font-size: 13.5px; color: var(--muted); }
+  .chip-card .ex { font-size: 13px; color: var(--ink); background: var(--surface2); border-radius: 6px; padding: 3px 8px; display: inline-block; margin-top: 6px; }
+
+  /* ---------- prompt block ---------- */
+  .prompt { border: 1.5px solid var(--accent); border-radius: 12px; overflow: hidden; margin: 18px 0; box-shadow: var(--shadow); }
+  .prompt .ph {
+    background: var(--accent); color: var(--surface); font-size: 12px; font-weight: 700;
+    letter-spacing: .12em; text-transform: uppercase; padding: 6px 16px;
+  }
+  .prompt pre {
+    margin: 0; padding: 16px 18px; background: var(--surface); color: var(--ink);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13.5px;
+    line-height: 1.6; overflow-x: auto; white-space: pre;
+  }
+
+  /* ---------- app UI mockups ---------- */
+  .duo { display: grid; grid-template-columns: minmax(280px, 380px) 1fr; gap: 22px; align-items: start; margin: 18px 0; }
+  @media (max-width: 760px) { .duo { grid-template-columns: 1fr; } }
+  .app {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 18px;
+    overflow: hidden; box-shadow: var(--shadow);
+  }
+  .app .ah {
+    background: var(--ink); color: var(--bg); text-align: center; font-weight: 700;
+    font-size: 14px; letter-spacing: .08em; padding: 10px 14px;
+  }
+  .app .ab { padding: 12px 14px; }
+  .lb-row, .mh-row {
+    display: flex; align-items: center; gap: 12px; padding: 10px 10px;
+    border-bottom: 1px solid var(--line); border-radius: 8px; cursor: default;
+  }
+  .lb-row:last-child, .mh-row:last-child { border-bottom: none; }
+  .lb-row.on, .mh-row.on { background: var(--accent-soft); }
+  .rank {
+    width: 30px; height: 30px; border-radius: 50%; background: var(--surface2);
+    display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; flex: none;
+  }
+  .rank.r1 { background: var(--warm); color: var(--surface); }
+  .lb-name { font-weight: 600; flex: 1; }
+  .lb-pts { font-variant-numeric: tabular-nums; color: var(--accent-ink); font-weight: 700; }
+  .mh-row { flex-direction: column; align-items: flex-start; gap: 2px; }
+  .mh-t { font-weight: 600; }
+  .mh-s { font-size: 13.5px; color: var(--muted); }
+
+  /* ---------- caro demo ---------- */
+  .board {
+    display: grid; grid-template-columns: repeat(9, 1fr); gap: 2px;
+    background: var(--line); border: 2px solid var(--line); border-radius: 8px;
+    aspect-ratio: 1; max-width: 340px; margin: 0 auto;
+  }
+  .cell { background: var(--surface); display: flex; align-items: center; justify-content: center;
+    font-family: Georgia, "Times New Roman", serif; font-weight: 700; font-size: clamp(13px, 2.6vw, 20px); }
+  .cell.x { color: var(--warm); }
+  .cell.o { color: var(--accent); }
+  .cell.cur { outline: 2.5px solid var(--warm); outline-offset: -2.5px; border-radius: 3px; }
+  .cell.cur.o-cur { outline-color: var(--accent); }
+  .ctrl { display: flex; gap: 6px; justify-content: center; align-items: center; margin-top: 12px; flex-wrap: wrap; }
+  .btn {
+    font: inherit; font-size: 13.5px; font-weight: 600; color: var(--ink);
+    background: var(--surface); border: 1.5px solid var(--line); border-radius: 8px;
+    padding: 5px 11px; cursor: pointer; white-space: nowrap;
+  }
+  .btn:hover { border-color: var(--accent); color: var(--accent-ink); }
+  .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .btn[disabled] { opacity: .45; cursor: default; }
+  .step-lab { font-size: 13px; color: var(--muted); min-width: 62px; text-align: center; font-variant-numeric: tabular-nums; }
+
+  /* ---------- quiz demo ---------- */
+  .qz { border-bottom: 1px solid var(--line); padding: 12px 2px 14px; }
+  .qz:last-of-type { border-bottom: none; }
+  .qz .qt { font-weight: 600; font-size: 14.5px; margin-bottom: 8px; }
+  .qz .qt .qid { color: var(--muted); font-weight: 700; font-family: ui-monospace, Menlo, monospace; font-size: 12px; margin-right: 6px; }
+  .opts { display: grid; gap: 6px; }
+  .opt {
+    font: inherit; font-size: 13.5px; text-align: left; display: flex; gap: 8px; align-items: baseline;
+    background: var(--surface2); border: 1.5px solid var(--line); border-radius: 8px;
+    padding: 7px 10px; cursor: pointer; color: var(--ink); width: 100%;
+  }
+  .opt b { font-family: ui-monospace, Menlo, monospace; }
+  .opt:hover:not([disabled]) { border-color: var(--accent); }
+  .opt:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .opt.good { background: var(--good-soft); border-color: var(--good); }
+  .opt.bad { background: var(--bad-soft); border-color: var(--bad); }
+  .opt[disabled] { cursor: default; opacity: .85; }
+  .verdict { font-size: 13px; margin-top: 7px; display: none; }
+  .verdict.show { display: block; }
+  .verdict .ok { color: var(--good); font-weight: 700; }
+  .verdict .no { color: var(--bad); font-weight: 700; }
+  tr.ghost td { color: var(--muted); font-style: italic; }
+  tr.born td { background: var(--good-soft); font-style: normal; color: var(--ink); }
+
+  /* ---------- svg erd ---------- */
+  .svgbox { overflow-x: auto; }
+  .svgbox svg { min-width: 700px; width: 100%; height: auto; display: block; }
+  .e-box { fill: var(--surface); stroke: var(--line); stroke-width: 1.5; }
+  .e-hd { fill: var(--accent-soft); stroke: var(--line); stroke-width: 1.5; }
+  .e-title { font: 700 14px ui-monospace, Menlo, Consolas, monospace; fill: var(--accent-ink); letter-spacing: .04em; }
+  .e-fn { font: 12.5px ui-monospace, Menlo, Consolas, monospace; fill: var(--ink); }
+  .e-ft { font: 12px ui-monospace, Menlo, Consolas, monospace; fill: var(--muted); }
+  .e-pk { fill: var(--accent); font-weight: 700; }
+  .edge { stroke: var(--muted); stroke-width: 1.6; fill: none; }
+  .e-lab { font: italic 12.5px -apple-system, "Segoe UI", sans-serif; fill: var(--muted); }
+  .e-card { font: 700 12px ui-monospace, Menlo, monospace; fill: var(--ink); }
+
+  .note {
+    border-left: 4px solid var(--accent); background: var(--surface);
+    border-radius: 0 10px 10px 0; padding: 12px 18px; margin: 16px 0;
+    box-shadow: var(--shadow); font-size: 15px;
+  }
+  .note.warm { border-left-color: var(--warm); }
+  .note b.tag { color: var(--accent-ink); }
+  .note.warm b.tag { color: var(--warm); }
+
+  ol.flow { padding-left: 22px; }
+  ol.flow li { margin: 10px 0; }
+  ul.sum { list-style: none; padding: 0; }
+  ul.sum li { padding: 9px 0 9px 34px; position: relative; border-bottom: 1px solid var(--line); }
+  ul.sum li::before {
+    content: "✓"; position: absolute; left: 4px; top: 8px; color: var(--accent);
+    font-weight: 700; font-size: 16px;
+  }
+  .next {
+    margin-top: 40px; background: var(--ink); color: var(--bg); border-radius: 14px;
+    padding: 24px 28px;
+  }
+  .next .eyebrow { color: var(--warm); margin-top: 0; }
+  .next h3 { margin: 6px 0 8px; color: var(--bg); }
+  .next p { color: var(--bg); opacity: .85; margin-bottom: 0; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .lb-row, .mh-row, .opt, .btn, table.dt td { transition: background-color .18s ease, border-color .18s ease; }
+  }
+</style>
+
+<div class="wrap">
+
+  <div class="eyebrow">Agentic Software Development · Bài 15</div>
+  <h1>Từ mô hình quản lý thực tế đến tư duy Cơ sở dữ liệu (Database)</h1>
+  <p class="lede">Bài học đi từ bài toán ghi chép quen thuộc trong trường học đến các khái niệm cốt lõi của Cơ sở dữ liệu, và kết thúc bằng việc dùng AI để thiết kế dữ liệu cho chính ứng dụng của bạn — dưới dạng tài liệu, chưa cần code.</p>
+
+  <nav class="toc" aria-label="Mục lục">
+    <a href="#s1">1 · Bài toán thực tế</a>
+    <a href="#s2">2 · Sổ gốc &amp; mã định danh</a>
+    <a href="#s3">3 · Khái niệm Database</a>
+    <a href="#s4">4 · Thực hành</a>
+    <a href="#s5">Tóm tắt</a>
+  </nav>
+
+  <div class="panel">
+    <h4>🎯 Mục tiêu bài học</h4>
+    <ul class="sum">
+      <li>Nhận thức được nhu cầu tổ chức dữ liệu thông qua các bài toán quản lý thực tế.</li>
+      <li>Khái quát hóa được phương pháp lưu trữ thông tin có cấu trúc bằng bảng tính.</li>
+      <li>Hiểu và phân biệt được các khái niệm cốt lõi của Cơ sở dữ liệu: Bảng (Table), Bản ghi (Row/Record), Trường dữ liệu (Column/Field), Khóa chính (Primary Key).</li>
+      <li>Nhận biết được Kiểu dữ liệu (Data Type), bốn thao tác dữ liệu cơ bản (CRUD) và cách đọc Sơ đồ quan hệ dữ liệu (ERD).</li>
+      <li>Vận dụng AI để phân tích tính năng ứng dụng và mô hình hóa dữ liệu, trình bày thiết kế dưới dạng tài liệu (bản thiết kế) chuẩn bị cho việc khởi tạo Cơ sở dữ liệu ở bài sau.</li>
+    </ul>
+  </div>
+
+  <!-- ============ SECTION 1 ============ -->
+  <section id="s1">
+    <div class="sec-head"><span class="sec-num">1</span><h2>Bài toán tổ chức dữ liệu trong thực tế</h2></div>
+
+    <p>Để hiểu lý do hệ thống phần mềm cần Cơ sở dữ liệu, chúng ta bắt đầu bằng mô hình quản lý thông tin trường học.</p>
+    <p>Trong một lớp học, mỗi giáo viên bộ môn và giáo viên chủ nhiệm đều cần quản lý thông tin học sinh. Ban đầu, giả sử mỗi cuốn sổ đều ghi chép đầy đủ mọi thông tin chi tiết của học sinh kèm theo điểm số.</p>
+
+    <div class="panel">
+      <h4>📒 Sổ điểm môn Toán</h4>
+      <div class="tscroll">
+        <table class="dt">
+          <thead><tr><th>Họ và tên</th><th>Ngày sinh</th><th>Quê quán</th><th>SĐT Phụ huynh</th><th>Điểm 15p</th><th>Điểm 1 tiết</th></tr></thead>
+          <tbody>
+            <tr><td class="dup">Nguyễn Văn A</td><td class="dup">15/03/2009</td><td class="dup">Hà Nội</td><td class="dup k">0912345678</td><td>8.5</td><td>9.0</td></tr>
+            <tr><td class="dup">Trần Thị B</td><td class="dup">22/07/2009</td><td class="dup">Nam Định</td><td class="dup k">0987654321</td><td>9.0</td><td>8.5</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h4>📒 Sổ điểm danh (Lớp trưởng)</h4>
+      <div class="tscroll">
+        <table class="dt">
+          <thead><tr><th>Họ và tên</th><th>Ngày sinh</th><th>Quê quán</th><th>SĐT Phụ huynh</th><th>01/09</th><th>02/09</th><th>03/09</th></tr></thead>
+          <tbody>
+            <tr><td class="dup">Nguyễn Văn A</td><td class="dup">15/03/2009</td><td class="dup">Hà Nội</td><td class="dup k">0912345678</td><td>Có mặt</td><td>Vắng</td><td>Có mặt</td></tr>
+            <tr><td class="dup">Trần Thị B</td><td class="dup">22/07/2009</td><td class="dup">Nam Định</td><td class="dup k">0987654321</td><td>Có mặt</td><td>Có mặt</td><td>Có mặt</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="legend"><span><span class="sw warm"></span>Thông tin bị chép lại giống hệt nhau ở cả hai cuốn sổ</span></div>
+    </div>
+
+    <p>Phương pháp này nảy sinh hai vấn đề nghiêm trọng:</p>
+    <ol class="flow">
+      <li><strong>Dư thừa dữ liệu (Data Duplication):</strong> Các thông tin cố định như Ngày sinh, Quê quán bị lặp lại ở mọi cuốn sổ, làm lãng phí giấy mực và công sức ghi chép.</li>
+      <li><strong>Khó khăn khi cập nhật:</strong> Nếu học sinh Nguyễn Văn A thay đổi số điện thoại phụ huynh, thông tin này phải được cập nhật đồng loạt trên sổ của giáo viên chủ nhiệm, sổ điểm môn Toán, môn Văn và sổ điểm danh. Nếu bỏ sót, dữ liệu sẽ không đồng nhất.</li>
+    </ol>
+  </section>
+
+  <!-- ============ SECTION 2 ============ -->
+  <section id="s2">
+    <div class="sec-head"><span class="sec-num">2</span><h2>Giải pháp đối chiếu và mô hình quản lý mới</h2></div>
+
+    <p>Để giải quyết vấn đề trên, nhà trường áp dụng một phương pháp quản lý tối ưu hơn: sử dụng một <strong>"Sổ gốc"</strong> lưu trữ thông tin cố định và cấp cho mỗi học sinh một <strong>mã định danh duy nhất</strong> (Mã học sinh). Các cuốn sổ phát sinh sau đó chỉ cần tham chiếu đến mã này.</p>
+
+    <div class="panel">
+      <h4>📗 Bảng 1: Sổ gốc (Danh sách học sinh)</h4>
+      <div class="tscroll">
+        <table class="dt">
+          <thead><tr><th class="k">Mã học sinh</th><th>Họ và tên</th><th>Ngày sinh</th><th>Quê quán</th><th>SĐT Phụ huynh</th></tr></thead>
+          <tbody>
+            <tr><td class="key k">HS001</td><td>Nguyễn Văn A</td><td>15/03/2009</td><td>Hà Nội</td><td class="k">0912345678</td></tr>
+            <tr><td class="key k">HS002</td><td>Trần Thị B</td><td>22/07/2009</td><td>Nam Định</td><td class="k">0987654321</td></tr>
+            <tr><td class="key k">HS003</td><td>Nguyễn Văn A</td><td>10/11/2009</td><td>Hải Phòng</td><td class="k">0905112233</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="cap"><em>Lưu ý:</em> Việc sử dụng "Mã học sinh" là bắt buộc để phân biệt các cá nhân trùng tên (như hai bạn Nguyễn Văn A).</p>
+    </div>
+
+    <div class="panel">
+      <h4>📘 Bảng 2: Sổ phát sinh (Sổ điểm Toán)</h4>
+      <div class="tscroll">
+        <table class="dt">
+          <thead><tr><th class="k">ID Bản ghi</th><th class="k">Mã học sinh</th><th>Điểm 15p</th><th>Điểm 1 tiết</th></tr></thead>
+          <tbody>
+            <tr><td class="k">1</td><td class="key k">HS001</td><td>8.5</td><td>9.0</td></tr>
+            <tr><td class="k">2</td><td class="key k">HS002</td><td>9.0</td><td>8.5</td></tr>
+            <tr><td class="k">3</td><td class="key k">HS003</td><td>7.0</td><td>6.5</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="legend"><span><span class="sw acc"></span>Cột mã định danh — cầu nối duy nhất giữa hai bảng</span></div>
+      <p class="cap"><em>Lưu ý:</em> Sổ điểm cũng có cột "ID Bản ghi" là mã định danh riêng cho từng dòng của chính nó. Cột "Mã học sinh" ở đây không phải mã định danh của sổ điểm, mà là giá trị dùng để tham chiếu ngược về Sổ gốc (cơ chế tham chiếu này sẽ được tìm hiểu kỹ hơn ở bài 16 với khái niệm Khóa ngoại).</p>
+    </div>
+
+    <div class="note"><b class="tag">Nguyên lý nền tảng.</b> Cách tiếp cận này chính là nền tảng hình thành nên cấu trúc Cơ sở dữ liệu trong khoa học máy tính: <strong>chia tách dữ liệu để tránh dư thừa</strong> và <strong>dùng mã định danh để liên kết</strong> chúng lại với nhau.</div>
+  </section>
+
+  <!-- ============ SECTION 3 ============ -->
+  <section id="s3">
+    <div class="sec-head"><span class="sec-num">3</span><h2>Khái niệm Cơ sở dữ liệu (Database)</h2></div>
+
+    <p>Cách tổ chức dữ liệu qua các bảng tính trên tương đồng với mô hình <strong>Cơ sở dữ liệu quan hệ (Relational Database)</strong> — mô hình tổ chức dữ liệu thành các bảng có liên kết với nhau, được sử dụng phổ biến nhất hiện nay.</p>
+
+    <h3>3.1. Bảng đối chiếu thuật ngữ</h3>
+    <div class="panel">
+      <div class="tscroll">
+        <table class="dt">
+          <thead><tr><th>Mô hình bảng tính</th><th>Cơ sở dữ liệu</th><th>Giải thích chức năng</th></tr></thead>
+          <tbody>
+            <tr><td>Tập hợp các trang tính</td><td class="k"><strong>Database</strong></td><td>Hệ thống lưu trữ tổng thể</td></tr>
+            <tr><td>Trang tính (Sheet)</td><td class="k"><strong>Table</strong> (Bảng)</td><td>Tập hợp dữ liệu về một đối tượng (ví dụ: Bảng học sinh)</td></tr>
+            <tr><td>Hàng (Row)</td><td class="k"><strong>Record</strong> (Bản ghi)</td><td>Chứa dữ liệu của một đối tượng cụ thể</td></tr>
+            <tr><td>Cột (Column)</td><td class="k"><strong>Field</strong> (Trường dữ liệu)</td><td>Chứa một thuộc tính của đối tượng (ví dụ: Ngày sinh)</td></tr>
+            <tr><td>Mã định danh (Mã HS)</td><td class="k"><strong>Primary Key</strong> (Khóa chính)</td><td>Giá trị định danh duy nhất cho mỗi bản ghi</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <h3>3.2. Kiểu dữ liệu (Data Type)</h3>
+    <p>Trong bảng tính, một ô có thể chứa bất kỳ nội dung nào: có thể gõ "tám phẩy năm" vào ô điểm số mà không gặp cảnh báo. Cơ sở dữ liệu chặt chẽ hơn: mỗi trường dữ liệu phải được khai báo trước một <strong>Kiểu dữ liệu (Data Type)</strong>, và hệ thống từ chối mọi giá trị sai kiểu. Nhờ vậy, dữ liệu luôn hợp lệ và các phép tính (tính điểm trung bình, xếp hạng) luôn chính xác.</p>
+
+    <div class="grid c4">
+      <div class="chip-card"><h5 class="mono">Text</h5><p>Chuỗi ký tự — văn bản có độ dài tùy ý</p><span class="ex">"Nguyễn Văn A", "Hà Nội"</span></div>
+      <div class="chip-card"><h5 class="mono">Integer</h5><p>Số nguyên — không có phần thập phân</p><span class="ex">50 trận thắng, 120 giây</span></div>
+      <div class="chip-card"><h5 class="mono">Decimal</h5><p>Số thập phân</p><span class="ex">Điểm 15 phút: 8.5</span></div>
+      <div class="chip-card"><h5 class="mono">Date</h5><p>Ngày, tháng, năm</p><span class="ex">15/03/2009</span></div>
+      <div class="chip-card"><h5 class="mono">Boolean</h5><p>Chỉ nhận một trong hai giá trị đúng/sai</p><span class="ex">Có mặt / Vắng</span></div>
+    </div>
+
+    <div class="note warm"><b class="tag">Vì sao SĐT lưu bằng Text?</b> Số điện thoại được lưu bằng kiểu Text chứ không phải kiểu số, vì hai lý do: số 0 ở đầu sẽ bị mất nếu lưu dưới dạng số nguyên (<code>0912345678</code> trở thành <code>912345678</code>), và không ai cần thực hiện phép tính cộng trừ trên số điện thoại.</div>
+
+    <h3>3.3. Bốn thao tác cơ bản với dữ liệu (CRUD)</h3>
+    <p>Mọi tính năng của ứng dụng, dù phức tạp đến đâu, khi chạm đến Cơ sở dữ liệu đều quy về bốn thao tác cơ bản, gọi tắt là <strong>CRUD</strong>:</p>
+
+    <div class="grid c4">
+      <div class="chip-card"><div class="big">C</div><h5>Create — Thêm</h5><p>Thêm bản ghi mới vào bảng</p><span class="ex">Lưu kết quả một ván đấu vừa kết thúc</span></div>
+      <div class="chip-card"><div class="big">R</div><h5>Read — Đọc</h5><p>Tra cứu, hiển thị dữ liệu</p><span class="ex">Hiển thị bảng xếp hạng</span></div>
+      <div class="chip-card"><div class="big">U</div><h5>Update — Sửa</h5><p>Cập nhật bản ghi đã có</p><span class="ex">Cộng điểm cho người chiến thắng</span></div>
+      <div class="chip-card"><div class="big">D</div><h5>Delete — Xóa</h5><p>Xóa bản ghi khỏi bảng</p><span class="ex">Xóa tài khoản người chơi</span></div>
+    </div>
+    <p class="cap">Trong mô hình trường học: Create — ghi tên học sinh mới vào Sổ gốc · Read — tra điểm của một học sinh · Update — sửa số điện thoại phụ huynh · Delete — gạch tên học sinh chuyển trường.</p>
+    <p>Khi mô tả một tính năng cho AI, việc xác định tính năng đó cần những thao tác nào trong bốn thao tác trên sẽ giúp bản mô tả rõ ràng và đầy đủ hơn.</p>
+
+    <h3>3.4. Sơ đồ quan hệ dữ liệu (ERD)</h3>
+    <p>Khi Cơ sở dữ liệu có từ hai bảng trở lên, kỹ sư dữ liệu sử dụng <strong>Sơ đồ quan hệ dữ liệu (Entity Relationship Diagram — ERD)</strong> để quan sát toàn cảnh: hệ thống có những bảng nào, mỗi bảng gồm những trường gì, và các bảng liên kết với nhau qua mã định danh nào. Mô hình quản lý trường học ở mục 2 được vẽ thành sơ đồ như sau:</p>
+
+    <div class="erd" role="img" aria-label="Sơ đồ quan hệ: một học sinh trong Sổ gốc có nhiều dòng điểm trong Sổ điểm Toán, liên kết qua mã học sinh">
+      <div class="entity">
+        <div class="et">SO_GOC</div>
+        <ul>
+          <li><span class="fn">ma_hoc_sinh <span class="badge pk">PK</span></span><span class="ft">Text</span></li>
+          <li><span class="fn">ho_va_ten</span><span class="ft">Text</span></li>
+          <li><span class="fn">ngay_sinh</span><span class="ft">Date</span></li>
+          <li><span class="fn">que_quan</span><span class="ft">Text</span></li>
+          <li><span class="fn">sdt_phu_huynh</span><span class="ft">Text</span></li>
+        </ul>
+      </div>
+      <div class="rel">
+        <svg viewBox="0 0 130 26" width="130" height="26" aria-hidden="true">
+          <line x1="8" y1="13" x2="122" y2="13" stroke="currentColor" stroke-width="1.6"/>
+          <line x1="14" y1="5" x2="14" y2="21" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M122,13 L106,5 M122,13 L106,21 M106,13 L122,13" stroke="currentColor" stroke-width="1.6" fill="none"/>
+          <text x="24" y="9" font-size="10" fill="currentColor" font-weight="700">1</text>
+          <text x="96" y="9" font-size="10" fill="currentColor" font-weight="700">N</text>
+        </svg>
+        <span class="rl">có điểm trong</span>
+      </div>
+      <div class="entity">
+        <div class="et">SO_DIEM_TOAN</div>
+        <ul>
+          <li><span class="fn">id_ban_ghi <span class="badge pk">PK</span></span><span class="ft">Integer</span></li>
+          <li><span class="fn">ma_hoc_sinh</span><span class="ft">Text → Sổ gốc</span></li>
+          <li><span class="fn">diem_15p</span><span class="ft">Decimal</span></li>
+          <li><span class="fn">diem_1_tiet</span><span class="ft">Decimal</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <p>Cách đọc sơ đồ:</p>
+    <ul>
+      <li>Mỗi khối là một bảng; ký hiệu <span class="badge pk">PK</span> đánh dấu Khóa chính.</li>
+      <li>Đường nối giữa hai khối thể hiện sự liên kết giữa hai bảng thông qua mã định danh.</li>
+      <li>Ký hiệu "chân chim" ở một đầu đường nối thể hiện quan hệ <strong>một – nhiều</strong>: một học sinh trong Sổ gốc có thể có nhiều dòng điểm trong Sổ điểm Toán.</li>
+    </ul>
+    <p>Đây chính là dạng sơ đồ chúng ta sẽ yêu cầu AI tạo ra trong phần thực hành, đồng thời là ngôn ngữ chung để trao đổi thiết kế dữ liệu giữa các thành viên trong nhóm.</p>
+
+    <h3>3.5. Vì sao cần hệ quản trị Cơ sở dữ liệu chuyên dụng</h3>
+    <p>Mặc dù bảng tính đáp ứng tốt cho quản lý quy mô nhỏ, các ứng dụng thực tế đòi hỏi một hệ quản trị Cơ sở dữ liệu chuyên dụng (như PostgreSQL qua Supabase) nhằm đảm bảo tốc độ truy xuất với khối lượng dữ liệu lớn, hỗ trợ truy cập đồng thời và cung cấp cơ chế bảo mật chặt chẽ.</p>
+  </section>
+
+  <!-- ============ SECTION 4 ============ -->
+  <section id="s4">
+    <div class="sec-head"><span class="sec-num">4</span><h2>Thực hành: Khảo sát và mô hình hóa dữ liệu</h2></div>
+    <p>Trong phần này, chúng ta tập trung hoàn toàn vào kỹ năng <strong>"Tư duy dữ liệu" (Data Modeling)</strong> trước khi áp dụng vào hệ quản trị Cơ sở dữ liệu chuyên dụng ở bài học tiếp theo.</p>
+
+    <h3>Bước 1: Từ giao diện (UI) đến dữ liệu — phân tích Game Caro</h3>
+    <p>Mọi màn hình của ứng dụng đều được "vẽ" từ dữ liệu lưu trong Cơ sở dữ liệu. Vì vậy, cách tự nhiên nhất để tìm ra cấu trúc bảng là đi ngược từ giao diện: quan sát màn hình cần hiển thị những thông tin gì, từ đó suy ra các trường dữ liệu cần lưu. <em>Di chuột vào từng dòng trên giao diện để thấy bản ghi tương ứng trong bảng dữ liệu.</em></p>
+
+    <h4 style="font-size:16px; margin:26px 0 4px;">Ví dụ 1: Bảng Xếp Hạng (Leaderboard)</h4>
+    <div class="duo">
+      <div class="app" aria-label="Giao diện bảng xếp hạng">
+        <div class="ah">🏆 BẢNG XẾP HẠNG</div>
+        <div class="ab" id="lb-ui">
+          <div class="lb-row" data-k="P001"><span class="rank r1">1</span><span class="lb-name">CaroMaster</span><span class="lb-pts">150 điểm</span></div>
+          <div class="lb-row" data-k="P003"><span class="rank">2</span><span class="lb-name">KyThuAn</span><span class="lb-pts">96 điểm</span></div>
+          <div class="lb-row" data-k="P002"><span class="rank">3</span><span class="lb-name">TanThu01</span><span class="lb-pts">30 điểm</span></div>
+        </div>
+      </div>
+      <div class="panel" style="margin:0;">
+        <h4>Dữ liệu tương ứng trong Cơ sở dữ liệu — bảng <code>XEP_HANG</code></h4>
+        <div class="tscroll">
+          <table class="dt" id="lb-dt">
+            <thead><tr><th class="k">Mã người chơi</th><th>Tên hiển thị</th><th>Số trận thắng</th><th>Tổng số trận</th><th>Điểm số</th></tr></thead>
+            <tbody>
+              <tr data-k="P001"><td class="key k">P001</td><td>CaroMaster</td><td>50</td><td>60</td><td>150</td></tr>
+              <tr data-k="P002"><td class="key k">P002</td><td>TanThu01</td><td>10</td><td>25</td><td>30</td></tr>
+              <tr data-k="P003"><td class="key k">P003</td><td>KyThuAn</td><td>32</td><td>45</td><td>96</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="cap"><em>Nhận xét:</em> Bảng dữ liệu không có cột "Hạng" và không cần lưu theo thứ tự xếp hạng. Khi hiển thị, ứng dụng đọc dữ liệu (thao tác Read) rồi sắp xếp theo Điểm số giảm dần — thứ hạng được tính ra lúc hiển thị, không phải dữ liệu cần lưu.</p>
+      </div>
+    </div>
+
+    <h4 style="font-size:16px; margin:26px 0 4px;">Ví dụ 2: Lịch sử ván đấu (Match History)</h4>
+    <div class="duo">
+      <div class="app" aria-label="Giao diện lịch sử ván đấu">
+        <div class="ah">🕐 LỊCH SỬ VÁN ĐẤU</div>
+        <div class="ab" id="mh-ui">
+          <div class="mh-row" data-k="M001"><span class="mh-t">CaroMaster (X) đấu với TanThu01 (O)</span><span class="mh-s">Người thắng: CaroMaster · 120 giây</span></div>
+          <div class="mh-row" data-k="M002"><span class="mh-t">TanThu01 (X) đấu với KyThuAn (O)</span><span class="mh-s">Kết quả: Hòa · 300 giây</span></div>
+        </div>
+      </div>
+      <div class="panel" style="margin:0;">
+        <h4>Dữ liệu tương ứng trong Cơ sở dữ liệu — bảng <code>LICH_SU_VAN_DAU</code></h4>
+        <div class="tscroll">
+          <table class="dt" id="mh-dt">
+            <thead><tr><th class="k">Mã trận</th><th class="k">Người chơi X</th><th class="k">Người chơi O</th><th class="k">Người thắng</th><th>Thời gian (giây)</th></tr></thead>
+            <tbody>
+              <tr data-k="M001"><td class="k">M001</td><td class="key k">P001</td><td class="key k">P002</td><td class="key k">P001</td><td>120</td></tr>
+              <tr data-k="M002"><td class="k">M002</td><td class="key k">P002</td><td class="key k">P003</td><td><span class="badge null">NULL</span></td><td>300</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="cap"><em>Lưu ý:</em> Ở trận M002, hai người chơi hòa nhau nên cột "Mã người chiến thắng" không có giá trị. Trong Cơ sở dữ liệu, một ô không chứa giá trị như vậy được gọi là <strong>NULL</strong>.</p>
+        <p class="cap"><em>Nhận xét:</em> Giao diện hiển thị tên người chơi (CaroMaster) nhưng bảng chỉ lưu mã (P001). Khi hiển thị, ứng dụng dùng mã này đối chiếu sang bảng Xếp hạng — nơi có cột Tên hiển thị — đúng nguyên tắc tham chiếu bằng mã định danh đã học ở mục 2.</p>
+      </div>
+    </div>
+
+    <h3>Bước 2: Sử dụng AI để gợi ý thiết kế từ mô tả tính năng</h3>
+    <p>Khi gặp một tính năng chưa có sẵn giao diện để phân tích, chúng ta mô tả tính năng bằng ngôn ngữ tự nhiên và để AI — trong vai trò kỹ sư dữ liệu — đề xuất cấu trúc bảng. Một prompt thiết kế dữ liệu hiệu quả gồm ba thành phần:</p>
+    <ol class="flow">
+      <li><strong>Vai trò:</strong> yêu cầu AI đóng vai kỹ sư dữ liệu.</li>
+      <li><strong>Mô tả tính năng kèm giới hạn phạm vi:</strong> nêu rõ người dùng làm được gì với tính năng, bằng ngôn ngữ tự nhiên, và nói rõ những gì không cần làm. Không cần liệt kê các cột hay chi tiết kỹ thuật — suy ra những chi tiết đó chính là việc của AI. Phần giới hạn phạm vi là quan trọng nhất: phạm vi càng rộng, thiết kế càng phức tạp. Ví dụ, "thi trắc nghiệm" nói chung bao gồm nhiều thể loại (một lựa chọn, nhiều lựa chọn, điền từ, kéo thả...) cùng nhiều thông tin phụ; nếu không giới hạn, AI sẽ đề xuất một thiết kế đồ sộ vượt xa nhu cầu thực tế của dự án.</li>
+      <li><strong>Yêu cầu định dạng kết quả:</strong> kết quả phải trực quan — có sơ đồ quan hệ, bảng dữ liệu mẫu và phần giải thích — và xuất ra hai định dạng: <strong>HTML</strong> (để trình chiếu, thuyết trình trước lớp) và <strong>Markdown</strong> (để làm tài liệu ngữ cảnh khi giao tiếp với AI agent ở các bước sau).</li>
+    </ol>
+    <p>Dưới đây là hai ví dụ hoàn chỉnh theo cấu trúc trên. Với mỗi ví dụ, hãy quan sát <strong>giao diện tính năng trước</strong>, sau đó theo dõi dữ liệu tương ứng xuất hiện trong các bảng.</p>
+
+    <!-- ===== Vi du 1: Caro replay ===== -->
+    <h4 style="font-size:17px; margin:30px 0 6px;">Ví dụ prompt 1 — Lưu trữ lịch sử nước đi của một ván cờ Caro</h4>
+
+    <p>Trước hết, hãy nhìn tính năng dưới góc độ người dùng: mở lại một ván cờ đã kết thúc và xem từng nước đi hiện ra theo đúng thứ tự. Bấm <strong>Tiến ▸</strong> để phát lại ván cờ — mỗi nước đi trên bàn cờ tương ứng đúng một bản ghi trong bảng <code>NUOC_DI</code>.</p>
+
+    <div class="duo">
+      <div class="app" aria-label="Mô phỏng xem lại ván cờ caro">
+        <div class="ah">▶ XEM LẠI VÁN CỜ V001</div>
+        <div class="ab">
+          <div class="board" id="board" aria-label="Bàn cờ caro 9x9"></div>
+          <div class="ctrl">
+            <button class="btn" id="c-reset" type="button">⟲ Đầu</button>
+            <button class="btn" id="c-prev" type="button">◂ Lùi</button>
+            <span class="step-lab" id="c-lab">Lượt 0/9</span>
+            <button class="btn" id="c-next" type="button">Tiến ▸</button>
+          </div>
+        </div>
+      </div>
+      <div class="panel" style="margin:0;">
+        <h4>Bảng <code>VAN_CO</code> — mỗi ván cờ là một bản ghi</h4>
+        <div class="tscroll">
+          <table class="dt">
+            <thead><tr><th class="k">ma_van_co</th><th class="k">nguoi_choi_x</th><th class="k">nguoi_choi_o</th><th class="k">nguoi_thang</th></tr></thead>
+            <tbody><tr><td class="key k">V001</td><td class="k">P001</td><td class="k">P002</td><td class="k" id="vc-winner"><span class="badge null">NULL</span></td></tr></tbody>
+          </table>
+        </div>
+        <h4 style="margin-top:18px;">Bảng <code>NUOC_DI</code> — mỗi nước đi là một bản ghi</h4>
+        <div class="tscroll">
+          <table class="dt" id="mv-dt">
+            <thead><tr><th class="k">ma_nuoc_di</th><th class="k">ma_van_co</th><th>luot_thu</th><th>hang</th><th>cot</th><th>ky_hieu</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p class="cap">Khi ván kết thúc (lượt 9), hệ thống <strong>cập nhật (Update)</strong> cột <code>nguoi_thang</code> của bảng <code>VAN_CO</code> từ NULL thành P001.</p>
+      </div>
+    </div>
+
+    <p>Prompt để AI thiết kế phần dữ liệu cho tính năng này:</p>
+    <div class="prompt">
+      <div class="ph">Prompt mẫu 1 · Replay ván cờ Caro</div>
+      <pre>Bạn là một kỹ sư dữ liệu. Tôi đang xây dựng game cờ Caro và muốn làm tính năng
+xem lại ván đấu (replay): khi một ván cờ kết thúc, người chơi có thể mở lại ván đó
+và xem từng nước đi hiện ra theo đúng thứ tự.
+
+Chỉ cần đúng tính năng trên; không cần đi lại nước cờ (undo) hay xem trực tiếp.
+
+Hãy thiết kế cơ sở dữ liệu cho tính năng này và trình bày kết quả thành hai file:
+1. Một file HTML để trình chiếu: có sơ đồ các bảng và mối liên kết giữa chúng,
+   bảng dữ liệu mẫu, và giải thích ngắn gọn lý do thiết kế.
+2. Một file Markdown (database-design.md) chứa cùng nội dung, trình bày bằng
+   bảng Markdown và sơ đồ Mermaid, để tôi dùng làm tài liệu ngữ cảnh khi làm việc
+   với AI agent sau này.
+Trong cả hai file, mỗi cột ghi rõ Kiểu dữ liệu và đánh dấu Khóa chính.</pre>
+    </div>
+
+    <p>Kết quả mong đợi: mặc dù prompt không liệt kê bất kỳ cột nào, AI tự suy ra các thông tin cần lưu cho mỗi nước đi (thuộc ván nào, lượt thứ mấy, tọa độ ô, ký hiệu X hay O) và đề xuất hai bảng — một bảng cho ván cờ, một bảng cho từng nước đi:</p>
+
+    <div class="erd" role="img" aria-label="Sơ đồ quan hệ: một ván cờ gồm nhiều nước đi, liên kết qua mã ván cờ">
+      <div class="entity">
+        <div class="et">VAN_CO</div>
+        <ul>
+          <li><span class="fn">ma_van_co <span class="badge pk">PK</span></span><span class="ft">Text</span></li>
+          <li><span class="fn">ma_nguoi_choi_x</span><span class="ft">Text</span></li>
+          <li><span class="fn">ma_nguoi_choi_o</span><span class="ft">Text</span></li>
+          <li><span class="fn">ma_nguoi_thang</span><span class="ft">Text · NULL nếu hòa</span></li>
+        </ul>
+      </div>
+      <div class="rel">
+        <svg viewBox="0 0 130 26" width="130" height="26" aria-hidden="true">
+          <line x1="8" y1="13" x2="122" y2="13" stroke="currentColor" stroke-width="1.6"/>
+          <line x1="14" y1="5" x2="14" y2="21" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M122,13 L106,5 M122,13 L106,21 M106,13 L122,13" stroke="currentColor" stroke-width="1.6" fill="none"/>
+          <text x="24" y="9" font-size="10" fill="currentColor" font-weight="700">1</text>
+          <text x="96" y="9" font-size="10" fill="currentColor" font-weight="700">N</text>
+        </svg>
+        <span class="rl">gồm nhiều</span>
+      </div>
+      <div class="entity">
+        <div class="et">NUOC_DI</div>
+        <ul>
+          <li><span class="fn">ma_nuoc_di <span class="badge pk">PK</span></span><span class="ft">Integer</span></li>
+          <li><span class="fn">ma_van_co</span><span class="ft">Text → VAN_CO</span></li>
+          <li><span class="fn">luot_thu</span><span class="ft">Integer</span></li>
+          <li><span class="fn">hang</span><span class="ft">Integer</span></li>
+          <li><span class="fn">cot</span><span class="ft">Integer</span></li>
+          <li><span class="fn">ky_hieu</span><span class="ft">Text · X hoặc O</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="note"><b class="tag">Điểm mấu chốt của thiết kế.</b> Một ván cờ gồm nhiều nước đi (quan hệ một – nhiều), nên nước đi được tách thành bảng riêng và lưu kèm mã ván cờ. Tính năng replay khi đó chỉ là đọc mọi nước đi có cùng mã ván cờ và sắp xếp theo lượt tăng dần — đúng như mô phỏng phía trên.</div>
+
+    <!-- ===== Vi du 2: Quiz ===== -->
+    <h4 style="font-size:17px; margin:36px 0 6px;">Ví dụ prompt 2 — Thi trắc nghiệm một lựa chọn (single choice)</h4>
+
+    <p>Tương tự, hãy trải nghiệm tính năng trước. Dưới đây là ba câu hỏi thật lấy từ đề thi giữa kỳ của khóa học — hãy làm bài, và quan sát: mỗi câu hỏi là một bản ghi trong bảng <code>CAU_HOI</code>; ứng dụng chấm điểm bằng cách so sánh lựa chọn của bạn với cột <code>dap_an_dung</code>; khi nộp bài, một bản ghi mới được <strong>thêm (Create)</strong> vào bảng <code>KET_QUA</code>.</p>
+
+    <div class="duo">
+      <div class="app" aria-label="Mô phỏng bài thi trắc nghiệm">
+        <div class="ah">📝 ĐỀ D001 · TRẮC NGHIỆM GIỮA KỲ</div>
+        <div class="ab">
+          <div class="qz" data-q="C001" data-ans="B">
+            <div class="qt"><span class="qid">C001</span>Nhóm muốn thay đổi màu các ô cờ và trạng thái của nút "Chơi lại". Thành phần nào chịu trách nhiệm trực tiếp cho phần thay đổi này?</div>
+            <div class="opts">
+              <button class="opt" type="button" data-v="A"><b>A.</b> Database</button>
+              <button class="opt" type="button" data-v="B"><b>B.</b> Frontend</button>
+              <button class="opt" type="button" data-v="C"><b>C.</b> Backend</button>
+              <button class="opt" type="button" data-v="D"><b>D.</b> Storage</button>
+            </div>
+            <div class="verdict"></div>
+          </div>
+          <div class="qz" data-q="C002" data-ans="D">
+            <div class="qt"><span class="qid">C002</span>Trong game caro có tài khoản, thành phần nào giúp ứng dụng biết người đang chơi là ai và duy trì phiên đăng nhập của họ?</div>
+            <div class="opts">
+              <button class="opt" type="button" data-v="A"><b>A.</b> AI Layer</button>
+              <button class="opt" type="button" data-v="B"><b>B.</b> Storage</button>
+              <button class="opt" type="button" data-v="C"><b>C.</b> Realtime Database</button>
+              <button class="opt" type="button" data-v="D"><b>D.</b> Authentication</button>
+            </div>
+            <div class="verdict"></div>
+          </div>
+          <div class="qz" data-q="C003" data-ans="D">
+            <div class="qt"><span class="qid">C003</span>Một prompt đã có mục tiêu, bối cảnh, yêu cầu cụ thể và kết quả mong muốn. Phần nào còn thiếu trong khung prompt năm phần?</div>
+            <div class="opts">
+              <button class="opt" type="button" data-v="A"><b>A.</b> Tên của mô hình AI</button>
+              <button class="opt" type="button" data-v="B"><b>B.</b> Số dòng code tối đa</button>
+              <button class="opt" type="button" data-v="C"><b>C.</b> Lịch sử mọi cuộc trò chuyện trước đó</button>
+              <button class="opt" type="button" data-v="D"><b>D.</b> Ràng buộc</button>
+            </div>
+            <div class="verdict"></div>
+          </div>
+        </div>
+      </div>
+      <div class="panel" style="margin:0;">
+        <h4>Bảng <code>CAU_HOI</code> — ngân hàng câu hỏi</h4>
+        <div class="tscroll">
+          <table class="dt" id="q-dt">
+            <thead><tr><th class="k">ma_cau_hoi</th><th>noi_dung</th><th class="k">dap_an_dung</th></tr></thead>
+            <tbody>
+              <tr data-k="C001"><td class="key k">C001</td><td>Nhóm muốn thay đổi màu các ô cờ…</td><td class="k">B</td></tr>
+              <tr data-k="C002"><td class="key k">C002</td><td>Thành phần nào duy trì phiên đăng nhập…</td><td class="k">D</td></tr>
+              <tr data-k="C003"><td class="key k">C003</td><td>Khung prompt năm phần còn thiếu…</td><td class="k">D</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="cap">Bảng đầy đủ còn các cột <code>phuong_an_a</code> … <code>phuong_an_d</code> (rút gọn để dễ theo dõi).</p>
+        <h4 style="margin-top:18px;">Bảng <code>KET_QUA</code> — điểm số sau khi nộp bài</h4>
+        <div class="tscroll">
+          <table class="dt">
+            <thead><tr><th class="k">ma_ket_qua</th><th class="k">ma_de_thi</th><th>ten_hoc_sinh</th><th>diem_so</th></tr></thead>
+            <tbody>
+              <tr class="ghost" id="kq-row"><td class="k">—</td><td class="k">—</td><td>Chưa có bản ghi — hãy trả lời cả 3 câu</td><td>—</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <p>Prompt để AI thiết kế phần dữ liệu cho tính năng này:</p>
+    <div class="prompt">
+      <div class="ph">Prompt mẫu 2 · Thi trắc nghiệm single choice</div>
+      <pre>Bạn là một kỹ sư dữ liệu. Tôi đang xây dựng tính năng thi trắc nghiệm cho ứng dụng
+học tập: giáo viên nhập câu hỏi vào ngân hàng câu hỏi chung, hệ thống chọn câu hỏi
+từ ngân hàng để tạo thành đề thi, học sinh làm bài và hệ thống lưu lại điểm số.
+
+Giới hạn: chỉ có dạng câu hỏi chọn một đáp án đúng (single choice) với 4 phương án.
+Không cần các dạng câu hỏi khác hay giới hạn thời gian làm bài.
+
+Hãy thiết kế cơ sở dữ liệu cho tính năng này và trình bày kết quả thành hai file:
+1. Một file HTML để trình chiếu: có sơ đồ các bảng và mối liên kết giữa chúng,
+   bảng dữ liệu mẫu, và giải thích ngắn gọn lý do thiết kế.
+2. Một file Markdown (database-design.md) chứa cùng nội dung, trình bày bằng
+   bảng Markdown và sơ đồ Mermaid, để tôi dùng làm tài liệu ngữ cảnh khi làm việc
+   với AI agent sau này.
+Trong cả hai file, mỗi cột ghi rõ Kiểu dữ liệu và đánh dấu Khóa chính.</pre>
+    </div>
+
+    <p>Kết quả mong đợi: từ câu "hệ thống chọn câu hỏi từ ngân hàng để tạo thành đề thi", AI tự nhận ra một câu hỏi có thể xuất hiện trong nhiều đề khác nhau, và đề xuất bốn bảng — trong đó có một bảng trung gian nối Đề thi với Câu hỏi:</p>
+
+    <figure style="margin:20px 0;">
+      <div class="svgbox">
+        <svg viewBox="0 0 960 640" role="img" aria-label="Sơ đồ quan hệ bốn bảng: CAU_HOI và DE_THI nối với nhau qua bảng trung gian CAU_HOI_TRONG_DE; DE_THI có nhiều KET_QUA">
+          <!-- edges -->
+          <path class="edge" d="M180,262 V492 H326"/>
+          <text class="e-card" x="188" y="280">1</text>
+          <text class="e-card" x="306" y="484">N</text>
+          <text class="e-lab" x="196" y="470">xuất hiện trong</text>
+
+          <path class="edge" d="M626,100 H480 V396"/>
+          <text class="e-card" x="606" y="92">1</text>
+          <text class="e-card" x="488" y="386">N</text>
+          <text class="e-lab" x="496" y="250">gồm</text>
+
+          <path class="edge" d="M780,166 V456"/>
+          <text class="e-card" x="790" y="186">1</text>
+          <text class="e-card" x="790" y="448">N</text>
+          <text class="e-lab" x="796" y="316">có</text>
+
+          <!-- CAU_HOI -->
+          <g>
+            <rect class="e-box" x="30" y="40" width="300" height="222" rx="10"/>
+            <path class="e-hd" d="M30,50 a10,10 0 0 1 10,-10 h280 a10,10 0 0 1 10,10 v22 h-300 z"/>
+            <text class="e-title" x="180" y="62" text-anchor="middle">CAU_HOI</text>
+            <text class="e-fn" x="44" y="92">ma_cau_hoi <tspan class="e-pk">PK</tspan></text><text class="e-ft" x="316" y="92" text-anchor="end">Text</text>
+            <text class="e-fn" x="44" y="116">noi_dung</text><text class="e-ft" x="316" y="116" text-anchor="end">Text</text>
+            <text class="e-fn" x="44" y="140">phuong_an_a</text><text class="e-ft" x="316" y="140" text-anchor="end">Text</text>
+            <text class="e-fn" x="44" y="164">phuong_an_b</text><text class="e-ft" x="316" y="164" text-anchor="end">Text</text>
+            <text class="e-fn" x="44" y="188">phuong_an_c</text><text class="e-ft" x="316" y="188" text-anchor="end">Text</text>
+            <text class="e-fn" x="44" y="212">phuong_an_d</text><text class="e-ft" x="316" y="212" text-anchor="end">Text</text>
+            <text class="e-fn" x="44" y="236">dap_an_dung</text><text class="e-ft" x="316" y="236" text-anchor="end">Text</text>
+          </g>
+
+          <!-- DE_THI -->
+          <g>
+            <rect class="e-box" x="630" y="40" width="300" height="126" rx="10"/>
+            <path class="e-hd" d="M630,50 a10,10 0 0 1 10,-10 h280 a10,10 0 0 1 10,10 v22 h-300 z"/>
+            <text class="e-title" x="780" y="62" text-anchor="middle">DE_THI</text>
+            <text class="e-fn" x="644" y="92">ma_de_thi <tspan class="e-pk">PK</tspan></text><text class="e-ft" x="916" y="92" text-anchor="end">Text</text>
+            <text class="e-fn" x="644" y="116">ten_de_thi</text><text class="e-ft" x="916" y="116" text-anchor="end">Text</text>
+            <text class="e-fn" x="644" y="140">ngay_tao</text><text class="e-ft" x="916" y="140" text-anchor="end">Date</text>
+          </g>
+
+          <!-- CAU_HOI_TRONG_DE -->
+          <g>
+            <rect class="e-box" x="330" y="400" width="300" height="150" rx="10"/>
+            <path class="e-hd" d="M330,410 a10,10 0 0 1 10,-10 h280 a10,10 0 0 1 10,10 v22 h-300 z"/>
+            <text class="e-title" x="480" y="422" text-anchor="middle">CAU_HOI_TRONG_DE</text>
+            <text class="e-fn" x="344" y="452">id <tspan class="e-pk">PK</tspan></text><text class="e-ft" x="616" y="452" text-anchor="end">Integer</text>
+            <text class="e-fn" x="344" y="476">ma_de_thi</text><text class="e-ft" x="616" y="476" text-anchor="end">Text → DE_THI</text>
+            <text class="e-fn" x="344" y="500">ma_cau_hoi</text><text class="e-ft" x="616" y="500" text-anchor="end">Text → CAU_HOI</text>
+            <text class="e-fn" x="344" y="524">thu_tu</text><text class="e-ft" x="616" y="524" text-anchor="end">Integer</text>
+          </g>
+
+          <!-- KET_QUA -->
+          <g>
+            <rect class="e-box" x="630" y="460" width="300" height="150" rx="10"/>
+            <path class="e-hd" d="M630,470 a10,10 0 0 1 10,-10 h280 a10,10 0 0 1 10,10 v22 h-300 z"/>
+            <text class="e-title" x="780" y="482" text-anchor="middle">KET_QUA</text>
+            <text class="e-fn" x="644" y="512">ma_ket_qua <tspan class="e-pk">PK</tspan></text><text class="e-ft" x="916" y="512" text-anchor="end">Integer</text>
+            <text class="e-fn" x="644" y="536">ma_de_thi</text><text class="e-ft" x="916" y="536" text-anchor="end">Text → DE_THI</text>
+            <text class="e-fn" x="644" y="560">ten_hoc_sinh</text><text class="e-ft" x="916" y="560" text-anchor="end">Text</text>
+            <text class="e-fn" x="644" y="584">diem_so</text><text class="e-ft" x="916" y="584" text-anchor="end">Decimal</text>
+          </g>
+        </svg>
+      </div>
+      <figcaption class="cap">Sơ đồ quan hệ mong đợi cho tính năng thi trắc nghiệm: bảng trung gian CAU_HOI_TRONG_DE ghi lại từng cặp "đề thi – câu hỏi".</figcaption>
+    </figure>
+
+    <p>Hai điểm đáng chú ý trong thiết kế này:</p>
+    <ul>
+      <li>Đề thi và Câu hỏi có quan hệ <strong>nhiều – nhiều</strong> (một đề chứa nhiều câu hỏi, một câu hỏi xuất hiện trong nhiều đề), nên không thể lưu trực tiếp mã của bên này vào bảng của bên kia. AI đề xuất thêm bảng trung gian <code>CAU_HOI_TRONG_DE</code> để ghi lại từng cặp "đề thi – câu hỏi". Đây là ví dụ điển hình về giá trị của AI trong vai trò kỹ sư dữ liệu: từ mô tả tính năng bằng ngôn ngữ tự nhiên, AI nhận ra mối quan hệ phức tạp và tự đề xuất cấu trúc phù hợp.</li>
+      <li>Nhờ giới hạn phạm vi "chỉ single choice với đúng 4 phương án", bốn phương án nằm gọn trong bốn cột của bảng <code>CAU_HOI</code>. Nếu mở rộng sang multiple choice (nhiều đáp án đúng, số phương án thay đổi), cấu trúc này không còn phù hợp — cần tách phương án thành bảng riêng.</li>
+    </ul>
+    <div class="note warm"><b class="tag">Câu hỏi thảo luận.</b> Hãy thử sửa prompt để hỗ trợ thêm multiple choice, sau đó so sánh hai bản thiết kế mà AI đưa ra.</div>
+
+    <div class="panel">
+      <h4>💪 Nhiệm vụ thực hành</h4>
+      <ul>
+        <li>Mỗi học sinh chọn một tính năng cho ứng dụng của mình (ví dụ: Danh sách bạn bè, Hòm thư tin nhắn) và tự viết prompt theo cấu trúc ba thành phần ở trên. Chú ý xác định rõ giới hạn phạm vi tính năng trước khi gửi cho AI.</li>
+        <li>Kiểm tra kết quả AI trả về theo các tiêu chí: sơ đồ có đầy đủ các bảng và đường liên kết không; mỗi cột có Kiểu dữ liệu và Khóa chính không; dữ liệu mẫu có khớp với mô tả tính năng không. Nếu thiếu, yêu cầu AI bổ sung.</li>
+      </ul>
+    </div>
+
+    <h3>Bước 3: Thiết kế cơ sở dữ liệu cho dự án nhóm (Giai đoạn tài liệu hóa)</h3>
+    <ul>
+      <li>Dựa trên phương pháp mô hình hóa vừa học, học sinh tiến hành thảo luận nhóm để thiết kế dữ liệu cho dự án cuối khóa của mình.</li>
+      <li>Các nhóm chọn ra 1 đến 2 tính năng quan trọng nhất (ví dụ: "Giao dịch chi tiêu" cho ứng dụng tài chính cá nhân, hoặc "Đơn hàng" cho ứng dụng bán hàng).</li>
+      <li>Sử dụng AI để hỗ trợ hoàn thiện cấu trúc các bảng theo mẫu prompt ở Bước 2. Sản phẩm của nhóm là một bộ tài liệu thiết kế gồm hai định dạng: file <strong>Markdown</strong> (bảng dữ liệu mẫu, sơ đồ Mermaid, kiểu dữ liệu, khóa chính) đóng vai trò bản vẽ kỹ thuật (Blueprint) để giao tiếp với AI agent khi khởi tạo Cơ sở dữ liệu thật ở bài 16, và file <strong>HTML</strong> để nhóm trình bày thiết kế trước lớp.</li>
+    </ul>
+  </section>
+
+  <!-- ============ SUMMARY ============ -->
+  <section id="s5">
+    <div class="sec-head"><span class="sec-num">✓</span><h2>Tóm tắt kiến thức</h2></div>
+    <ul class="sum">
+      <li>Ghi chép trùng lặp cùng một thông tin ở nhiều nơi gây dư thừa dữ liệu và dễ dẫn đến sai lệch khi cập nhật.</li>
+      <li>Giải pháp: tách dữ liệu thành các bảng riêng, cấp cho mỗi đối tượng một mã định danh duy nhất, các bảng khác chỉ tham chiếu đến mã này.</li>
+      <li>Bốn khái niệm cốt lõi của Cơ sở dữ liệu: Bảng (Table), Bản ghi (Record), Trường dữ liệu (Field), Khóa chính (Primary Key).</li>
+      <li>Mỗi trường dữ liệu có một Kiểu dữ liệu (Data Type) cố định; mọi tính năng khi chạm đến dữ liệu đều quy về bốn thao tác CRUD (Thêm – Đọc – Sửa – Xóa).</li>
+      <li>Sơ đồ quan hệ dữ liệu (ERD) là ngôn ngữ chung để trình bày các bảng và mối liên kết giữa chúng.</li>
+      <li>Giao diện (UI) được vẽ từ dữ liệu trong Cơ sở dữ liệu; phân tích ngược từ màn hình hiển thị là cách tự nhiên để tìm ra các trường dữ liệu cần lưu.</li>
+      <li>Prompt thiết kế dữ liệu hiệu quả gồm ba thành phần: vai trò kỹ sư dữ liệu, mô tả tính năng kèm giới hạn phạm vi, và yêu cầu kết quả trực quan ở hai định dạng (HTML để trình chiếu, Markdown để giao tiếp với AI agent).</li>
+      <li>Sản phẩm của bài học là bản thiết kế dữ liệu dưới dạng tài liệu, chưa phải Cơ sở dữ liệu thật.</li>
+    </ul>
+
+    <div class="next">
+      <div class="eyebrow">Bài tiếp theo · Bài 16</div>
+      <h3>Từ bản thiết kế đến Cơ sở dữ liệu thật</h3>
+      <p>Các nhóm sẽ sử dụng Supabase CLI kết hợp AI để chuyển bản thiết kế này thành Cơ sở dữ liệu thật, đồng thời tìm hiểu cách liên kết các bảng với nhau bằng Khóa ngoại (Foreign Key).</p>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- hover sync: UI row <-> data row ---------- */
+  function sync(uiSel, dtSel) {
+    var rows = document.querySelectorAll(uiSel + " [data-k]");
+    rows.forEach(function (r) {
+      var k = r.getAttribute("data-k");
+      var mate = document.querySelector(dtSel + ' tr[data-k="' + k + '"]');
+      function on() { r.classList.add("on"); if (mate) mate.classList.add("hl"); }
+      function off() { r.classList.remove("on"); if (mate) mate.classList.remove("hl"); }
+      r.addEventListener("mouseenter", on);
+      r.addEventListener("mouseleave", off);
+      r.addEventListener("focus", on);
+      r.addEventListener("blur", off);
+    });
+  }
+  sync("#lb-ui", "#lb-dt");
+  sync("#mh-ui", "#mh-dt");
+
+  /* ---------- caro replay ---------- */
+  var MOVES = [
+    { h: 5, c: 5, k: "X" }, { h: 4, c: 4, k: "O" },
+    { h: 5, c: 4, k: "X" }, { h: 6, c: 5, k: "O" },
+    { h: 5, c: 6, k: "X" }, { h: 4, c: 6, k: "O" },
+    { h: 5, c: 3, k: "X" }, { h: 6, c: 3, k: "O" },
+    { h: 5, c: 7, k: "X" }
+  ];
+  var board = document.getElementById("board");
+  var cells = {};
+  for (var r = 1; r <= 9; r++) {
+    for (var c = 1; c <= 9; c++) {
+      var d = document.createElement("div");
+      d.className = "cell";
+      cells[r + "-" + c] = d;
+      board.appendChild(d);
+    }
+  }
+  var mvBody = document.querySelector("#mv-dt tbody");
+  MOVES.forEach(function (m, i) {
+    var tr = document.createElement("tr");
+    tr.innerHTML = '<td class="k">' + (i + 1) + '</td><td class="k">V001</td><td>' + (i + 1) +
+      "</td><td>" + m.h + "</td><td>" + m.c + "</td><td><strong>" + m.k + "</strong></td>";
+    mvBody.appendChild(tr);
+  });
+  var mvRows = mvBody.querySelectorAll("tr");
+  var step = 0;
+  var lab = document.getElementById("c-lab");
+  var winner = document.getElementById("vc-winner");
+  function render() {
+    for (var key in cells) { cells[key].textContent = ""; cells[key].className = "cell"; }
+    for (var i = 0; i < step; i++) {
+      var m = MOVES[i];
+      var el = cells[m.h + "-" + m.c];
+      el.textContent = m.k;
+      el.classList.add(m.k === "X" ? "x" : "o");
+      if (i === step - 1) { el.classList.add("cur"); if (m.k === "O") el.classList.add("o-cur"); }
+    }
+    mvRows.forEach(function (tr, i) { tr.classList.toggle("hl", i === step - 1); });
+    lab.textContent = "Lượt " + step + "/" + MOVES.length;
+    winner.innerHTML = step === MOVES.length ? '<strong>P001</strong>' : '<span class="badge null">NULL</span>';
+    document.getElementById("c-prev").disabled = step === 0;
+    document.getElementById("c-next").disabled = step === MOVES.length;
+  }
+  document.getElementById("c-next").addEventListener("click", function () { if (step < MOVES.length) { step++; render(); } });
+  document.getElementById("c-prev").addEventListener("click", function () { if (step > 0) { step--; render(); } });
+  document.getElementById("c-reset").addEventListener("click", function () { step = 0; render(); });
+  render();
+
+  /* ---------- quiz demo ---------- */
+  var answered = {};
+  var quizzes = document.querySelectorAll(".qz");
+  quizzes.forEach(function (qz) {
+    var qid = qz.getAttribute("data-q");
+    var ans = qz.getAttribute("data-ans");
+    var verdict = qz.querySelector(".verdict");
+    var row = document.querySelector('#q-dt tr[data-k="' + qid + '"]');
+    qz.querySelectorAll(".opt").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        if (answered[qid] !== undefined) return;
+        var v = btn.getAttribute("data-v");
+        var ok = v === ans;
+        answered[qid] = ok;
+        qz.querySelectorAll(".opt").forEach(function (b) {
+          b.disabled = true;
+          if (b.getAttribute("data-v") === ans) b.classList.add("good");
+        });
+        if (!ok) btn.classList.add("bad");
+        verdict.className = "verdict show";
+        verdict.innerHTML = (ok
+          ? '<span class="ok">✔ Chính xác.</span>'
+          : '<span class="no">✘ Chưa đúng.</span>')
+          + ' App so sánh lựa chọn "' + v + '" với cột <code>dap_an_dung</code> = "' + ans + '" của bản ghi ' + qid + ".";
+        if (row) {
+          row.classList.add("hl");
+          setTimeout(function () { row.classList.remove("hl"); }, 1600);
+        }
+        if (Object.keys(answered).length === quizzes.length) {
+          var good = 0;
+          for (var k in answered) if (answered[k]) good++;
+          var score = (good / quizzes.length * 10).toFixed(1);
+          var kq = document.getElementById("kq-row");
+          kq.innerHTML = '<td class="k">K001</td><td class="k">D001</td><td>Bạn</td><td><strong>' + score + "</strong></td>";
+          kq.className = "born";
+        }
+      });
+    });
+  });
+})();
+</script>
