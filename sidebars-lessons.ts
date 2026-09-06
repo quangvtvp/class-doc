@@ -175,6 +175,16 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
+          id: 'agentic software development/Bai-16-Ket-Noi-Du-Lieu-Va-Van-Hanh-Database',
+          label: 'Buổi 16: Quan hệ dữ liệu và vận hành Database',
+        },
+        {
+          type: 'doc',
+          id: 'agentic software development/Bai-18-Bo-Nho-Agent-Va-File-Huong-Dan-AGENTS-md',
+          label: 'Buổi 18: Bộ nhớ agent và file hướng dẫn',
+        },
+        {
+          type: 'doc',
           id: 'agentic software development/Bai-20-GitHub-CLI-Va-Phoi-Hop-Tren-Cung-Repo',
           label: 'Buổi 20: GitHub CLI và phối hợp trên repo',
         },
