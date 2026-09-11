@@ -1,0 +1,606 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bài 19 · Ứng dụng agentic</title>
+
+<style>
+  :root {
+    --bg: #f5f6f9; --surface: #ffffff; --surface2: #eef1f6; --ink: #1f2735; --muted: #5d6b82;
+    --line: #d9dfe9; --accent: #0e6d6a; --accent-ink: #0a5553; --accent-soft: #e1f0ee;
+    --warm: #b45817; --warm-soft: #f9ebdd; --good: #2e7d46; --good-soft: #e3f2e8;
+    --bad: #b3423a; --bad-soft: #f9e7e5; --violet: #5b4bb7; --violet-soft: #ebe7f9;
+    --shadow: 0 1px 2px rgba(20,30,50,.06), 0 4px 14px rgba(20,30,50,.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #12161d; --surface: #1a202b; --surface2: #141a23; --ink: #e7ebf2; --muted: #97a3b8;
+      --line: #2b3444; --accent: #56c4be; --accent-ink: #7ed7d2; --accent-soft: #17322f;
+      --warm: #e2925c; --warm-soft: #392817; --good: #6cc188; --good-soft: #1c3324;
+      --bad: #e08078; --bad-soft: #3d211f; --violet: #a89af0; --violet-soft: #26213f;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.25);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #12161d; --surface: #1a202b; --surface2: #141a23; --ink: #e7ebf2; --muted: #97a3b8;
+    --line: #2b3444; --accent: #56c4be; --accent-ink: #7ed7d2; --accent-soft: #17322f;
+    --warm: #e2925c; --warm-soft: #392817; --good: #6cc188; --good-soft: #1c3324;
+    --bad: #e08078; --bad-soft: #3d211f; --violet: #a89af0; --violet-soft: #26213f;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.25);
+  }
+
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); margin: 0; font-size: 16.5px; line-height: 1.65;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 22px 90px; }
+  h1, h2, h3 { font-family: Georgia, "Times New Roman", serif; line-height: 1.25; text-wrap: balance; }
+  h1 { font-size: clamp(30px, 5vw, 42px); margin: 10px 0 14px; }
+  h2 { font-size: clamp(23px, 3.4vw, 29px); margin: 0 0 6px; }
+  h3 { font-size: 19px; margin: 30px 0 10px; }
+  p { margin: 12px 0; }
+  code, .mono, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .92em; }
+  code { background: var(--surface2); border: 1px solid var(--line); border-radius: 5px; padding: 1px 6px; }
+  pre { background: var(--surface2); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; overflow-x: auto; margin: 0; line-height: 1.5; }
+  .eyebrow { font-size: 12.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-top: 46px; }
+  .lede { color: var(--muted); font-size: 18px; max-width: 62ch; }
+  .toc { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 8px; }
+  .toc a { text-decoration: none; color: var(--accent-ink); background: var(--accent-soft); border-radius: 999px; padding: 5px 14px; font-size: 13.5px; font-weight: 600; }
+  section { margin-top: 64px; }
+  .sec-head { display: flex; align-items: baseline; gap: 16px; border-bottom: 2px solid var(--ink); padding-bottom: 10px; margin-bottom: 20px; }
+  .sec-num { font-family: Georgia, serif; font-size: 44px; font-weight: 700; color: var(--accent); line-height: 1; }
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px; margin: 18px 0; box-shadow: var(--shadow); }
+  .panel > h4 { margin: 0 0 10px; font-size: 15px; }
+  .cap { color: var(--muted); font-size: 14px; margin-top: 10px; }
+  .note { border-left: 4px solid var(--warm); background: var(--warm-soft); padding: 12px 16px; border-radius: 8px; margin: 18px 0; }
+  .note.good { border-color: var(--good); background: var(--good-soft); }
+  .note.violet { border-color: var(--violet); background: var(--violet-soft); }
+  .tscroll { overflow-x: auto; }
+  table.dt { border-collapse: collapse; width: 100%; font-size: 14.5px; }
+  table.dt th, table.dt td { border-bottom: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
+  table.dt th { font-size: 12.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+  .grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+  .two { display: grid; gap: 18px; grid-template-columns: 1fr 1fr; }
+  @media (max-width: 720px) { .two { grid-template-columns: 1fr; } }
+  .two > *, .sim > *, .grid > *, .pipe > * { min-width: 0; }
+  #jsonOut, .tstep pre, #t1p { white-space: pre-wrap; word-break: break-word; }
+
+  button, .btn { font: inherit; cursor: pointer; border-radius: 9px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 8px 14px; font-size: 14.5px; }
+  button:hover { border-color: var(--accent); }
+  button.primary { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600; }
+  button.ghost { background: transparent; }
+  button.danger { background: var(--bad); color: #fff; border-color: var(--bad); }
+  button:disabled { opacity: .5; cursor: default; }
+  input[type=text], textarea, select { font: inherit; width: 100%; padding: 9px 12px; border-radius: 9px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+  .chips button { border-radius: 999px; font-size: 13.5px; padding: 6px 12px; }
+  .tag { display: inline-block; font-size: 12px; padding: 2px 9px; border-radius: 999px; font-weight: 600; }
+  .tag.low { background: var(--good-soft); color: var(--good); }
+  .tag.mid { background: var(--warm-soft); color: var(--warm); }
+  .tag.high { background: var(--bad-soft); color: var(--bad); }
+
+  /* section 1 cards */
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; box-shadow: var(--shadow); cursor: pointer; transition: transform .15s; }
+  .card:hover { transform: translateY(-2px); }
+  .card .ico { font-size: 28px; }
+  .card h4 { margin: 6px 0 4px; font-size: 16px; }
+  .card .who { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--line); font-size: 14px; }
+  .card.open .who { display: block; }
+  .card .who b { color: var(--warm); }
+
+  /* section 2 side by side */
+  .phone { background: var(--surface2); border: 1px solid var(--line); border-radius: 14px; padding: 14px; min-height: 260px; display: flex; flex-direction: column; gap: 10px; }
+  .phone .bar { font-size: 12px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); display: flex; justify-content: space-between; }
+  .bubble { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; font-size: 14.5px; max-width: 95%; }
+  .bubble.user { align-self: flex-end; background: var(--accent-soft); border-color: transparent; }
+  .miniapp { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; font-size: 14px; flex: 1; }
+  .miniapp .title { font-weight: 700; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--line); }
+  .row.overdue { color: var(--bad); font-weight: 600; }
+  .row.dim { opacity: .35; }
+  .row.new { background: var(--good-soft); border-radius: 6px; padding: 6px 8px; }
+  .flash { animation: flash .9s ease; }
+  @keyframes flash { 0% { box-shadow: 0 0 0 3px var(--accent); } 100% { box-shadow: none; } }
+
+  /* section 3 pipeline */
+  .pipe { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
+  .step { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; box-shadow: var(--shadow); position: relative; }
+  .step .n { width: 30px; height: 30px; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 700; display: grid; place-items: center; margin-bottom: 8px; }
+  .step h4 { margin: 0 0 6px; font-size: 16px; }
+  .step p { margin: 0; font-size: 14px; color: var(--muted); }
+  .step.lit { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .step .ex { display: block; margin-top: 8px; font-size: 12.5px; background: var(--surface2); padding: 6px 8px; border-radius: 6px; }
+
+  /* section 4 simulator */
+  .sim { display: grid; grid-template-columns: 1.05fr 1fr; gap: 18px; }
+  @media (max-width: 820px) { .sim { grid-template-columns: 1fr; } }
+  .app { background: var(--surface2); border: 1px solid var(--line); border-radius: 16px; padding: 14px; }
+  .app .hdr { display: flex; justify-content: space-between; align-items: center; font-size: 14px; margin-bottom: 8px; gap: 8px; flex-wrap: wrap; }
+  .tabs { display: flex; gap: 6px; }
+  .tabs button { padding: 5px 10px; font-size: 13px; border-radius: 999px; }
+  .tabs button.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .switch { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; }
+  .switch .knob { width: 34px; height: 20px; border-radius: 999px; background: var(--line); position: relative; transition: background .2s; }
+  .switch .knob::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: #fff; transition: left .2s; }
+  .switch.on .knob { background: var(--accent); } .switch.on .knob::after { left: 16px; }
+  .screen { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px; min-height: 300px; }
+  .board { display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; max-width: 320px; margin: 0 auto; }
+  .cell { aspect-ratio: 1; background: var(--surface2); border: 1px solid var(--line); border-radius: 4px; display: grid; place-items: center; font-weight: 700; font-size: 15px; cursor: pointer; }
+  .cell.x { color: var(--accent); } .cell.o { color: var(--warm); }
+  .cmdbar { display: flex; gap: 8px; margin-top: 12px; }
+  .log { margin-top: 10px; font-size: 13.5px; display: flex; flex-direction: column; gap: 4px; min-height: 60px; }
+  .log div { padding: 4px 8px; border-radius: 6px; background: var(--surface); border: 1px solid var(--line); }
+  .log .ok { border-color: var(--good); } .log .fail { border-color: var(--bad); } .log .txt { border-color: var(--violet); }
+  .trace { display: flex; flex-direction: column; gap: 10px; }
+  .tstep { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; background: var(--surface); opacity: .35; transition: opacity .3s; }
+  .tstep.on { opacity: 1; border-color: var(--accent); }
+  .tstep .h { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; margin-bottom: 6px; }
+  .tstep .h .n { width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 12px; display: grid; place-items: center; }
+  .tstep pre { font-size: 12.5px; padding: 8px 10px; }
+  .tstep .verdict { font-size: 13.5px; margin-top: 6px; }
+  .verdict.ok { color: var(--good); font-weight: 600; } .verdict.fail { color: var(--bad); font-weight: 600; } .verdict.ask { color: var(--violet); font-weight: 600; }
+  .modal { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: none; place-items: center; z-index: 10; }
+  .modal.show { display: grid; }
+  .modal .box { background: var(--surface); border-radius: 14px; padding: 22px 24px; max-width: 360px; width: 92%; box-shadow: var(--shadow); }
+  .modal .box .acts { display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px; }
+
+  /* section 5 builder */
+  .frow { display: grid; grid-template-columns: 1fr 120px 1fr 34px; gap: 8px; align-items: center; margin-top: 8px; }
+  @media (max-width: 720px) { .frow { grid-template-columns: 1fr 1fr; } }
+  label.lbl { font-size: 13px; color: var(--muted); display: block; margin-top: 12px; margin-bottom: 4px; }
+  .check { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 14.5px; }
+</style>
+
+<div class="wrap">
+  <p class="eyebrow">Agentic Software Development · Bài 19</p>
+  <h1>Ứng dụng agentic: AI hiểu ý định và tự thực hiện hành động trong app</h1>
+  <p class="lede">Hầu hết AI trong app hôm nay chỉ <em>nói</em>. Bài này cho các em thấy bước chuyển mới: người dùng nói, app <em>làm</em>. Mọi mô phỏng chạy ngay trong trang, không cần API key.</p>
+
+  <nav class="toc" aria-label="Mục lục">
+    <a href="#s1">1 · AI trong app hôm nay</a>
+    <a href="#s2">2 · Bước chuyển</a>
+    <a href="#s3">3 · 4 bước hoạt động</a>
+    <a href="#s4">4 · Mô phỏng game Caro</a>
+    <a href="#s5">5 · Thiết kế cho app của em</a>
+    <a href="#s6">✓ · Tóm tắt và bài tập</a>
+  </nav>
+
+  <!-- ================= 1 ================= -->
+  <section id="s1">
+    <div class="sec-head"><span class="sec-num">1</span><h2>AI đang được đưa vào app như thế nào?</h2></div>
+    <p>Chạm vào từng thẻ và trả lời câu hỏi: <b>sau khi AI xong việc, ai là người bấm nút tiếp theo?</b></p>
+    <div class="grid" id="cards">
+      <div class="card"><div class="ico">💬</div><h4>Chatbot hỏi đáp</h4><div>Hỗ trợ khách hàng, ChatGPT, Gemini</div><div class="who">AI tạo <b>câu trả lời</b>. Người đọc rồi <b>tự đi làm</b>.</div></div>
+      <div class="card"><div class="ico">🎨</div><h4>Sinh nội dung, hình ảnh</h4><div>Canva Magic, tạo ảnh, viết caption</div><div class="who">AI tạo <b>bản nháp</b>. Người chọn, sửa, <b>tự đăng</b>.</div></div>
+      <div class="card"><div class="ico">📝</div><h4>Tóm tắt, dịch</h4><div>Tóm tắt email, dịch tin nhắn</div><div class="who">AI tạo <b>bản tóm tắt</b>. Người đọc rồi <b>tự quyết định</b>.</div></div>
+      <div class="card"><div class="ico">🗣️</div><h4>Học ngoại ngữ</h4><div>Duolingo Max, ELSA Speak</div><div class="who">AI tạo <b>nhận xét</b>. Người <b>tự luyện lại</b>.</div></div>
+      <div class="card"><div class="ico">🎯</div><h4>Gợi ý</h4><div>Gợi ý video, món ăn, sách</div><div class="who">AI tạo <b>danh sách</b>. Người <b>tự bấm chọn</b>.</div></div>
+      <div class="card"><div class="ico">♟️</div><h4>AI Move Reviewer (Buổi 8)</h4><div>Game Caro của lớp mình</div><div class="who">AI chấm <b>điểm nước đi</b>. Người bấm <b>"Đánh ô này"</b>.</div></div>
+    </div>
+    <div class="note">Điểm chung của cả sáu thẻ: <b>AI nói, người làm.</b> Mọi thao tác thật trên app vẫn do con người bấm.</div>
+  </section>
+
+  <!-- ================= 2 ================= -->
+  <section id="s2">
+    <div class="sec-head"><span class="sec-num">2</span><h2>Bước chuyển: từ chatbot sang ứng dụng agentic</h2></div>
+    <p>Cùng một câu của người dùng, hai kiểu app phản ứng khác nhau. Bấm một câu để xem.</p>
+    <div class="chips" id="s2chips">
+      <button data-k="overdue">Cho tôi xem hóa đơn quá hạn</button>
+      <button data-k="lang">Đổi ngôn ngữ sang tiếng Việt</button>
+      <button data-k="expense">Thêm 30k ăn sáng</button>
+    </div>
+    <div class="two">
+      <div class="phone">
+        <div class="bar"><span>Chatbot trong app</span><span>AI nói</span></div>
+        <div id="chatUser" class="bubble user" hidden></div>
+        <div id="chatBot" class="bubble" hidden></div>
+        <div class="miniapp" id="chatApp"></div>
+      </div>
+      <div class="phone">
+        <div class="bar"><span>Ứng dụng agentic</span><span>AI làm</span></div>
+        <div id="agUser" class="bubble user" hidden></div>
+        <div id="agCall" class="bubble mono" hidden></div>
+        <div class="miniapp" id="agApp"></div>
+      </div>
+    </div>
+    <div class="tscroll" style="margin-top:18px">
+      <table class="dt">
+        <thead><tr><th></th><th>Chatbot</th><th>Ứng dụng agentic</th></tr></thead>
+        <tbody>
+          <tr><td>Đầu ra của AI</td><td>Văn bản</td><td>Một <b>hành động</b> có tên và tham số</td></tr>
+          <tr><td>Ai bấm nút</td><td>Người dùng</td><td>App, sau khi AI chọn hành động</td></tr>
+          <tr><td>App cần thêm gì</td><td>Không</td><td>Một <b>danh sách hành động</b> AI được phép dùng</td></tr>
+          <tr><td>Rủi ro lớn nhất</td><td>Trả lời sai</td><td>Làm sai việc thật trên dữ liệu thật</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note good"><b>Các em đã dùng app agentic rồi.</b> Codex hay Claude Code không trả lời "bạn hãy gõ flutter test", nó tự chạy lệnh, tự sửa file. Hôm nay ta làm điều tương tự ở quy mô nhỏ cho chính app của mình. Nút bấm vẫn còn đó; ngôn ngữ chỉ là <b>con đường thứ hai</b> tới cùng một hành động.</div>
+  </section>
+
+  <!-- ================= 3 ================= -->
+  <section id="s3">
+    <div class="sec-head"><span class="sec-num">3</span><h2>Cách hoạt động: 4 bước, lặp lại mỗi câu lệnh</h2></div>
+    <div class="pipe" id="pipe">
+      <div class="step"><div class="n">1</div><h4>Định nghĩa hành động</h4><p>App liệt kê những việc AI được phép yêu cầu: tên, mô tả <i>khi nào dùng</i>, tham số.</p><span class="ex mono">open_screen(screen: game | history | profile)</span></div>
+      <div class="step"><div class="n">2</div><h4>Nhận diện ý định</h4><p>Gửi câu người dùng kèm danh sách. Mô hình trả về <b>một lời gọi hàm</b> hoặc văn bản nếu không khớp.</p><span class="ex mono">{"name":"open_screen","arguments":{"screen":"history"}}</span></div>
+      <div class="step"><div class="n">3</div><h4>Kiểm tra và xác nhận</h4><p>Tên có trong danh sách? Tham số hợp lệ? Việc khó hoàn tác thì hỏi lại người dùng.</p><span class="ex">restart_game → hộp thoại "Chơi lại?"</span></div>
+      <div class="step"><div class="n">4</div><h4>Thực thi</h4><p>Dispatcher gọi đúng hàm <b>đã có sẵn</b> trong app. Không viết logic mới cho AI.</p><span class="ex mono">Navigator.push(HistoryScreen)</span></div>
+    </div>
+    <div class="note violet"><b>Mô hình không chạy hàm.</b> Nó chỉ <b>chọn</b> hàm và <b>điền</b> tham số rồi trả về cho app. Giống nhân viên mới báo "em định pha cà phê cho bàn 3", còn máy pha là của quán. Cơ chế này tên chính thức là <b>function calling</b> (Gemini, OpenAI) hoặc <b>tool use</b> (Anthropic).</div>
+
+    <h3>Một hành động được khai báo thế nào?</h3>
+    <div class="two">
+      <pre>{
+  "type": "function",
+  "name": "open_screen",
+  "description": "Mở một màn hình khi người chơi
+    muốn xem một phần nào đó của game.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "screen": {
+        "type": "string",
+        "enum": ["game", "history", "profile"]
+      }
+    },
+    "required": ["screen"]
+  }
+}</pre>
+      <div>
+        <p><b>Mô tả viết cho mô hình đọc</b>, không phải cho người: nói rõ <i>khi nào</i> dùng. Mô tả tốt giúp mô hình hỏi lại thay vì đoán bừa.</p>
+        <p><b>Dùng <code>enum</code> ở mọi nơi có thể.</b> Mô hình không thể bịa ra màn hình <code>settings</code> nếu enum chỉ có ba giá trị.</p>
+        <p>Request gửi lên Gemini giống Buổi 8, chỉ thêm trường <code>tools</code> chứa các khai báo này. Response trả về mảng <code>steps</code>, trong đó step <code>function_call</code> có <code>name</code> và <code>arguments</code>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 4 ================= -->
+  <section id="s4">
+    <div class="sec-head"><span class="sec-num">4</span><h2>Mô phỏng: thanh lệnh AI cho game Caro</h2></div>
+    <p>Bên trái là app Caro thu nhỏ với 4 hành động được phép. Bên phải là <b>những gì xảy ra bên trong</b> sau mỗi câu lệnh. Gõ tiếng Việt tự nhiên hoặc bấm câu mẫu.</p>
+    <div class="note">Trong mô phỏng này, bước 2 (nhận diện ý định) được giả lập bằng luật từ khóa để không cần API key. Trên lớp, bước đó do Gemini thực hiện; các bước 1, 3, 4 giữ nguyên.</div>
+
+    <div class="tscroll">
+      <table class="dt">
+        <thead><tr><th>Hành động</th><th>Người chơi có thể nói</th><th>Tham số</th><th>Xác nhận?</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">restart_game</td><td>"chơi lại", "ván mới đi"</td><td>không</td><td><span class="tag high">Có</span></td></tr>
+          <tr><td class="mono">set_ai_reviewer</td><td>"bật trợ lý AI", "tắt reviewer"</td><td>enabled: bool</td><td><span class="tag low">Không</span></td></tr>
+          <tr><td class="mono">open_screen</td><td>"xem lịch sử", "mở hồ sơ"</td><td>screen: game | history | profile</td><td><span class="tag low">Không</span></td></tr>
+          <tr><td class="mono">set_player_name</td><td>"đổi tên O thành Lan"</td><td>player: X | O, name</td><td><span class="tag low">Không</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="chips" id="s4chips">
+      <button>cho tôi xem lịch sử trận đấu</button>
+      <button>bật trợ lý AI</button>
+      <button>đổi tên O thành Lan</button>
+      <button>chơi lại đi</button>
+      <button>bật AI và xem hồ sơ</button>
+      <button>đổi tên thành Minh</button>
+      <button>hôm nay trời đẹp không</button>
+      <button>xóa hết lịch sử</button>
+    </div>
+
+    <div class="sim">
+      <div class="app">
+        <div class="hdr">
+          <div class="tabs" id="tabs"><button data-s="game" class="on">Bàn cờ</button><button data-s="history">Lịch sử</button><button data-s="profile">Hồ sơ</button></div>
+          <div class="switch" id="aiSwitch"><span class="knob"></span><span id="aiLabel">AI Reviewer: Tắt</span></div>
+        </div>
+        <div class="screen" id="screen"></div>
+        <div class="cmdbar">
+          <input type="text" id="cmd" placeholder="Bạn muốn làm gì?" autocomplete="off">
+          <button class="primary" id="send">Gửi</button>
+        </div>
+        <div class="log" id="log"></div>
+      </div>
+      <div class="trace" id="trace">
+        <div class="tstep" id="t1"><div class="h"><span class="n">1</span>Gửi câu + danh sách 4 hành động</div><pre id="t1p">Chờ câu lệnh...</pre></div>
+        <div class="tstep" id="t2"><div class="h"><span class="n">2</span>Mô hình trả về</div><pre id="t2p"></pre></div>
+        <div class="tstep" id="t3"><div class="h"><span class="n">3</span>App kiểm tra và xác nhận</div><div class="verdict" id="t3p"></div></div>
+        <div class="tstep" id="t4"><div class="h"><span class="n">4</span>Dispatcher thực thi</div><div class="verdict" id="t4p"></div></div>
+      </div>
+    </div>
+
+    <h3>Thử đủ 8 câu mẫu, rồi trả lời</h3>
+    <div class="tscroll">
+      <table class="dt">
+        <thead><tr><th>Câu</th><th>Điều cần nhận ra</th></tr></thead>
+        <tbody>
+          <tr><td>"đổi tên thành Minh"</td><td>Thiếu thông tin: mô hình <b>hỏi lại</b> thay vì đoán X hay O. Mô tả hành động quyết định điều này.</td></tr>
+          <tr><td>"hôm nay trời đẹp không"</td><td>Không khớp hành động nào: trả lời chữ, <b>không đổi gì</b> trên game.</td></tr>
+          <tr><td>"xóa hết lịch sử"</td><td>Giả lập mô hình bịa tên hàm <code>delete_history</code>. Dispatcher <b>từ chối</b> vì không có trong danh sách. Hàng rào nằm trong code, không nằm trong prompt.</td></tr>
+          <tr><td>"chơi lại đi"</td><td>Hành động khó hoàn tác: <b>hỏi xác nhận</b> trước. Bấm Hủy thì ván giữ nguyên.</td></tr>
+          <tr><td>"bật AI và xem hồ sơ"</td><td>Hai lời gọi hàm trong một response, app thực thi <b>lần lượt</b>.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note"><b>Nguyên tắc vàng:</b> mô hình chỉ <b>đề xuất</b>, app <b>quyết định</b>. Hành động không có trong danh sách thì không tồn tại với AI. Không bao giờ để một dòng chữ trong prompt là hàng rào duy nhất giữa người dùng và dữ liệu thật.</div>
+  </section>
+
+  <!-- ================= 5 ================= -->
+  <section id="s5">
+    <div class="sec-head"><span class="sec-num">5</span><h2>Thiết kế cho app của em</h2></div>
+    <p>Chọn domain gần với project nhóm để xem gợi ý, rồi tự khai báo một hành động. JSON bên dưới cập nhật ngay khi em gõ.</p>
+    <div class="chips" id="domains">
+      <button data-d="expense">Chi tiêu</button>
+      <button data-d="book">Trao đổi sách</button>
+      <button data-d="diet">Ăn uống</button>
+      <button data-d="travel">Du lịch</button>
+    </div>
+    <div class="tscroll"><table class="dt" id="domainTable"><thead><tr><th>Loại</th><th>Người dùng sẽ nói</th><th>Hành động</th><th>Rủi ro</th></tr></thead><tbody></tbody></table></div>
+
+    <div class="two" style="margin-top:18px">
+      <div class="panel">
+        <h4>Khai báo hành động của em</h4>
+        <label class="lbl">Tên hàm (không dấu, không khoảng trắng)</label>
+        <input type="text" id="fName" value="show_expenses" placeholder="vd: show_expenses">
+        <label class="lbl">Mô tả: khi nào dùng?</label>
+        <textarea id="fDesc" rows="3">Hiển thị danh sách khoản chi khi người dùng muốn xem chi tiêu theo danh mục hoặc khoảng thời gian.</textarea>
+        <label class="lbl">Tham số</label>
+        <div id="params"></div>
+        <button class="ghost" id="addParam" style="margin-top:8px">+ Thêm tham số</button>
+        <label class="check"><input type="checkbox" id="fConfirm"> Hành động khó hoàn tác, cần xác nhận trước khi thực thi</label>
+      </div>
+      <div class="panel">
+        <h4>JSON gửi trong trường <code>tools</code></h4>
+        <pre id="jsonOut"></pre>
+        <div class="cap" id="jsonHint"></div>
+        <button id="copyJson" style="margin-top:10px">Sao chép</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h4>Checklist trước khi nộp bảng thiết kế</h4>
+      <ul style="margin:0; padding-left:20px; font-size:15px">
+        <li>Mỗi mô tả nói rõ <b>khi nào</b> dùng, không chỉ nói hành động làm gì.</li>
+        <li>Tham số có tập giá trị cố định đều dùng <code>enum</code>.</li>
+        <li>Hành động sửa, xóa, gửi đi đều được đánh dấu cần xác nhận.</li>
+        <li>Mỗi hành động nối được vào một hàm <b>đã có</b> trong app. Nếu chưa có, đó là việc phải làm trước, không phải việc của AI.</li>
+        <li>Có ít nhất 2 câu kiểm thử thiếu thông tin và 2 câu ngoài phạm vi.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ================= 6 ================= -->
+  <section id="s6">
+    <div class="sec-head"><span class="sec-num">✓</span><h2>Tóm tắt và bài tập về nhà</h2></div>
+    <div class="two">
+      <div class="panel">
+        <h4>Nhớ 5 điều</h4>
+        <ol style="margin:0; padding-left:20px; font-size:15px">
+          <li>AI trong app hôm nay phần lớn theo mẫu <b>AI nói, người làm</b>.</li>
+          <li>Ứng dụng agentic đảo lại: <b>người nói, app làm</b>. Ngôn ngữ là con đường thứ hai, không thay nút bấm.</li>
+          <li>4 bước: định nghĩa hành động, nhận diện ý định, kiểm tra và xác nhận, thực thi.</li>
+          <li>Mô hình chỉ chọn hàm và điền tham số. App chạy. Mọi kiểm tra nằm trong code.</li>
+          <li>Mô tả viết cho mô hình đọc, dùng enum, thiết kế bảng hành động và câu kiểm thử <b>trước</b> khi code.</li>
+        </ol>
+      </div>
+      <div class="panel">
+        <h4>Bài tập về nhà</h4>
+        <ol style="margin:0; padding-left:20px; font-size:15px">
+          <li>Thêm thanh lệnh AI vào game Caro của em với 4 hành động ở mục 4, dùng Gemini function calling. Làm theo thứ tự: dispatcher trước, gọi AI sau, xác nhận và xử lý lỗi cuối.</li>
+          <li>Triển khai <b>một</b> hành động rủi ro thấp (điều hướng hoặc cài đặt) từ bảng thiết kế ở mục 5 vào project nhóm. Nộp link commit và ảnh chụp 3 câu chạy đúng, 1 câu ngoài phạm vi bị từ chối.</li>
+          <li>Viết 5 dòng: hành động nào trong app của nhóm <b>không nên</b> cho AI làm dù có xác nhận, và vì sao.</li>
+        </ol>
+      </div>
+    </div>
+    <p class="cap">Tài liệu: <a href="https://ai.google.dev/gemini-api/docs/function-calling">Gemini function calling</a> · <a href="https://www.builder.io/blog/agent-native-architecture">Agent-native architecture (Builder.io)</a> · Phiên bản đầy đủ của bài với các prompt cho Codex nằm trong trang bài giảng Buổi 19.</p>
+  </section>
+</div>
+
+<div class="modal" id="modal">
+  <div class="box">
+    <h3 style="margin:0 0 6px">Ván đang chơi sẽ mất. Chơi lại?</h3>
+    <p class="cap" style="margin:0">Hành động <code>restart_game</code> nằm trong danh sách cần xác nhận.</p>
+    <div class="acts"><button id="mCancel">Hủy</button><button class="danger" id="mOk">Đồng ý</button></div>
+  </div>
+</div>
+
+<script>
+/* ---------- helpers ---------- */
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+const norm = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/đ/g,'d');
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+/* ---------- 1. cards ---------- */
+$$('#cards .card').forEach(c => c.addEventListener('click', () => c.classList.toggle('open')));
+
+/* ---------- 2. chatbot vs agentic ---------- */
+const S2 = {
+  overdue: {
+    user: 'Cho tôi xem hóa đơn quá hạn',
+    bot: 'Bạn vào menu Hóa đơn, chọn bộ lọc Trạng thái, rồi chọn Quá hạn nhé.',
+    call: 'open_invoices({ status: "overdue" })',
+    render(el, done) {
+      el.innerHTML = `<div class="title">Hóa đơn <span class="tag ${done?'high':'low'}">${done?'Lọc: quá hạn':'Tất cả'}</span></div>
+        <div class="row ${done?'dim':''}"><span>#1041 Cửa hàng A</span><span>Đã trả</span></div>
+        <div class="row ${done?'overdue':''}"><span>#1042 Kho B</span><span>Quá hạn 5 ngày</span></div>
+        <div class="row ${done?'dim':''}"><span>#1043 Nhà cung cấp C</span><span>Còn 3 ngày</span></div>
+        <div class="row ${done?'overdue':''}"><span>#1044 Vận chuyển D</span><span>Quá hạn 12 ngày</span></div>`;
+    }
+  },
+  lang: {
+    user: 'Đổi ngôn ngữ sang tiếng Việt',
+    bot: 'Bạn mở Settings, chọn Language, rồi chọn Vietnamese.',
+    call: 'switch_language({ language: "vi" })',
+    render(el, done) {
+      const t = done ? ['Trang chủ','Hóa đơn','Báo cáo','Cài đặt'] : ['Home','Invoices','Reports','Settings'];
+      el.innerHTML = `<div class="title">${done?'Menu':'Menu'} <span class="tag low">${done?'vi':'en'}</span></div>` + t.map(x=>`<div class="row"><span>${x}</span><span>›</span></div>`).join('');
+    }
+  },
+  expense: {
+    user: 'Thêm 30k ăn sáng',
+    bot: 'Bạn bấm nút +, nhập số tiền 30.000, chọn danh mục Ăn uống và ghi chú "ăn sáng".',
+    call: 'add_expense({ amount: 30000, category: "food", note: "ăn sáng" })',
+    render(el, done) {
+      el.innerHTML = `<div class="title">Hôm nay <span>${done?'115.000đ':'85.000đ'}</span></div>
+        <div class="row"><span>Xe bus</span><span>15.000</span></div>
+        <div class="row"><span>Trà sữa</span><span>70.000</span></div>
+        ${done?'<div class="row new"><span>Ăn sáng · Ăn uống</span><span>30.000</span></div>':''}`;
+    }
+  }
+};
+function s2show(k) {
+  const d = S2[k];
+  $('#chatUser').textContent = d.user; $('#chatUser').hidden = false;
+  $('#chatBot').textContent = d.bot; $('#chatBot').hidden = false;
+  d.render($('#chatApp'), false);
+  $('#agUser').textContent = d.user; $('#agUser').hidden = false;
+  $('#agCall').textContent = d.call; $('#agCall').hidden = false;
+  d.render($('#agApp'), false);
+  setTimeout(() => { d.render($('#agApp'), true); $('#agApp').classList.remove('flash'); void $('#agApp').offsetWidth; $('#agApp').classList.add('flash'); }, 600);
+}
+$$('#s2chips button').forEach(b => b.addEventListener('click', () => s2show(b.dataset.k)));
+S2.overdue.render($('#chatApp'), false); S2.overdue.render($('#agApp'), false);
+
+/* ---------- 3. pipeline glow ---------- */
+const pipeSteps = $$('#pipe .step');
+async function glowPipe() { for (const s of pipeSteps) { pipeSteps.forEach(x=>x.classList.remove('lit')); s.classList.add('lit'); await sleep(900); } pipeSteps.forEach(x=>x.classList.remove('lit')); }
+new IntersectionObserver(es => { if (es.some(e=>e.isIntersecting)) { glowPipe(); } }, {threshold:.4}).observe($('#pipe'));
+
+/* ---------- 4. simulator ---------- */
+const game = { screen:'game', ai:false, names:{X:'X', O:'O'}, board:Array(100).fill(''), turn:'X', history:[
+  {d:'02/09', r:'X thắng', n:23},{d:'05/09', r:'O thắng', n:31},{d:'09/09', r:'Hòa', n:100}] };
+const TOOLS = ['restart_game','set_ai_reviewer(enabled)','open_screen(screen)','set_player_name(player, name)'];
+const ALLOWED = new Set(['restart_game','set_ai_reviewer','open_screen','set_player_name']);
+const NEEDS_CONFIRM = new Set(['restart_game']);
+
+function renderApp() {
+  $$('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.s === game.screen));
+  $('#aiSwitch').classList.toggle('on', game.ai); $('#aiLabel').textContent = 'AI Reviewer: ' + (game.ai?'Bật':'Tắt');
+  const sc = $('#screen');
+  if (game.screen === 'game') {
+    sc.innerHTML = `<div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:8px"><span>Lượt: <b>${game.turn} (${game.names[game.turn]})</b></span><span>${game.names.X} vs ${game.names.O}</span></div><div class="board" id="board"></div>`;
+    const b = $('#board');
+    game.board.forEach((v,i) => { const c = document.createElement('div'); c.className = 'cell ' + v.toLowerCase(); c.textContent = v; c.onclick = () => { if (!game.board[i]) { game.board[i] = game.turn; game.turn = game.turn==='X'?'O':'X'; renderApp(); } }; b.appendChild(c); });
+  } else if (game.screen === 'history') {
+    sc.innerHTML = `<h4 style="margin:0 0 8px">Lịch sử trận đấu</h4>` + game.history.map(h => `<div class="row"><span>${h.d} · ${h.r}</span><span>${h.n} nước</span></div>`).join('');
+  } else {
+    sc.innerHTML = `<h4 style="margin:0 0 8px">Hồ sơ</h4><div style="display:flex;gap:14px;align-items:center"><div style="width:56px;height:56px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:24px;font-weight:700">${game.names.X[0]}</div><div><div><b>${game.names.X}</b> (X) và <b>${game.names.O}</b> (O)</div><div class="cap" style="margin:0">Số trận: ${game.history.length}</div></div></div>`;
+  }
+}
+$$('#tabs button').forEach(b => b.onclick = () => { game.screen = b.dataset.s; renderApp(); });
+$('#aiSwitch').onclick = () => { game.ai = !game.ai; renderApp(); };
+renderApp();
+
+/* mock intent identifier: stands in for Gemini function calling */
+function identify(text) {
+  const parts = text.split(/\s+(?:và|rồi|sau đó)\s+/i);
+  const calls = []; let textReply = null;
+  for (const raw of parts) {
+    const t = norm(raw);
+    if (/(choi lai|van moi|reset|bat dau lai|restart)/.test(t)) { calls.push({name:'restart_game', arguments:{}}); continue; }
+    if (/(ai|tro ly|reviewer|huan luyen)/.test(t) && /(bat|mo |on\b|kich hoat)/.test(t)) { calls.push({name:'set_ai_reviewer', arguments:{enabled:true}}); continue; }
+    if (/(ai|tro ly|reviewer)/.test(t) && /(tat|off|dong)/.test(t)) { calls.push({name:'set_ai_reviewer', arguments:{enabled:false}}); continue; }
+    if (/(lich su|tran da|history|da choi)/.test(t) && !/xoa/.test(t)) { calls.push({name:'open_screen', arguments:{screen:'history'}}); continue; }
+    if (/(ho so|profile|avatar)/.test(t)) { calls.push({name:'open_screen', arguments:{screen:'profile'}}); continue; }
+    if (/(ban co|ve game|quay lai|man hinh choi)/.test(t)) { calls.push({name:'open_screen', arguments:{screen:'game'}}); continue; }
+    if (/doi ten/.test(t)) {
+      const m = raw.match(/\b([xXoO])\b[^]*?thành\s+(.+)$/i) || raw.match(/\b([xXoO])\b[^]*?thanh\s+(.+)$/i);
+      if (m) { calls.push({name:'set_player_name', arguments:{player:m[1].toUpperCase(), name:m[2].trim()}}); continue; }
+      textReply = 'Bạn muốn đổi tên cho người chơi X hay O?'; continue;
+    }
+    if (/xoa/.test(t)) { calls.push({name:'delete_history', arguments:{}}); continue; } /* simulate an off-menu call */
+    textReply = 'Mình chỉ hỗ trợ điều khiển game Caro: chơi lại, bật/tắt AI Reviewer, mở lịch sử hoặc hồ sơ, đổi tên người chơi.';
+  }
+  return { calls, textReply };
+}
+
+function validate(call) {
+  const a = call.arguments;
+  if (!ALLOWED.has(call.name)) return 'Tên hàm "' + call.name + '" không có trong danh sách 4 hành động';
+  if (call.name === 'open_screen' && !['game','history','profile'].includes(a.screen)) return 'screen không hợp lệ';
+  if (call.name === 'set_ai_reviewer' && typeof a.enabled !== 'boolean') return 'thiếu enabled';
+  if (call.name === 'set_player_name') { if (!['X','O'].includes(a.player) || !a.name) return 'cần cả player và name'; if (a.name.length > 20) return 'tên quá dài'; }
+  return null;
+}
+function dispatch(call) {
+  const a = call.arguments;
+  switch (call.name) {
+    case 'restart_game': game.board.fill(''); game.turn = 'X'; game.screen = 'game'; return 'Đã bắt đầu ván mới';
+    case 'set_ai_reviewer': game.ai = a.enabled; return a.enabled ? 'Đã bật AI Reviewer' : 'Đã tắt AI Reviewer';
+    case 'open_screen': game.screen = a.screen; return 'Đã mở màn hình ' + a.screen;
+    case 'set_player_name': game.names[a.player] = a.name; return `Đã đổi tên người chơi ${a.player} thành ${a.name}`;
+  }
+}
+function confirmDialog() { return new Promise(res => { const m = $('#modal'); m.classList.add('show'); $('#mOk').onclick = () => { m.classList.remove('show'); res(true); }; $('#mCancel').onclick = () => { m.classList.remove('show'); res(false); }; }); }
+function log(msg, cls) { const l = $('#log'); const d = document.createElement('div'); d.className = cls; d.textContent = msg; l.prepend(d); while (l.children.length > 5) l.lastChild.remove(); }
+function trace(i, on) { $('#t'+i).classList.toggle('on', on); }
+
+let busy = false;
+async function run(text) {
+  if (busy || !text.trim()) return; busy = true; $('#send').disabled = true;
+  [1,2,3,4].forEach(i => trace(i,false)); $('#t2p').textContent = ''; $('#t3p').innerHTML = ''; $('#t4p').innerHTML = '';
+  trace(1,true); $('#t1p').textContent = `input: "${text}"\ntools: [\n  ${TOOLS.join(',\n  ')}\n]`;
+  await sleep(600);
+  const { calls, textReply } = identify(text);
+  trace(2,true);
+  if (calls.length) $('#t2p').textContent = calls.map(c => JSON.stringify({type:'function_call', name:c.name, arguments:c.arguments}, null, 2)).join('\n');
+  else $('#t2p').textContent = JSON.stringify({type:'model_output', text:textReply}, null, 2);
+  await sleep(700);
+  if (!calls.length) {
+    trace(3,true); $('#t3p').innerHTML = '<span class="verdict ask">Không có function_call. Hiện văn bản cho người dùng, không đổi gì trên game.</span>';
+    log('AI: ' + textReply, 'txt'); busy = false; $('#send').disabled = false; return;
+  }
+  for (const c of calls) {
+    trace(3,true);
+    const err = validate(c);
+    if (err) { $('#t3p').innerHTML += `<div class="verdict fail">✗ ${c.name}: ${err}</div>`; log('✗ Hành động không được hỗ trợ: ' + c.name, 'fail'); await sleep(500); continue; }
+    if (NEEDS_CONFIRM.has(c.name)) {
+      $('#t3p').innerHTML += `<div class="verdict ask">? ${c.name} khó hoàn tác, hỏi người dùng...</div>`;
+      const ok = await confirmDialog();
+      if (!ok) { $('#t3p').innerHTML += `<div class="verdict fail">✗ Người dùng hủy. Không đổi gì.</div>`; log('Đã hủy chơi lại', 'fail'); continue; }
+      $('#t3p').innerHTML += `<div class="verdict ok">✓ Người dùng đồng ý</div>`;
+    } else $('#t3p').innerHTML += `<div class="verdict ok">✓ ${c.name}: tên hợp lệ, tham số hợp lệ</div>`;
+    await sleep(500); trace(4,true);
+    const msg = dispatch(c); renderApp();
+    $('#t4p').innerHTML += `<div class="verdict ok">✓ ${msg}</div>`; log('✓ ' + msg, 'ok');
+    if (textReply) log('AI: ' + textReply, 'txt');
+    await sleep(400);
+  }
+  if (textReply && calls.length) { /* mixed case already logged */ }
+  busy = false; $('#send').disabled = false;
+}
+$('#send').onclick = () => { run($('#cmd').value); $('#cmd').value = ''; };
+$('#cmd').addEventListener('keydown', e => { if (e.key === 'Enter') { run($('#cmd').value); $('#cmd').value = ''; } });
+$$('#s4chips button').forEach(b => b.onclick = () => run(b.textContent));
+
+/* ---------- 5. builder ---------- */
+const DOM = {
+  expense: [['Điều hướng','"mở trang thống kê tháng này"','open_stats(month)','low'],['Cài đặt','"đổi sang tiếng Anh"','switch_language(language)','low'],['Xem có điều kiện','"các khoản ăn uống tuần này"','show_expenses(category, period)','low'],['Tạo mới','"thêm 30k ăn sáng"','add_expense(amount, category, note)','mid'],['Xóa, gửi đi','"xóa khoản vừa thêm"','delete_expense(id)','high']],
+  book: [['Điều hướng','"mở sách của tôi"','open_screen(screen)','low'],['Xem có điều kiện','"tìm sách lịch sử dưới 50k"','search_books(keyword, max_price)','low'],['Tạo mới','"đăng cuốn Dế Mèn giá 20k"','create_listing(title, price)','mid'],['Sửa','"đổi giá cuốn Dế Mèn thành 15k"','update_price(id, price)','mid'],['Gửi đi','"nhắn cho người bán là tôi muốn mua"','send_message(to, text)','high']],
+  diet: [['Điều hướng','"xem thực đơn hôm nay"','open_screen(screen)','low'],['Cài đặt','"đặt mục tiêu 1800 calo"','set_goal(calories)','low'],['Xem có điều kiện','"bữa nào tuần này nhiều đường nhất"','show_meals(sort_by, period)','low'],['Tạo mới','"tôi vừa ăn một bát phở"','log_meal(name, time)','mid'],['Xóa','"xóa bữa sáng hôm qua"','delete_meal(id)','high']],
+  travel: [['Điều hướng','"mở lịch trình Đà Lạt"','open_trip(trip_id)','low'],['Xem có điều kiện','"ngày 2 có gì"','show_day(trip_id, day)','low'],['Tạo mới','"thêm quán cà phê Túi Mơ To vào chiều ngày 2"','add_stop(trip_id, day, name, time)','mid'],['Sửa','"dời bữa tối sang 19h"','move_stop(id, time)','mid'],['Gửi đi','"chia sẻ lịch trình cho Lan"','share_trip(trip_id, user)','high']],
+};
+function showDomain(k) { $('#domainTable tbody').innerHTML = DOM[k].map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td class="mono">${r[2]}</td><td><span class="tag ${r[3]}">${r[3]==='low'?'Thấp':r[3]==='mid'?'Trung bình':'Cao, xác nhận'}</span></td></tr>`).join(''); }
+$$('#domains button').forEach(b => b.onclick = () => showDomain(b.dataset.d)); showDomain('expense');
+
+const params = [{name:'category', type:'string', enumv:'food, transport, study, other'},{name:'period', type:'string', enumv:'today, week, month'}];
+function renderParams() {
+  $('#params').innerHTML = params.map((p,i) => `<div class="frow">
+    <input type="text" data-i="${i}" data-k="name" value="${p.name}" placeholder="tên tham số">
+    <select data-i="${i}" data-k="type"><option ${p.type==='string'?'selected':''}>string</option><option ${p.type==='integer'?'selected':''}>integer</option><option ${p.type==='boolean'?'selected':''}>boolean</option></select>
+    <input type="text" data-i="${i}" data-k="enumv" value="${p.enumv}" placeholder="enum, cách nhau bằng dấu phẩy (nếu có)">
+    <button class="ghost" data-del="${i}" title="Xóa">×</button></div>`).join('');
+  $$('#params [data-k]').forEach(el => el.oninput = () => { params[el.dataset.i][el.dataset.k] = el.value; renderJson(); });
+  $$('#params [data-del]').forEach(el => el.onclick = () => { params.splice(el.dataset.del,1); renderParams(); renderJson(); });
+}
+function renderJson() {
+  const props = {}; const req = [];
+  for (const p of params) { if (!p.name.trim()) continue; const o = {type:p.type}; const e = p.enumv.split(',').map(s=>s.trim()).filter(Boolean); if (e.length && p.type!=='boolean') o.enum = p.type==='integer' ? e.map(Number) : e; props[p.name.trim()] = o; req.push(p.name.trim()); }
+  const decl = { type:'function', name:$('#fName').value.trim(), description:$('#fDesc').value.trim(), parameters:{ type:'object', properties:props, required:req } };
+  $('#jsonOut').textContent = JSON.stringify(decl, null, 2);
+  const hints = [];
+  if (/[\sÀ-ỹ]/.test(decl.name)) hints.push('Tên hàm không nên có dấu hay khoảng trắng.');
+  if (!/khi/i.test(decl.description)) hints.push('Mô tả chưa nói rõ KHI NÀO dùng hành động này.');
+  if (params.some(p => p.type==='string' && !p.enumv.trim() && /(screen|status|category|type|mode|language)/i.test(p.name))) hints.push('Tham số kiểu danh mục nên có enum để mô hình không bịa giá trị.');
+  hints.push($('#fConfirm').checked ? 'Nhớ thêm "' + decl.name + '" vào danh sách needsConfirm trong dispatcher.' : 'Nếu hành động này sửa, xóa hay gửi đi, hãy tick ô xác nhận.');
+  $('#jsonHint').textContent = hints.join(' ');
+}
+$('#addParam').onclick = () => { params.push({name:'', type:'string', enumv:''}); renderParams(); renderJson(); };
+['#fName','#fDesc','#fConfirm'].forEach(s => $(s).addEventListener('input', renderJson));
+$('#copyJson').onclick = async () => { try { await navigator.clipboard.writeText($('#jsonOut').textContent); $('#copyJson').textContent = 'Đã sao chép'; setTimeout(()=>$('#copyJson').textContent='Sao chép', 1200); } catch (e) {} };
+renderParams(); renderJson();
+</script>

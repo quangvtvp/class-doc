@@ -185,6 +185,11 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
+          id: 'agentic software development/Bai-19-Ung-Dung-Agentic-AI-Hieu-Y-Dinh-Va-Thuc-Hien-Hanh-Dong',
+          label: 'Buổi 19: Ứng dụng agentic, AI thực hiện hành động trong app',
+        },
+        {
+          type: 'doc',
           id: 'agentic software development/Bai-20-GitHub-CLI-Va-Phoi-Hop-Tren-Cung-Repo',
           label: 'Buổi 20: GitHub CLI và phối hợp trên repo',
         },
